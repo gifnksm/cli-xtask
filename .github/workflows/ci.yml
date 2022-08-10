@@ -10,18 +10,72 @@ env:
   CARGO_TERM_COLOR: always
 
 jobs:
+  set-matrix:
+    runs-on: ubuntu-latest
+    outputs:
+      rust: ${{ steps.set-values.outputs.rust }}
+      os: ${{ steps.set-values.outputs.os }}
+      features: ${{ steps.set-values.outputs.features}}
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions-rs/toolchain@v1
+        with:
+          toolchain: stable
+          profile: minimal
+          override: true
+      - uses: Swatinem/rust-cache@v2
+      - name: Set matrix values
+        id: set-values
+        run: |
+          root_package_id="$(cargo metadata --format-version 1 | jq -cr '.resolve.root')"
+          root_package="$(cargo metadata --format-version 1 | jq -c --arg pkgid "${root_package_id}" '.packages[] | select(.id == $pkgid)')"
+          echo "${root_package}" | jq -c '{ root_package: .name }'
+
+          msrv="$(echo "${root_package}" | jq '.rust_version')"
+          rust="$(echo "[\"stable\", ${msrv}]" | jq -c)"
+          echo "::set-output name=rust::${rust}"
+
+          os="$(echo '["ubuntu-latest", "macos-latest", "windows-latest"]' | jq -c)"
+          echo "::set-output name=os::${os}"
+
+          features="$(echo "${root_package}" | jq '.features | del(.default) | keys | map("--features " + . + " --no-default-features")')"
+          if [[ "$(echo "${features}" | jq 'length')" -gt "0" ]]; then
+            features="$(echo "${features}" | jq -c '. + ["--no-default-features", "--all-features", ""]')"
+          else
+            features='[""]'
+          fi
+          echo "::set-output name=features::${features}"
+
+          jq -n --argjson rust "${rust}" --argjson os "${os}" --argjson features "${features}" '{ rust: $rust, os: $os, features: $features }'
+
+  set-workspace:
+    runs-on: ubuntu-latest
+    outputs:
+      workspaces: ${{ steps.set-workspace.outputs.workspaces }}
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions-rs/toolchain@v1
+        with:
+          toolchain: stable
+          profile: minimal
+          override: true
+      - uses: Swatinem/rust-cache@v2
+      - name: Set workspace paths
+        id: set-workspace
+        run: |
+          value="$(cargo xtask exec -- pwd | sed "s@^$(pwd)@.@" | sed 's/$/ -> target/')"
+          echo "${value}"
+          value="${value//$'\n'/'%0A'}"
+          echo "::set-output name=workspaces::${value}"
+
   test:
     name: Test
+    needs: [set-matrix, set-workspace]
     strategy:
       fail-fast: false
       matrix:
-        rust:
-          - stable
-          - 1.59.0 # MSRV
-        os:
-          - ubuntu-latest
-          - macos-latest
-          - windows-latest
+        rust: ${{ fromJSON(needs.set-matrix.outputs.rust) }}
+        os: ${{ fromJSON(needs.set-matrix.outputs.os) }}
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v3
@@ -31,20 +85,22 @@ jobs:
           profile: minimal
           override: true
       - uses: Swatinem/rust-cache@v2
+        with:
+          workspaces: ${{ needs.set-workspace.outputs.workspaces }}
       - name: cargo test
-        run: cargo test --workspace --all-targets --all-features
+        run: |
+          cargo test --workspace --all-targets
+          cargo xtask exec --no-root -- cargo xtask dist
+        shell: bash
 
   coverage:
     name: Code coverage
+    needs: [set-matrix, set-workspace]
     strategy:
       fail-fast: false
       matrix:
-        rust:
-          - stable
-        os:
-          - ubuntu-latest
-          - macos-latest
-          - windows-latest
+        rust: [stable]
+        os: ${{ fromJSON(needs.set-matrix.outputs.os) }}
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v3
@@ -55,28 +111,35 @@ jobs:
           components: llvm-tools-preview
           override: true
       - uses: Swatinem/rust-cache@v2
+        with:
+          workspaces: ${{ needs.set-workspace.outputs.workspaces }}
       - name: Install cargo-llvm-cov
         uses: taiki-e/install-action@cargo-llvm-cov
       - name: Generate code coverage
-        run: cargo llvm-cov --all-features --workspace --lcov --output-path lcov.info
+        run: |
+          cargo llvm-cov --workspace --lcov --output-path lcov.info
+          # shellcheck disable=SC1090
+          (cd examples/simple; source <(cargo llvm-cov show-env --export-prefix); cargo xtask dist; cargo llvm-cov --no-run --lcov --output-path lcov.info)
+          # shellcheck disable=SC1090
+          (cd examples/with_command; source <(cargo llvm-cov show-env --export-prefix); cargo xtask dist; cargo llvm-cov --no-run --lcov --output-path lcov.info)
+        shell: bash
+        continue-on-error: ${{ matrix.os == 'macos-latest' }} # fails to collect coverage info on macos
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v3
         with:
-          files: lcov.info
+          files: |
+            lcov.info,examples/simple/lcov.info,examples/with_command/lcov.info
           fail_ci_if_error: true
 
   build:
     name: Build
+    needs: [set-matrix, set-workspace]
     strategy:
       fail-fast: false
       matrix:
-        rust:
-          - stable
-          - 1.59.0 # MSRV
-        os:
-          - ubuntu-latest
-          - macos-latest
-          - windows-latest
+        rust: ${{ fromJSON(needs.set-matrix.outputs.rust) }}
+        os: ${{ fromJSON(needs.set-matrix.outputs.os) }}
+        features: ${{ fromJSON(needs.set-matrix.outputs.features) }}
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v3
@@ -86,11 +149,44 @@ jobs:
           profile: minimal
           override: true
       - uses: Swatinem/rust-cache@v2
+        with:
+          key: ${{ matrix.features }}
+          workspaces: ${{ needs.set-workspace.outputs.workspaces }}
       - name: cargo build
-        run: cargo build --workspace --all-targets --all-features
+        run: |
+          cargo build --workspace --all-targets ${{ matrix.features }}
+          cargo xtask exec --no-root -- cargo build --workspace --all-targets
+        shell: bash
+
+  udeps:
+    name: Unused dependency
+    needs: [set-matrix, set-workspace]
+    strategy:
+      fail-fast: false
+      matrix:
+        os: ${{ fromJSON(needs.set-matrix.outputs.os) }}
+        features: ${{ fromJSON(needs.set-matrix.outputs.features) }}
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions-rs/toolchain@v1
+        with:
+          toolchain: nightly
+          profile: minimal
+          override: true
+      - uses: Swatinem/rust-cache@v2
+        with:
+          key: ${{ matrix.features }}
+          workspaces: ${{ needs.set-workspace.outputs.workspaces }}
+      - uses: taiki-e/install-action@cargo-udeps
+      - name: cargo udeps
+        run: |
+          cargo udeps --workspace --all-targets ${{ matrix.features }}
+          cargo xtask exec --no-root -- cargo udeps --workspace --all-targets
 
   rustfmt:
     name: Rustfmt
+    needs: set-workspace
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -101,11 +197,19 @@ jobs:
           components: rustfmt
           override: true
       - uses: Swatinem/rust-cache@v2
+        with:
+          workspaces: ${{ needs.set-workspace.outputs.workspaces }}
       - name: cargo fmt
-        run: cargo fmt --all --check
+        run: cargo xtask exec -- cargo fmt --all --check
+        shell: bash
 
   clippy:
     name: Clippy
+    needs: [set-matrix, set-workspace]
+    strategy:
+      fail-fast: false
+      matrix:
+        features: ${{ fromJSON(needs.set-matrix.outputs.features) }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -116,43 +220,41 @@ jobs:
           components: clippy
           override: true
       - uses: Swatinem/rust-cache@v2
-      - name: Check workflow permissions
-        id: check_permissions
-        uses: scherermichael-oss/action-has-permission@1.0.6
         with:
-          required-permission: write
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      - name: Run clippy action to produce annotations
-        uses: actions-rs/clippy-check@v1
-        if: ${{ steps.check_permissions.outputs.has-permission }}
-        with:
-          # GitHub displays the clippy job and its results as separate entries
-          name: Clippy (stable) Results
-          token: ${{ secrets.GITHUB_TOKEN }}
-          args: --all-features --all-targets -- -D warnings
-      - name: Run clippy manually without annotations
-        if: ${{ !steps.check_permissions.outputs.has-permission }}
-        run: cargo clippy --all-features --all-targets -- -D warnings
+          key: ${{ matrix.features }}
+          workspaces: ${{ needs.set-workspace.outputs.workspaces }}
+      - name: Run clippy
+        run: |
+          cargo clippy --workspace --all-targets ${{ matrix.features }} -- -D warnings
+          cargo xtask exec --no-root -- cargo clippy --workspace --all-targets -- -D warnings
+        shell: bash
 
   rustdoc:
     name: Docs
+    strategy:
+      fail-fast: false
+      matrix:
+        job:
+          - rust: stable
+            flags: ""
+          - rust: nightly
+            flags: "--cfg docsrs"
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
       - uses: actions-rs/toolchain@v1
         with:
-          toolchain: stable
+          toolchain: ${{ matrix.job.rust }}
           profile: minimal
           override: true
       - uses: Swatinem/rust-cache@v2
       - name: cargo doc
         uses: actions-rs/cargo@v1
         env:
-          RUSTDOCFLAGS: -D warnings
+          RUSTDOCFLAGS: -D warnings ${{ matrix.job.flags }}
         with:
           command: doc
-          args: --no-deps --document-private-items --all-features --workspace --examples
+          args: --no-deps --document-private-items --workspace --all-features --examples
 
   publish-dry-run:
     name: Publish dry run

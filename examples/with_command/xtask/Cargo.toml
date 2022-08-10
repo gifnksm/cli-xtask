@@ -1,0 +1,13 @@
+[package]
+name = "xtask"
+version = "0.1.0"
+edition = "2021"
+publish = false
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+clap = "3.2.17"
+cli-xtask = { path = "../../../" }
+eyre = "0.6.8"
+with_command = { path = ".." }

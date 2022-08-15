@@ -8,10 +8,16 @@ feature_clap_command! {
 pub struct TargetConfigBuilder<'a> {
     name: String,
     target: &'a Target,
-    #[cfg(any(feature = "command-build-man", feature = "command-build-completion"))]
+    #[cfg(any(
+        feature = "command-dist-build-man",
+        feature = "command-dist-build-completion"
+    ))]
     #[cfg_attr(
         docsrs,
-        doc(cfg(any(feature = "command-build-man", feature = "command-build-completion")))
+        doc(cfg(any(
+            feature = "command-dist-build-man",
+            feature = "command-dist-build-completion"
+        )))
     )]
     command: Option<clap::Command<'static>>,
 }
@@ -21,12 +27,15 @@ impl<'a> TargetConfigBuilder<'a> {
         Self {
             name: target.name.clone(),
             target,
-            #[cfg(any(feature = "command-build-man", feature = "command-build-completion"))]
+            #[cfg(any(
+                feature = "command-dist-build-man",
+                feature = "command-dist-build-completion"
+            ))]
             #[cfg_attr(
                 docsrs,
                 doc(cfg(any(
-                    feature = "command-build-man",
-                    feature = "command-build-completion"
+                    feature = "command-dist-build-man",
+                    feature = "command-dist-build-completion"
                 )))
             )]
             command: None,
@@ -57,12 +66,15 @@ impl<'a> TargetConfigBuilder<'a> {
         TargetConfig {
             name: self.name,
             target: self.target,
-            #[cfg(any(feature = "command-build-man", feature = "command-build-completion"))]
+            #[cfg(any(
+                feature = "command-dist-build-man",
+                feature = "command-dist-build-completion"
+            ))]
             #[cfg_attr(
                 docsrs,
                 doc(cfg(any(
-                    feature = "command-build-man",
-                    feature = "command-build-completion"
+                    feature = "command-dist-build-man",
+                    feature = "command-dist-build-completion"
                 )))
             )]
             command: self.command,
@@ -75,10 +87,16 @@ impl<'a> TargetConfigBuilder<'a> {
 pub struct TargetConfig<'a> {
     name: String,
     target: &'a Target,
-    #[cfg(any(feature = "command-build-man", feature = "command-build-completion"))]
+    #[cfg(any(
+        feature = "command-dist-build-man",
+        feature = "command-dist-build-completion"
+    ))]
     #[cfg_attr(
         docsrs,
-        doc(cfg(any(feature = "command-build-man", feature = "command-build-completion")))
+        doc(cfg(any(
+            feature = "command-dist-build-man",
+            feature = "command-dist-build-completion"
+        )))
     )]
     command: Option<clap::Command<'static>>,
 }

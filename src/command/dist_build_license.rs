@@ -2,13 +2,13 @@ use clap::Parser;
 
 use crate::DistConfig;
 
-/// `build-license` subcommand arguments.
+/// `dist-build-license` subcommand arguments.
 #[derive(Debug, Parser)]
-pub struct BuildLicense {}
+pub struct DistBuildLicense {}
 
-impl BuildLicense {
-    /// Execute `build-license` subcommand workflow
-    #[tracing::instrument(name = "build-license", skip_all, err)]
+impl DistBuildLicense {
+    /// Execute `dist-build-license` subcommand workflow
+    #[tracing::instrument(name = "dist-build-license", skip_all, err)]
     pub fn run(&self, config: &DistConfig) -> eyre::Result<()> {
         use once_cell::sync::Lazy;
         use regex::{Regex, RegexBuilder};

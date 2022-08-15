@@ -63,18 +63,18 @@ macro_rules! feature_command {
 macro_rules! feature_command_build {
     ($($item:item)*) => {
         $(
-            #[cfg(command_build)]
-            #[cfg_attr(docsrs, doc(cfg(feature = "command-build-*")))]
+            #[cfg(command_dist_build)]
+            #[cfg_attr(docsrs, doc(cfg(feature = "command-dist-build-*")))]
             $item
         )*
     };
 }
 
-macro_rules! feature_command_build_bin {
+macro_rules! feature_command_dist_build_bin {
     ($($item:item)*) => {
         $(
-            #[cfg(feature = "command-build-bin")]
-            #[cfg_attr(docsrs, doc(cfg(feature = "command-build-bin")))]
+            #[cfg(feature = "command-dist-build-bin")]
+            #[cfg_attr(docsrs, doc(cfg(feature = "command-dist-build-bin")))]
             $item
         )*
     }
@@ -83,8 +83,8 @@ macro_rules! feature_command_build_bin {
 macro_rules! feature_command_build_completion {
     ($($item:item)*) => {
         $(
-            #[cfg(feature = "command-build-completion")]
-            #[cfg_attr(docsrs, doc(cfg(feature = "command-build-completion")))]
+            #[cfg(feature = "command-dist-build-completion")]
+            #[cfg_attr(docsrs, doc(cfg(feature = "command-dist-build-completion")))]
             $item
         )*
     };
@@ -93,8 +93,8 @@ macro_rules! feature_command_build_completion {
 macro_rules! feature_command_build_doc {
     ($($item:item)*) => {
         $(
-            #[cfg(feature = "command-build-doc")]
-            #[cfg_attr(docsrs, doc(cfg(feature = "command-build-doc")))]
+            #[cfg(feature = "command-dist-build-doc")]
+            #[cfg_attr(docsrs, doc(cfg(feature = "command-dist-build-doc")))]
             $item
         )*
     };
@@ -103,8 +103,8 @@ macro_rules! feature_command_build_doc {
 macro_rules! feature_command_build_license {
     ($($item:item)*) => {
         $(
-            #[cfg(feature = "command-build-license")]
-            #[cfg_attr(docsrs, doc(cfg(feature = "command-build-license")))]
+            #[cfg(feature = "command-dist-build-license")]
+            #[cfg_attr(docsrs, doc(cfg(feature = "command-dist-build-license")))]
             $item
         )*
     };
@@ -113,8 +113,8 @@ macro_rules! feature_command_build_license {
 macro_rules! feature_command_build_man {
     ($($item:item)*) => {
         $(
-            #[cfg(feature = "command-build-man")]
-            #[cfg_attr(docsrs, doc(cfg(feature = "command-build-man")))]
+            #[cfg(feature = "command-dist-build-man")]
+            #[cfg_attr(docsrs, doc(cfg(feature = "command-dist-build-man")))]
             $item
         )*
     };
@@ -133,12 +133,12 @@ macro_rules! feature_command_dist {
 macro_rules! feature_clap_command {
     ($($item:item)*) => {
         $(
-            #[cfg(any(feature = "command-build-man", feature = "command-build-completion"))]
+            #[cfg(any(feature = "command-dist-build-man", feature = "command-dist-build-completion"))]
             #[cfg_attr(
                 docsrs,
                 doc(cfg(any(
-                    feature = "command-build-man",
-                    feature = "command-build-completion"
+                    feature = "command-dist-build-man",
+                    feature = "command-dist-build-completion"
                 )))
             )]
             $item

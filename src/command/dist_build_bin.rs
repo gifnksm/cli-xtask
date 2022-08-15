@@ -2,9 +2,9 @@ use clap::Parser;
 
 use crate::{cargo, DistConfig};
 
-/// `build-bin` subcommand arguments.
+/// `dist-build-bin` subcommand arguments.
 #[derive(Debug, Parser)]
-pub struct BuildBin {
+pub struct DistBuildBin {
     /// Target triple for the build
     #[clap(long = "target")]
     pub target_triple: Option<String>,
@@ -16,9 +16,9 @@ pub struct BuildBin {
     pub use_cross_if_needed: bool,
 }
 
-impl BuildBin {
-    /// Execute `build-bin` subcommand workflow.
-    #[tracing::instrument(name = "build-bin", skip_all, err)]
+impl DistBuildBin {
+    /// Execute `dist-build-bin` subcommand workflow.
+    #[tracing::instrument(name = "dist-build-bin", skip_all, err)]
     pub fn run(&self, config: &DistConfig) -> eyre::Result<()> {
         tracing::info!("Building executables...");
 

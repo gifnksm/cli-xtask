@@ -7,10 +7,10 @@ use crate::{archive, DistConfig};
 /// `dist` subcommand arguments.
 #[derive(Debug, Parser)]
 pub struct Dist {
-    #[cfg(command_build)]
-    #[cfg_attr(docsrs, doc(cfg(feature = "command-build-*")))]
+    #[cfg(command_dist_build)]
+    #[cfg_attr(docsrs, doc(cfg(feature = "command-dist-build-*")))]
     #[clap(flatten)]
-    build_args: super::Build,
+    dist_build_args: super::DistBuild,
 }
 
 impl Dist {
@@ -18,23 +18,23 @@ impl Dist {
     #[tracing::instrument(name = "dist", skip_all, err)]
     pub(crate) fn run(&self, config: &DistConfig) -> eyre::Result<()> {
         let Self {
-            #[cfg(command_build)]
-            build_args,
+            #[cfg(command_dist_build)]
+            dist_build_args,
         } = self;
 
-        #[cfg(command_build)]
-        build_args.run(config)?;
+        #[cfg(command_dist_build)]
+        dist_build_args.run(config)?;
 
         let dist_dir = config.dist_target_directory();
         fs::create_dir_all(&dist_dir)?;
 
-        #[cfg(feature = "command-build-bin")]
-        let target_triple = build_args
-            .build_bin_args
+        #[cfg(feature = "command-dist-build-bin")]
+        let target_triple = dist_build_args
+            .dist_build_bin_args
             .target_triple
             .as_deref()
             .unwrap_or(env!("DEFAULT_TARGET"));
-        #[cfg(not(feature = "command-build-bin"))]
+        #[cfg(not(feature = "command-dist-build-bin"))]
         let target_triple = env!("DEFAULT_TARGET");
 
         let archive_name = format!("{}-{}.tar.gz", config.name(), target_triple);

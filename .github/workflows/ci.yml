@@ -15,14 +15,9 @@ jobs:
     outputs:
       rust: ${{ steps.set-values.outputs.rust }}
       os: ${{ steps.set-values.outputs.os }}
-      features: ${{ steps.set-values.outputs.features}}
     steps:
       - uses: actions/checkout@v3
-      - uses: actions-rs/toolchain@v1
-        with:
-          toolchain: stable
-          profile: minimal
-          override: true
+      - uses: dtolnay/rust-toolchain@stable
       - uses: Swatinem/rust-cache@v2
       - name: Set matrix values
         id: set-values
@@ -38,27 +33,13 @@ jobs:
           os="$(echo '["ubuntu-latest", "macos-latest", "windows-latest"]' | jq -c)"
           echo "::set-output name=os::${os}"
 
-          features="$(echo "${root_package}" | jq '.features | keys | map("--features " + . + " --no-default-features")')"
-          if [[ "$(echo "${features}" | jq 'length')" -gt "0" ]]; then
-            features="$(echo "${features}" | jq -c '. + ["--no-default-features", "--all-features"]')"
-          else
-            features='[""]'
-          fi
-          echo "::set-output name=features::${features}"
-
-          jq -n --argjson rust "${rust}" --argjson os "${os}" --argjson features "${features}" '{ rust: $rust, os: $os, features: $features }'
-
   set-workspace:
     runs-on: ubuntu-latest
     outputs:
       workspaces: ${{ steps.set-workspace.outputs.workspaces }}
     steps:
       - uses: actions/checkout@v3
-      - uses: actions-rs/toolchain@v1
-        with:
-          toolchain: stable
-          profile: minimal
-          override: true
+      - uses: dtolnay/rust-toolchain@stable
       - uses: Swatinem/rust-cache@v2
       - name: Set workspace paths
         id: set-workspace
@@ -79,17 +60,16 @@ jobs:
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v3
-      - uses: actions-rs/toolchain@v1
+      - uses: dtolnay/rust-toolchain@v1
         with:
           toolchain: ${{ matrix.rust }}
-          profile: minimal
-          override: true
       - uses: Swatinem/rust-cache@v2
         with:
           workspaces: ${{ needs.set-workspace.outputs.workspaces }}
-      - name: cargo test
+      - name: cargo xtask test
         run: |
-          cargo test --workspace --all-targets
+          # DO NOT USE `--all-targets` here, doctests are not built with `--all-targets`
+          cargo xtask test
           cargo xtask exec --no-root -- cargo xtask dist
         shell: bash
 
@@ -104,12 +84,10 @@ jobs:
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v3
-      - uses: actions-rs/toolchain@v1
+      - uses: dtolnay/rust-toolchain@v1
         with:
           toolchain: ${{ matrix.rust }}
-          profile: minimal
           components: llvm-tools-preview
-          override: true
       - uses: Swatinem/rust-cache@v2
         with:
           workspaces: ${{ needs.set-workspace.outputs.workspaces }}
@@ -117,18 +95,15 @@ jobs:
         uses: taiki-e/install-action@cargo-llvm-cov
       - name: Generate code coverage
         run: |
-          cargo llvm-cov --workspace --lcov --output-path lcov.info
-          # shellcheck disable=SC1090
-          (cd examples/simple; source <(cargo llvm-cov show-env --export-prefix); cargo xtask dist; cargo llvm-cov --no-run --lcov --output-path lcov.info)
-          # shellcheck disable=SC1090
-          (cd examples/with_command; source <(cargo llvm-cov show-env --export-prefix); cargo xtask dist; cargo llvm-cov --no-run --lcov --output-path lcov.info)
+          cargo xtask exec -- cargo llvm-cov --workspace --lcov --output-path lcov-test.info
+          cargo xtask exec --no-root -- cargo llvm-cov run --lcov --output-path lcov-xtask-dist.info -p xtask -- dist
         shell: bash
         continue-on-error: ${{ matrix.os == 'macos-latest' }} # fails to collect coverage info on macos
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v3
         with:
           files: |
-            lcov.info,examples/simple/lcov.info,examples/with_command/lcov.info
+            **/lcov-*.info
           fail_ci_if_error: true
 
   build:
@@ -139,94 +114,39 @@ jobs:
       matrix:
         rust: ${{ fromJSON(needs.set-matrix.outputs.rust) }}
         os: ${{ fromJSON(needs.set-matrix.outputs.os) }}
-        features: ${{ fromJSON(needs.set-matrix.outputs.features) }}
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v3
-      - uses: actions-rs/toolchain@v1
+      - uses: dtolnay/rust-toolchain@v1
         with:
           toolchain: ${{ matrix.rust }}
-          profile: minimal
-          override: true
       - uses: Swatinem/rust-cache@v2
         with:
-          key: ${{ matrix.features }}
           workspaces: ${{ needs.set-workspace.outputs.workspaces }}
-      - name: cargo build
-        run: |
-          cargo build --workspace --all-targets ${{ matrix.features }}
-          cargo xtask exec --no-root -- cargo build --workspace --all-targets
+      - name: cargo xtask build
+        run: cargo xtask build -- --all-targets
         shell: bash
 
-  udeps:
-    name: Unused dependency
+  lint:
+    name: Lint
     needs: [set-matrix, set-workspace]
     strategy:
       fail-fast: false
       matrix:
         os: ${{ fromJSON(needs.set-matrix.outputs.os) }}
-        features: ${{ fromJSON(needs.set-matrix.outputs.features) }}
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v3
-      - uses: actions-rs/toolchain@v1
+      - uses: dtolnay/rust-toolchain@stable
         with:
-          toolchain: nightly
-          profile: minimal
-          override: true
+          components: rustfmt, clippy
       - uses: Swatinem/rust-cache@v2
         with:
-          key: ${{ matrix.features }}
           workspaces: ${{ needs.set-workspace.outputs.workspaces }}
       - uses: taiki-e/install-action@cargo-udeps
-      - name: cargo udeps
-        run: |
-          cargo udeps --workspace --all-targets ${{ matrix.features }}
-          cargo xtask exec --no-root -- cargo udeps --workspace --all-targets
-
-  rustfmt:
-    name: Rustfmt
-    needs: set-workspace
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      - uses: actions-rs/toolchain@v1
-        with:
-          toolchain: stable
-          profile: minimal
-          components: rustfmt
-          override: true
-      - uses: Swatinem/rust-cache@v2
-        with:
-          workspaces: ${{ needs.set-workspace.outputs.workspaces }}
-      - name: cargo fmt
-        run: cargo xtask exec -- cargo fmt --all --check
+      - run: rustup toolchain add nightly --profile minimal
         shell: bash
-
-  clippy:
-    name: Clippy
-    needs: [set-matrix, set-workspace]
-    strategy:
-      fail-fast: false
-      matrix:
-        features: ${{ fromJSON(needs.set-matrix.outputs.features) }}
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      - uses: actions-rs/toolchain@v1
-        with:
-          toolchain: stable
-          profile: minimal
-          components: clippy
-          override: true
-      - uses: Swatinem/rust-cache@v2
-        with:
-          key: ${{ matrix.features }}
-          workspaces: ${{ needs.set-workspace.outputs.workspaces }}
-      - name: Run clippy
-        run: |
-          cargo clippy --workspace --all-targets ${{ matrix.features }} -- -D warnings
-          cargo xtask exec --no-root -- cargo clippy --workspace --all-targets -- -D warnings
+      - run: cargo xtask lint
         shell: bash
 
   rustdoc:
@@ -242,11 +162,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - uses: actions-rs/toolchain@v1
+      - uses: dtolnay/rust-toolchain@v1
         with:
           toolchain: ${{ matrix.job.rust }}
-          profile: minimal
-          override: true
       - uses: Swatinem/rust-cache@v2
       - name: cargo doc
         uses: actions-rs/cargo@v1
@@ -261,11 +179,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - uses: actions-rs/toolchain@v1
-        with:
-          toolchain: stable
-          profile: minimal
-          override: true
+      - uses: dtolnay/rust-toolchain@stable
       - uses: Swatinem/rust-cache@v2
       - uses: actions-rs/cargo@v1
         with:

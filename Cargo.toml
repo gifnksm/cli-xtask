@@ -26,11 +26,11 @@ default = [
     "error-handler",
     "archive",
     "cargo",
-    "command-build-bin",
-    "command-build-completion",
-    "command-build-doc",
-    "command-build-license",
-    "command-build-man",
+    "command-dist-build-bin",
+    "command-dist-build-completion",
+    "command-dist-build-doc",
+    "command-dist-build-license",
+    "command-dist-build-man",
     "command-dist",
 ]
 
@@ -41,11 +41,11 @@ error-handler = ["dep:color-eyre"]
 archive = ["dep:flate2", "dep:tar"]
 cargo = []
 
-command-build-bin = ["cargo", "dep:clap"]
-command-build-completion = ["dep:clap", "dep:clap_complete"]
-command-build-doc = ["dep:clap", "dep:regex"]
-command-build-license = ["dep:regex", "dep:clap"]
-command-build-man = ["dep:clap", "dep:clap_mangen", "dep:time"]
+command-dist-build-bin = ["cargo", "dep:clap"]
+command-dist-build-completion = ["dep:clap", "dep:clap_complete"]
+command-dist-build-doc = ["dep:clap", "dep:regex"]
+command-dist-build-license = ["dep:regex", "dep:clap"]
+command-dist-build-man = ["dep:clap", "dep:clap_mangen", "dep:time"]
 command-dist = ["archive", "dep:clap"]
 
 [dependencies]

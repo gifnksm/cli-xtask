@@ -1,4 +1,7 @@
-#[cfg(any(feature = "command-build-license", feature = "command-build-doc"))]
+#[cfg(any(
+    feature = "command-dist-build-license",
+    feature = "command-dist-build-doc"
+))]
 use cargo_metadata::camino::Utf8PathBuf;
 use cargo_metadata::{camino::Utf8Path, Package};
 
@@ -10,9 +13,9 @@ pub struct PackageConfigBuilder<'a> {
     name: String,
     package: &'a Package,
     targets: Option<Vec<TargetConfig<'a>>>,
-    #[cfg(feature = "command-build-license")]
+    #[cfg(feature = "command-dist-build-license")]
     license_files: Option<Vec<Utf8PathBuf>>,
-    #[cfg(feature = "command-build-doc")]
+    #[cfg(feature = "command-dist-build-doc")]
     documents: Option<Vec<Utf8PathBuf>>,
 }
 
@@ -22,9 +25,9 @@ impl<'a> PackageConfigBuilder<'a> {
             name: package.name.clone(),
             package,
             targets: None,
-            #[cfg(feature = "command-build-license")]
+            #[cfg(feature = "command-dist-build-license")]
             license_files: None,
-            #[cfg(feature = "command-build-doc")]
+            #[cfg(feature = "command-dist-build-doc")]
             documents: None,
         }
     }
@@ -86,9 +89,9 @@ impl<'a> PackageConfigBuilder<'a> {
             name: self.name,
             package: self.package,
             targets: self.targets,
-            #[cfg(feature = "command-build-license")]
+            #[cfg(feature = "command-dist-build-license")]
             license_files: self.license_files,
-            #[cfg(feature = "command-build-doc")]
+            #[cfg(feature = "command-dist-build-doc")]
             documents: self.documents,
         }
     }
@@ -100,9 +103,9 @@ pub struct PackageConfig<'a> {
     name: String,
     package: &'a Package,
     targets: Option<Vec<TargetConfig<'a>>>,
-    #[cfg(feature = "command-build-license")]
+    #[cfg(feature = "command-dist-build-license")]
     license_files: Option<Vec<Utf8PathBuf>>,
-    #[cfg(feature = "command-build-doc")]
+    #[cfg(feature = "command-dist-build-doc")]
     documents: Option<Vec<Utf8PathBuf>>,
 }
 

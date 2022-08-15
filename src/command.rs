@@ -1,33 +1,33 @@
 use crate::DistConfig;
 
 feature_command_build! {
-    mod build;
-    pub use build::Build;
+    mod dist_build;
+    pub use dist_build::DistBuild;
 }
 
-feature_command_build_bin! {
-    mod build_bin;
-    pub use build_bin::BuildBin;
+feature_command_dist_build_bin! {
+    mod dist_build_bin;
+    pub use dist_build_bin::DistBuildBin;
 }
 
 feature_command_build_completion! {
-    mod build_completion;
-    pub use build_completion::BuildCompletion;
+    mod dist_build_completion;
+    pub use dist_build_completion::DistBuildCompletion;
 }
 
 feature_command_build_doc! {
-    mod build_doc;
-    pub use build_doc::BuildDoc;
+    mod dist_build_doc;
+    pub use dist_build_doc::DistBuildDoc;
 }
 
 feature_command_build_license! {
-    mod build_license;
-    pub use build_license::BuildLicense;
+    mod dist_build_license;
+    pub use dist_build_license::DistBuildLicense;
 }
 
 feature_command_build_man! {
-    mod build_man;
-    pub use build_man::BuildMan;
+    mod dist_build_man;
+    pub use dist_build_man::DistBuildMan;
 }
 
 feature_command_dist! {
@@ -38,35 +38,35 @@ feature_command_dist! {
 /// `xtask` command arguments.
 #[derive(Debug, clap::Parser)]
 pub enum Command {
-    /// Build all artifacts
-    #[cfg(command_build)]
-    #[cfg_attr(docsrs, doc(cfg(feature = "command-build-*")))]
-    Build(Build),
+    /// Build all artifacts to distribute
+    #[cfg(command_dist_build)]
+    #[cfg_attr(docsrs, doc(cfg(feature = "command-dist-build-*")))]
+    DistBuild(DistBuild),
 
     /// Build the release binaries
-    #[cfg(feature = "command-build-bin")]
-    #[cfg_attr(docsrs, doc(cfg(feature = "command-build-bin")))]
-    BuildBin(BuildBin),
+    #[cfg(feature = "command-dist-build-bin")]
+    #[cfg_attr(docsrs, doc(cfg(feature = "command-dist-build-bin")))]
+    DistBuildBin(DistBuildBin),
 
     /// Build the shell completion files
-    #[cfg(feature = "command-build-completion")]
-    #[cfg_attr(docsrs, doc(cfg(feature = "command-build-completion")))]
-    BuildCompletion(BuildCompletion),
+    #[cfg(feature = "command-dist-build-completion")]
+    #[cfg_attr(docsrs, doc(cfg(feature = "command-dist-build-completion")))]
+    DistBuildCompletion(DistBuildCompletion),
 
     /// Build the documents
-    #[cfg(feature = "command-build-doc")]
-    #[cfg_attr(docsrs, doc(cfg(feature = "command-build-doc")))]
-    BuildDoc(BuildDoc),
+    #[cfg(feature = "command-dist-build-doc")]
+    #[cfg_attr(docsrs, doc(cfg(feature = "command-dist-build-doc")))]
+    DistBuildDoc(DistBuildDoc),
 
     /// Build the license files
-    #[cfg(feature = "command-build-license")]
-    #[cfg_attr(docsrs, doc(cfg(feature = "command-build-license")))]
-    BuildLicense(BuildLicense),
+    #[cfg(feature = "command-dist-build-license")]
+    #[cfg_attr(docsrs, doc(cfg(feature = "command-dist-build-license")))]
+    DistBuildLicense(DistBuildLicense),
 
     /// Build the man pages
-    #[cfg(feature = "command-build-man")]
-    #[cfg_attr(docsrs, doc(cfg(feature = "command-build-man")))]
-    BuildMan(BuildMan),
+    #[cfg(feature = "command-dist-build-man")]
+    #[cfg_attr(docsrs, doc(cfg(feature = "command-dist-build-man")))]
+    DistBuildMan(DistBuildMan),
 
     /// Crate the archive for distribution
     #[cfg(feature = "command-dist")]
@@ -78,23 +78,23 @@ impl Command {
     /// Execute subcommand workflow.
     pub fn run(&self, config: &DistConfig) -> eyre::Result<()> {
         match self {
-            #[cfg(command_build)]
-            Self::Build(args) => args.run(config),
+            #[cfg(command_dist_build)]
+            Self::DistBuild(args) => args.run(config),
 
-            #[cfg(feature = "command-build-bin")]
-            Self::BuildBin(args) => args.run(config),
+            #[cfg(feature = "command-dist-build-bin")]
+            Self::DistBuildBin(args) => args.run(config),
 
-            #[cfg(feature = "command-build-completion")]
-            Self::BuildCompletion(args) => args.run(config),
+            #[cfg(feature = "command-dist-build-completion")]
+            Self::DistBuildCompletion(args) => args.run(config),
 
-            #[cfg(feature = "command-build-doc")]
-            Self::BuildDoc(args) => args.run(config),
+            #[cfg(feature = "command-dist-build-doc")]
+            Self::DistBuildDoc(args) => args.run(config),
 
-            #[cfg(feature = "command-build-license")]
-            Self::BuildLicense(args) => args.run(config),
+            #[cfg(feature = "command-dist-build-license")]
+            Self::DistBuildLicense(args) => args.run(config),
 
-            #[cfg(feature = "command-build-man")]
-            Self::BuildMan(args) => args.run(config),
+            #[cfg(feature = "command-dist-build-man")]
+            Self::DistBuildMan(args) => args.run(config),
 
             #[cfg(feature = "command-dist")]
             Self::Dist(args) => args.run(config),

@@ -7,13 +7,13 @@ use time::OffsetDateTime;
 
 use crate::DistConfig;
 
-/// `build-man` subcommand arguments.
+/// `dist-build-man` subcommand arguments.
 #[derive(Debug, Parser)]
-pub struct BuildMan {}
+pub struct DistBuildMan {}
 
-impl BuildMan {
-    /// Execute `build-man` subcommand workflow
-    #[tracing::instrument(name = "build-man", skip_all, err)]
+impl DistBuildMan {
+    /// Execute `dist-build-man` subcommand workflow
+    #[tracing::instrument(name = "dist-build-man", skip_all, err)]
     pub fn run(&self, config: &DistConfig) -> eyre::Result<()> {
         tracing::info!("Building man pages...");
 
@@ -27,7 +27,7 @@ impl BuildMan {
         for package in config.packages() {
             for target in package.targets().into_iter().flatten() {
                 if let Some(cmd) = target.command() {
-                    let it = build_man_pages(&man_dir, package.name(), cmd.clone(), section)?;
+                    let it = dist_build_man_pages(&man_dir, package.name(), cmd.clone(), section)?;
                     for res in it {
                         let (path, man) = res?;
                         let mut file = crate::fs::create_file(&path)?;
@@ -41,7 +41,7 @@ impl BuildMan {
     }
 }
 
-fn build_man_pages<'a>(
+fn dist_build_man_pages<'a>(
     man_dir: &Utf8Path,
     package_name: &str,
     mut cmd: clap::Command<'a>,

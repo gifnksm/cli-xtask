@@ -6,9 +6,9 @@ fn main() {
     }
 
     let command_build_enabled = std::env::vars()
-        .any(|(name, var)| name.starts_with("CARGO_FEATURE_COMMAND_BUILD_") && var == "1");
+        .any(|(name, var)| name.starts_with("CARGO_FEATURE_COMMAND_DIST_BUILD_") && var == "1");
     if command_build_enabled {
-        println!("cargo:rustc-cfg=command_build");
+        println!("cargo:rustc-cfg=command_dist_build");
     }
 
     println!(

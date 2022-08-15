@@ -1,12 +1,10 @@
-use std::process::Command;
-
-use cli_xtask::fs::ToRelative;
-
 #[derive(Debug, clap::Parser)]
 pub(crate) struct Args {
-    /// Don's execute command on the root workspace.
-    #[clap(long)]
+    /// Do not execute command on the root workspace.
+    #[clap(long, conflicts_with = "root-only")]
     no_root: bool,
+    #[clap(long)]
+    root_only: bool,
     /// Command to execute
     command: String,
     /// Arguments to pass to the command
@@ -14,36 +12,27 @@ pub(crate) struct Args {
 }
 
 impl Args {
+    #[tracing::instrument(name = "exec", skip_all, err)]
     pub(crate) fn run(&self) -> eyre::Result<()> {
         let Self {
             no_root,
+            root_only,
             command,
             command_options,
         } = self;
 
-        let metadata = crate::metadata(!no_root)?;
-
-        for metadata in metadata {
-            let workspace_root = &metadata.workspace_root;
-            tracing::info!("Executing command on {}", workspace_root.to_relative());
-            tracing::info!("  $ {} {}", command, command_options.join(" "));
-            let status = Command::new(command)
-                .args(command_options)
-                .current_dir(workspace_root)
-                .status()?;
-            if !status.success() {
-                tracing::error!(
-                    "Command for {} failed with status {}",
-                    workspace_root.to_relative(),
-                    status.code().unwrap()
-                );
-                return Err(eyre::eyre!(
-                    "command for {} failed with status {}",
-                    workspace_root.to_relative(),
-                    status.code().unwrap()
-                ));
+        let current_dir = std::env::current_dir()?;
+        for (workspace_root, metadata) in crate::all_workspaces()? {
+            let is_root = workspace_root == current_dir;
+            if is_root && *no_root {
+                continue;
             }
+            if !is_root && *root_only {
+                continue;
+            }
+            crate::execute_on(&metadata, command, command_options)?;
         }
+
         Ok(())
     }
 }

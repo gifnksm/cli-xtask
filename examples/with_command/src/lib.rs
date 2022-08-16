@@ -1,3 +1,5 @@
+//! Example CLI application.
+
 use std::path::PathBuf;
 
 #[derive(Debug, clap::Parser)]

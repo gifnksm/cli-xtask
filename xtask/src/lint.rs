@@ -10,6 +10,9 @@ impl Args {
             // cargo fmt --all --check
             crate::execute_on(&metadata, "cargo", ["fmt", "--all", "--check"])?;
 
+            // cargo rdme --check
+            crate::execute_on(&metadata, "cargo", ["rdme", "--check"])?;
+
             for package in metadata.workspace_packages() {
                 for feature_args in crate::feature_combinations(package) {
                     // rustup run nightly cargo udeps --package <pkg> <features>

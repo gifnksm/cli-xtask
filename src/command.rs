@@ -1,4 +1,4 @@
-use crate::DistConfig;
+use crate::Config;
 
 feature_command_dist_archive! {
     mod dist_archive;
@@ -96,34 +96,34 @@ pub enum Command {
 
 impl Command {
     /// Execute subcommand workflow.
-    pub fn run(&self, config: &DistConfig) -> eyre::Result<()> {
+    pub fn run(&self, config: &Config) -> eyre::Result<()> {
         match self {
             #[cfg(feature = "command-dist-archive")]
-            Self::DistArchive(args) => args.run(config),
+            Self::DistArchive(args) => args.run(config.dist()?),
 
             #[cfg(command_dist_build)]
-            Self::DistBuild(args) => args.run(config),
+            Self::DistBuild(args) => args.run(config.dist()?),
 
             #[cfg(feature = "command-dist-build-bin")]
-            Self::DistBuildBin(args) => args.run(config),
+            Self::DistBuildBin(args) => args.run(config.dist()?),
 
             #[cfg(feature = "command-dist-build-completion")]
-            Self::DistBuildCompletion(args) => args.run(config),
+            Self::DistBuildCompletion(args) => args.run(config.dist()?),
 
             #[cfg(feature = "command-dist-build-doc")]
-            Self::DistBuildDoc(args) => args.run(config),
+            Self::DistBuildDoc(args) => args.run(config.dist()?),
 
             #[cfg(feature = "command-dist-build-license")]
-            Self::DistBuildLicense(args) => args.run(config),
+            Self::DistBuildLicense(args) => args.run(config.dist()?),
 
             #[cfg(feature = "command-dist-build-man")]
-            Self::DistBuildMan(args) => args.run(config),
+            Self::DistBuildMan(args) => args.run(config.dist()?),
 
             #[cfg(feature = "command-dist-build-readme")]
-            Self::DistBuildReadme(args) => args.run(config),
+            Self::DistBuildReadme(args) => args.run(config.dist()?),
 
             #[cfg(feature = "command-dist")]
-            Self::Dist(args) => args.run(config),
+            Self::Dist(args) => args.run(config.dist()?),
         }
     }
 }

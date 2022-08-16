@@ -83,8 +83,8 @@ pub mod fs;
 
 mod config;
 pub use config::{
-    DistConfig, DistConfigBuilder, PackageConfig, PackageConfigBuilder, TargetConfig,
-    TargetConfigBuilder,
+    Config, ConfigBuilder, DistConfig, DistConfigBuilder, PackageConfig, PackageConfigBuilder,
+    TargetConfig, TargetConfigBuilder,
 };
 
 /// Returns a cargo workspace metadata.
@@ -121,18 +121,18 @@ feature_error_handler! {
 feature_main! {
     /// Entry point for xtask crate.
     pub fn main() -> eyre::Result<()> {
-        #[cfg(feature = "error-handler")]
         install_error_handler()?;
-
-        #[cfg(feature = "logger")]
         install_logger()?;
+
+        tracing::info!("Running on {}", std::env::current_dir()?.display());
 
         #[cfg(command)]
         {
             let metadata = cargo_workspace();
             let (dist, package) = DistConfigBuilder::from_root_package(metadata)?;
             let dist = dist.package(package.all_binaries().build()).build();
-            <Command as clap::Parser>::parse().run(&dist)?;
+            let config = ConfigBuilder::new().dist(dist).build();
+            <Command as clap::Parser>::parse().run(&config)?;
         }
 
         Ok(())

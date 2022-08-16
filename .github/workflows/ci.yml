@@ -98,7 +98,6 @@ jobs:
           cargo xtask exec -- cargo llvm-cov --workspace --lcov --output-path lcov-test.info
           cargo xtask exec --no-root -- cargo llvm-cov run --lcov --output-path lcov-xtask-dist.info -p xtask -- dist
         shell: bash
-        continue-on-error: ${{ matrix.os == 'macos-latest' }} # fails to collect coverage info on macos
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v3
         with:

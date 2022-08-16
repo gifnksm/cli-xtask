@@ -67,7 +67,7 @@ impl<'a> PackageConfigBuilder<'a> {
         }
     }
 
-    feature_command_build_license! {
+    feature_command_dist_build_license! {
         /// Adds a package license files to the list of files to be distributed.
         pub fn license_files(mut self, files: impl IntoIterator<Item = Utf8PathBuf>) -> Self {
             self.license_files = Some(files.into_iter().collect());
@@ -75,7 +75,7 @@ impl<'a> PackageConfigBuilder<'a> {
         }
     }
 
-    feature_command_build_doc! {
+    feature_command_dist_build_doc! {
         /// Adds a package documentation files to the list of files to be distributed.
         pub fn documents(mut self, files: impl IntoIterator<Item = Utf8PathBuf>) -> Self {
             self.documents = Some(files.into_iter().collect());
@@ -130,14 +130,14 @@ impl<'a> PackageConfig<'a> {
         self.package.manifest_path.parent().unwrap()
     }
 
-    feature_command_build_license! {
+    feature_command_dist_build_license! {
         /// Returns the list of license files to be distributed.
         pub fn license_files(&self) -> Option<&[Utf8PathBuf]> {
             self.license_files.as_deref()
         }
     }
 
-    feature_command_build_doc! {
+    feature_command_dist_build_doc! {
         /// Returns the list of documentation files to be distributed.
         pub fn documents(&self) -> Option<&[Utf8PathBuf]> {
             self.documents.as_deref()

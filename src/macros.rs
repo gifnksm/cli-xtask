@@ -60,7 +60,27 @@ macro_rules! feature_command {
     };
 }
 
-macro_rules! feature_command_build {
+macro_rules! feature_command_dist {
+    ($($item:item)*) => {
+        $(
+            #[cfg(feature = "command-dist")]
+            #[cfg_attr(docsrs, doc(cfg(feature = "command-dist")))]
+            $item
+        )*
+    };
+}
+
+macro_rules! feature_command_dist_archive {
+    ($($item:item)*) => {
+        $(
+            #[cfg(feature = "command-dist-archive")]
+            #[cfg_attr(docsrs, doc(cfg(feature = "command-dist-archive")))]
+            $item
+        )*
+    };
+}
+
+macro_rules! feature_command_dist_build {
     ($($item:item)*) => {
         $(
             #[cfg(command_dist_build)]
@@ -80,7 +100,7 @@ macro_rules! feature_command_dist_build_bin {
     }
 }
 
-macro_rules! feature_command_build_completion {
+macro_rules! feature_command_dist_build_completion {
     ($($item:item)*) => {
         $(
             #[cfg(feature = "command-dist-build-completion")]
@@ -90,7 +110,7 @@ macro_rules! feature_command_build_completion {
     };
 }
 
-macro_rules! feature_command_build_doc {
+macro_rules! feature_command_dist_build_doc {
     ($($item:item)*) => {
         $(
             #[cfg(feature = "command-dist-build-doc")]
@@ -100,7 +120,7 @@ macro_rules! feature_command_build_doc {
     };
 }
 
-macro_rules! feature_command_build_license {
+macro_rules! feature_command_dist_build_license {
     ($($item:item)*) => {
         $(
             #[cfg(feature = "command-dist-build-license")]
@@ -110,21 +130,11 @@ macro_rules! feature_command_build_license {
     };
 }
 
-macro_rules! feature_command_build_man {
+macro_rules! feature_command_dist_build_man {
     ($($item:item)*) => {
         $(
             #[cfg(feature = "command-dist-build-man")]
             #[cfg_attr(docsrs, doc(cfg(feature = "command-dist-build-man")))]
-            $item
-        )*
-    };
-}
-
-macro_rules! feature_command_dist {
-    ($($item:item)*) => {
-        $(
-            #[cfg(feature = "command-dist")]
-            #[cfg_attr(docsrs, doc(cfg(feature = "command-dist")))]
             $item
         )*
     };

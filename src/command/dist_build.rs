@@ -2,7 +2,7 @@ use clap::Parser;
 
 use crate::DistConfig;
 
-/// `dbuild` subcommand arguments.
+/// `dist-build` subcommand arguments.
 #[derive(Debug, Parser)]
 pub struct DistBuild {
     /// `dist-build-bin` subcommand arguments.

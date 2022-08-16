@@ -1,6 +1,11 @@
 use crate::DistConfig;
 
-feature_command_build! {
+feature_command_dist_archive! {
+    mod dist_archive;
+    pub use dist_archive::DistArchive;
+}
+
+feature_command_dist_build! {
     mod dist_build;
     pub use dist_build::DistBuild;
 }
@@ -10,22 +15,22 @@ feature_command_dist_build_bin! {
     pub use dist_build_bin::DistBuildBin;
 }
 
-feature_command_build_completion! {
+feature_command_dist_build_completion! {
     mod dist_build_completion;
     pub use dist_build_completion::DistBuildCompletion;
 }
 
-feature_command_build_doc! {
+feature_command_dist_build_doc! {
     mod dist_build_doc;
     pub use dist_build_doc::DistBuildDoc;
 }
 
-feature_command_build_license! {
+feature_command_dist_build_license! {
     mod dist_build_license;
     pub use dist_build_license::DistBuildLicense;
 }
 
-feature_command_build_man! {
+feature_command_dist_build_man! {
     mod dist_build_man;
     pub use dist_build_man::DistBuildMan;
 }
@@ -38,6 +43,11 @@ feature_command_dist! {
 /// `xtask` command arguments.
 #[derive(Debug, clap::Parser)]
 pub enum Command {
+    /// Create the archive file for distribution
+    #[cfg(feature = "command-dist-archive")]
+    #[cfg_attr(docsrs, doc(cfg(feature = "command-dist-archive")))]
+    DistArchive(DistArchive),
+
     /// Build all artifacts for distribution
     #[cfg(command_dist_build)]
     #[cfg_attr(docsrs, doc(cfg(feature = "command-dist-build-*")))]
@@ -78,6 +88,9 @@ impl Command {
     /// Execute subcommand workflow.
     pub fn run(&self, config: &DistConfig) -> eyre::Result<()> {
         match self {
+            #[cfg(feature = "command-dist-archive")]
+            Self::DistArchive(args) => args.run(config),
+
             #[cfg(command_dist_build)]
             Self::DistBuild(args) => args.run(config),
 

@@ -37,8 +37,8 @@ pub struct DistBuild {
 }
 
 impl DistBuild {
-    /// Execute `dbuild` subcommand workflow.
-    #[tracing::instrument(name = "build", skip_all, err)]
+    /// Execute `dist-build` subcommand workflow.
+    #[tracing::instrument(name = "dist-build", parent = None, skip_all, err)]
     pub fn run(&self, config: &DistConfig) -> eyre::Result<()> {
         let Self {
             #[cfg(feature = "command-dist-build-bin")]

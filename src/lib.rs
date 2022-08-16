@@ -56,8 +56,8 @@ pub use config::{
     TargetConfigBuilder,
 };
 
-/// Get a cargo workspace metadata.
-pub fn get_metadata() -> &'static Metadata {
+/// Returns a cargo workspace metadata.
+pub fn cargo_workspace() -> &'static Metadata {
     static METADATA: Lazy<Metadata> = Lazy::new(|| MetadataCommand::new().exec().unwrap());
     &*METADATA
 }
@@ -98,7 +98,7 @@ feature_main! {
 
         #[cfg(command)]
         {
-            let metadata = get_metadata();
+            let metadata = cargo_workspace();
             let (dist, package) = DistConfigBuilder::from_root_package(metadata)?;
             let dist = dist.package(package.all_binaries().build()).build();
             <Command as clap::Parser>::parse().run(&dist)?;

@@ -8,21 +8,21 @@ use cargo_metadata::{
 };
 use eyre::ensure;
 
-/// Execute a `cargo build` command.
+/// Executes a `cargo build` command and returns paths to the build artifacts.
 ///
 /// # Examples
 ///
 /// ```no_run
 /// # fn main() -> eyre::Result<()> {
 /// // executes cargo build
-/// let metadata = cli_xtask::get_metadata();
+/// let metadata = cli_xtask::cargo_workspace();
 /// for bin in cli_xtask::cargo::build(metadata, None, None, None, false, None)? {
 ///     let bin = bin?;
 ///     println!("{bin}");
 /// }
 ///
 /// // executes cross build --profile target --bin foo --target aarch64-unknown-linux-gnu
-/// let metadata = cli_xtask::get_metadata();
+/// let metadata = cli_xtask::cargo_workspace();
 /// let package = metadata.root_package().unwrap();
 /// let target = package.targets.iter().find(|t| t.name == "foo").unwrap();
 /// for bin in cli_xtask::cargo::build(metadata, Some(&package), Some(target), Some("release"), true, Some("aarch64-unknown-linux-gnu"))? {
@@ -48,11 +48,17 @@ pub fn build<'a>(
         args.extend(["--package", package.name.as_str()]);
     }
 
-    let kind_opt = target
-        .map(|t| format!("--{}", t.kind[0])) // --bin <name>, --lib <name>, etc.
-        .unwrap_or_default();
     if let Some(target) = target {
-        args.extend([kind_opt.as_str(), target.name.as_str()]);
+        for kind in &target.kind {
+            match kind.as_str() {
+                "bin" => args.extend(["--bin", target.name.as_str()]),
+                "example" => args.extend(["--example", target.name.as_str()]),
+                "test" => args.extend(["--test", target.name.as_str()]),
+                "bench" => args.extend(["--bench", target.name.as_str()]),
+                "lib" => args.extend(["--lib"]),
+                _ => eyre::bail!("unsupported target kind: {}", kind),
+            }
+        }
     }
 
     if let Some(profile) = profile {
@@ -81,8 +87,9 @@ pub fn build<'a>(
     cmd.args(&args);
 
     let mut cmd = cmd.stdout(Stdio::piped()).spawn()?;
+    let stdout = cmd.stdout.take().unwrap();
 
-    let reader = BufReader::new(cmd.stdout.take().unwrap());
+    let reader = BufReader::new(stdout);
     let it = Message::parse_stream(reader)
         .map(|res| res.map_err(eyre::Error::from))
         .filter_map(|res| match res {

@@ -18,7 +18,7 @@ pub struct DistBuildBin {
 
 impl DistBuildBin {
     /// Execute `dist-build-bin` subcommand workflow.
-    #[tracing::instrument(name = "dist-build-bin", skip_all, err)]
+    #[tracing::instrument(name = "dist-build-bin", parent = None, skip_all, err)]
     pub fn run(&self, config: &DistConfig) -> eyre::Result<()> {
         tracing::info!("Building executables...");
 

@@ -38,37 +38,37 @@ feature_command_dist! {
 /// `xtask` command arguments.
 #[derive(Debug, clap::Parser)]
 pub enum Command {
-    /// Build all artifacts to distribute
+    /// Build all artifacts for distribution
     #[cfg(command_dist_build)]
     #[cfg_attr(docsrs, doc(cfg(feature = "command-dist-build-*")))]
     DistBuild(DistBuild),
 
-    /// Build the release binaries
+    /// Build the release binaries dor distribution
     #[cfg(feature = "command-dist-build-bin")]
     #[cfg_attr(docsrs, doc(cfg(feature = "command-dist-build-bin")))]
     DistBuildBin(DistBuildBin),
 
-    /// Build the shell completion files
+    /// Build the shell completion files for distribution
     #[cfg(feature = "command-dist-build-completion")]
     #[cfg_attr(docsrs, doc(cfg(feature = "command-dist-build-completion")))]
     DistBuildCompletion(DistBuildCompletion),
 
-    /// Build the documents
+    /// Build the documentation for distribution
     #[cfg(feature = "command-dist-build-doc")]
     #[cfg_attr(docsrs, doc(cfg(feature = "command-dist-build-doc")))]
     DistBuildDoc(DistBuildDoc),
 
-    /// Build the license files
+    /// Build the license files for distribution
     #[cfg(feature = "command-dist-build-license")]
     #[cfg_attr(docsrs, doc(cfg(feature = "command-dist-build-license")))]
     DistBuildLicense(DistBuildLicense),
 
-    /// Build the man pages
+    /// Build the man pages for distribution
     #[cfg(feature = "command-dist-build-man")]
     #[cfg_attr(docsrs, doc(cfg(feature = "command-dist-build-man")))]
     DistBuildMan(DistBuildMan),
 
-    /// Crate the archive for distribution
+    /// Crate the archive file for distribution
     #[cfg(feature = "command-dist")]
     #[cfg_attr(docsrs, doc(cfg(feature = "command-dist")))]
     Dist(Dist),

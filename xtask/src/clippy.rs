@@ -1,23 +1,21 @@
 #[derive(Debug, clap::Parser)]
 pub(crate) struct Args {
-    /// Arguments to pass to the `cargo test`
+    /// Arguments to pass to the `cargo clippy`
     extra_options: Vec<String>,
 }
 
 impl Args {
-    #[tracing::instrument(name = "test", skip_all, err)]
+    #[tracing::instrument(name = "clippy", skip_all, err)]
     pub(crate) fn run(&self) -> eyre::Result<()> {
         let Self { extra_options } = self;
 
         for (_path, metadata) in crate::all_workspaces()? {
             for package in metadata.workspace_packages() {
                 for feature_args in crate::feature_combinations(package) {
-                    // cargo test --package <pkg> <features> <extra_options>
-                    // DO NOT USE `--all-targets` here, doctests are not built with `--all-targets`
                     crate::execute_on(
                         &metadata,
                         "cargo",
-                        ["test", "--package", &package.name]
+                        ["clippy", "--all-targets", "--package", &package.name]
                             .into_iter()
                             .chain(feature_args.iter().copied())
                             .chain(extra_options.iter().map(String::as_str)),

@@ -5,29 +5,45 @@ use clap::Parser;
 use cli_xtask::fs::ToRelative;
 
 mod build;
+mod clippy;
 mod exec;
+mod fmt;
 mod lint;
+mod rdme;
 mod test;
+mod udeps;
 
 #[derive(Debug, Parser)]
 enum Args {
-    /// Execute commands on this workspace and all sub workspaces
-    Exec(exec::Args),
-    /// Execute all lint commands on this workspace and all sub workspaces
-    Lint(lint::Args),
-    /// Execute cargo build on this workspace and all sub workspaces
+    /// Run `cargo build` on all workspaces in the current directory and subdirectories
     Build(build::Args),
-    /// Execute cargo test on this workspace and all sub workspaces
+    /// Run `cargo clippy` on all workspaces in the current directory and subdirectories
+    Clippy(clippy::Args),
+    /// Run commands on all workspaces in the current directory and subdirectories
+    Exec(exec::Args),
+    /// Run `cargo fmt` on all workspaces in the current directory and subdirectories
+    Fmt(fmt::Args),
+    /// Run all lint commands on all workspaces in the current directory and subdirectories
+    Lint(lint::Args),
+    /// Run `cargo rdme` on all workspaces in the current directory and subdirectories
+    Rdme(rdme::Args),
+    /// Run `cargo test` on all workspaces in the current directory and subdirectories
     Test(test::Args),
+    /// Run `cargo udeps` on all workspaces in the current directory and subdirectories
+    Udeps(udeps::Args),
 }
 
 impl Args {
     fn run(&self) -> eyre::Result<()> {
         match self {
-            Self::Exec(args) => args.run(),
-            Self::Lint(args) => args.run(),
             Self::Build(args) => args.run(),
+            Self::Clippy(args) => args.run(),
+            Self::Exec(args) => args.run(),
+            Self::Fmt(args) => args.run(),
+            Self::Lint(args) => args.run(),
+            Self::Rdme(args) => args.run(),
             Self::Test(args) => args.run(),
+            Self::Udeps(args) => args.run(),
         }
     }
 }
@@ -80,8 +96,12 @@ fn execute_on(
     let args = args.into_iter().map(Into::into).collect::<Vec<_>>();
 
     let workspace_root = &metadata.workspace_root;
-    tracing::info!("Executing command on {}", workspace_root.to_relative());
-    tracing::info!("  $ {} {}", command, args.join(" "));
+    tracing::info!(
+        "[{}]$ {} {}",
+        workspace_root.to_relative(),
+        command,
+        args.join(" ")
+    );
     let status = Command::new(command)
         .args(args)
         .current_dir(workspace_root)

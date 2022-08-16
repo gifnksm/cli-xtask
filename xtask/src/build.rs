@@ -1,6 +1,6 @@
 #[derive(Debug, clap::Parser)]
 pub(crate) struct Args {
-    /// Arguments to pass to the cargo build
+    /// Arguments to pass to the `cargo build`
     extra_options: Vec<String>,
 }
 

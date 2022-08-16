@@ -1,26 +1,17 @@
-use clap::Parser;
-
 #[derive(Debug, clap::Parser)]
-pub(crate) struct Args {}
+pub(crate) struct Args {
+    /// Arguments to pass to the `cargo udeps`
+    extra_options: Vec<String>,
+}
 
 impl Args {
-    #[tracing::instrument(name = "lint", skip_all, err)]
+    #[tracing::instrument(name = "udeps", skip_all, err)]
     pub(crate) fn run(&self) -> eyre::Result<()> {
-        let Self {} = self;
-
-        // cargo fmt --check
-        crate::fmt::Args::parse_from(["fmt", "--", "--check"]).run()?;
-        // cargo clippy -- -D warnings
-        crate::clippy::Args::parse_from(["clippy", "--", "--", "-D", "warnings"]).run()?;
-        // cargo rdme --check
-        crate::rdme::Args::parse_from(["rdme", "--", "--check"]).run()?;
-        // cargo udeps
-        crate::udeps::Args::parse_from(["udeps"]).run()?;
+        let Self { extra_options } = self;
 
         for (_path, metadata) in crate::all_workspaces()? {
             for package in metadata.workspace_packages() {
                 for feature_args in crate::feature_combinations(package) {
-                    // rustup run nightly cargo udeps --package <pkg> <features>
                     // cargo +nightly udeps fails on windows, so use rustup instead
                     crate::execute_on(
                         &metadata,
@@ -34,7 +25,8 @@ impl Args {
                             &package.name,
                         ]
                         .into_iter()
-                        .chain(feature_args.iter().copied()),
+                        .chain(feature_args.iter().copied())
+                        .chain(extra_options.iter().map(String::as_str)),
                     )?;
                 }
             }

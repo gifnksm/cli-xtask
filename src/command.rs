@@ -35,6 +35,11 @@ feature_command_dist_build_man! {
     pub use dist_build_man::DistBuildMan;
 }
 
+feature_command_dist_build_readme! {
+    mod dist_build_readme;
+    pub use dist_build_readme::DistBuildReadme;
+}
+
 feature_command_dist! {
     mod dist;
     pub use dist::Dist;
@@ -78,6 +83,11 @@ pub enum Command {
     #[cfg_attr(docsrs, doc(cfg(feature = "command-dist-build-man")))]
     DistBuildMan(DistBuildMan),
 
+    /// Build the readme files for distribution
+    #[cfg(feature = "command-dist-build-readme")]
+    #[cfg_attr(docsrs, doc(cfg(feature = "command-dist-build-readme")))]
+    DistBuildReadme(DistBuildReadme),
+
     /// Crate the archive file for distribution
     #[cfg(feature = "command-dist")]
     #[cfg_attr(docsrs, doc(cfg(feature = "command-dist")))]
@@ -108,6 +118,9 @@ impl Command {
 
             #[cfg(feature = "command-dist-build-man")]
             Self::DistBuildMan(args) => args.run(config),
+
+            #[cfg(feature = "command-dist-build-readme")]
+            Self::DistBuildReadme(args) => args.run(config),
 
             #[cfg(feature = "command-dist")]
             Self::Dist(args) => args.run(config),

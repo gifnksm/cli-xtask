@@ -34,9 +34,7 @@ impl DistBuildBin {
             || (*use_cross_if_needed
                 && target_triple.map(|t| t != default_target).unwrap_or(false));
 
-        let bin_dir = config
-            .dist_working_directory(Some(target_triple.unwrap_or(default_target)))
-            .join("bin");
+        let bin_dir = config.dist_working_directory(Some(target_triple.unwrap_or(default_target)));
         crate::fs::create_or_cleanup_dir(&bin_dir)?;
 
         for package in config.packages() {

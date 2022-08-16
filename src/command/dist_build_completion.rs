@@ -1,3 +1,5 @@
+use std::fs;
+
 use cargo_metadata::camino::{Utf8Path, Utf8PathBuf};
 use clap::Parser;
 use clap_complete::Shell;
@@ -16,27 +18,27 @@ impl DistBuildCompletion {
 
         let Self {} = self;
 
-        let bash_dir = config
-            .dist_working_directory(None)
-            .join("share/bash-completion");
-        let fish_dir = config
-            .dist_working_directory(None)
-            .join("share/fish/completions");
-        let zsh_dir = config
-            .dist_working_directory(None)
-            .join("share/zsh/site-functions");
+        let out_dir = config.dist_working_directory(None).join("completion");
+        if out_dir.is_dir() {
+            fs::remove_dir_all(&out_dir)?;
+        }
 
-        crate::fs::create_or_cleanup_dir(&bash_dir)?;
-        crate::fs::create_or_cleanup_dir(&fish_dir)?;
-        crate::fs::create_or_cleanup_dir(&zsh_dir)?;
+        let shells = [
+            Shell::Bash,
+            Shell::Elvish,
+            Shell::Fish,
+            Shell::PowerShell,
+            Shell::Zsh,
+        ];
 
         for package in config.packages() {
             for target in package.targets().into_iter().flatten() {
                 let target_name = target.name();
                 if let Some(cmd) = target.command() {
-                    generate(Shell::Bash, cmd, target_name, &bash_dir)?;
-                    generate(Shell::Fish, cmd, target_name, &fish_dir)?;
-                    generate(Shell::Zsh, cmd, target_name, &zsh_dir)?;
+                    for shell in shells {
+                        fs::create_dir_all(&out_dir)?;
+                        generate(shell, cmd, target_name, &out_dir)?;
+                    }
                 }
             }
         }
@@ -49,9 +51,9 @@ fn generate(
     shell: Shell,
     cmd: &clap::Command<'_>,
     bin_name: &str,
-    dir: &Utf8Path,
+    out_dir: &Utf8Path,
 ) -> eyre::Result<Utf8PathBuf> {
-    let path = clap_complete::generate_to(shell, &mut cmd.clone(), bin_name, &dir)?;
+    let path = clap_complete::generate_to(shell, &mut cmd.clone(), bin_name, &out_dir)?;
     let path = Utf8PathBuf::try_from(path)?;
     tracing::info!("Generated {shell} completion file: {}", path.to_relative());
     Ok(path)

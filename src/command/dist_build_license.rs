@@ -1,3 +1,5 @@
+use std::fs;
+
 use clap::Parser;
 
 use crate::DistConfig;
@@ -17,13 +19,29 @@ impl DistBuildLicense {
 
         let Self {} = self;
 
+        let packages = config.packages();
+
+        let working_dir = config.dist_working_directory(None);
+        let license_dir;
+        let add_package_dir;
+        if packages.len() > 1 {
+            license_dir = working_dir.join("license");
+            add_package_dir = true;
+            if license_dir.is_dir() {
+                fs::remove_dir_all(&license_dir)?;
+            }
+        } else {
+            license_dir = working_dir;
+            add_package_dir = false;
+        }
+
         for package in config.packages() {
             let src_dir = package.root_dir();
-            let dest_dir = config
-                .dist_working_directory(None)
-                .join("share/license")
-                .join(package.name());
-            crate::fs::create_or_cleanup_dir(&dest_dir)?;
+            let dest_dir = if add_package_dir {
+                license_dir.join(package.name())
+            } else {
+                license_dir.clone()
+            };
 
             if let Some(files) = package.license_files() {
                 for file in files {
@@ -46,6 +64,7 @@ impl DistBuildLicense {
                         .build()
                         .unwrap()
                 });
+
                 let src_name = match src_file.file_name() {
                     Some(name) => name,
                     None => continue,
@@ -53,6 +72,8 @@ impl DistBuildLicense {
                 if !RE.is_match(src_name) {
                     continue;
                 }
+
+                fs::create_dir_all(&dest_dir)?;
                 let dest_file = dest_dir.join(src_name);
                 crate::fs::copy(src_file, dest_file)?;
             }

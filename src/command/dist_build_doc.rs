@@ -1,3 +1,5 @@
+use std::fs;
+
 use clap::Parser;
 
 use crate::DistConfig;
@@ -10,51 +12,36 @@ impl DistBuildDoc {
     /// Execute `dist-build-doc` subcommand workflow.
     #[tracing::instrument(name = "dist-build-doc", parent = None, skip_all, err)]
     pub fn run(&self, config: &DistConfig) -> eyre::Result<()> {
-        use once_cell::sync::Lazy;
-        use regex::{Regex, RegexBuilder};
-
         tracing::info!("Building documents...");
+
+        let packages = config.packages();
+
+        let working_dir = config.dist_working_directory(None);
+        let doc_dir = working_dir.join("doc");
+        let add_package_dir = packages.len() > 1;
+
+        if doc_dir.is_dir() {
+            fs::remove_dir_all(&doc_dir)?;
+        }
 
         let Self {} = self;
 
-        for package in config.packages() {
+        for package in packages {
             let src_dir = package.root_dir();
-            let dest_dir = config
-                .dist_working_directory(None)
-                .join("share/doc")
-                .join(package.name());
-            crate::fs::create_or_cleanup_dir(&dest_dir)?;
+            let dest_dir = if add_package_dir {
+                doc_dir.join(package.name())
+            } else {
+                doc_dir.clone()
+            };
 
             if let Some(files) = package.documents() {
                 for file in files {
                     let src_file = src_dir.join(file);
                     let dest_file = dest_dir.join(file);
+                    fs::create_dir_all(&dest_dir)?;
                     crate::fs::copy(&src_file, &dest_file)?;
                 }
                 continue;
-            }
-
-            for src_entry in src_dir.read_dir_utf8()? {
-                let src_entry = src_entry?;
-                if !src_entry.file_type()?.is_file() {
-                    continue;
-                }
-                let src_file = src_entry.path();
-                static RE: Lazy<Regex> = Lazy::new(|| {
-                    RegexBuilder::new(r"^README(?:-|\.|$)")
-                        .case_insensitive(true)
-                        .build()
-                        .unwrap()
-                });
-                let src_name = match src_file.file_name() {
-                    Some(name) => name,
-                    None => continue,
-                };
-                if !RE.is_match(src_name) {
-                    continue;
-                }
-                let dest_file = dest_dir.join(src_name);
-                crate::fs::copy(&src_file, &dest_file)?;
             }
         }
 

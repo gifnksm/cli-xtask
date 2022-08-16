@@ -140,6 +140,16 @@ macro_rules! feature_command_dist_build_man {
     };
 }
 
+macro_rules! feature_command_dist_build_readme {
+    ($($item:item)*) => {
+        $(
+            #[cfg(feature = "command-dist-build-readme")]
+            #[cfg_attr(docsrs, doc(cfg(feature = "command-dist-build-readme")))]
+            $item
+        )*
+    };
+}
+
 macro_rules! feature_clap_command {
     ($($item:item)*) => {
         $(

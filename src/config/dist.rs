@@ -13,7 +13,7 @@ pub struct DistConfigBuilder<'a> {
     name: String,
     metadata: &'a Metadata,
     dist_target_directory: Utf8PathBuf,
-    dist_working_directory: Utf8PathBuf,
+    dist_base_working_directory: Utf8PathBuf,
     packages: Vec<PackageConfig<'a>>,
 }
 
@@ -24,13 +24,13 @@ impl<'a> DistConfigBuilder<'a> {
     pub fn new(name: impl Into<String>, metadata: &'a Metadata) -> Self {
         let name = name.into();
         let dist_target_directory = metadata.target_directory.join("dist");
-        let dist_working_directory = metadata.target_directory.join("xtask/dist").join(&name);
+        let dist_base_working_directory = metadata.target_directory.join("xtask/dist").join(&name);
 
         Self {
             name,
             metadata,
             dist_target_directory,
-            dist_working_directory,
+            dist_base_working_directory,
             packages: vec![],
         }
     }
@@ -96,7 +96,7 @@ impl<'a> DistConfigBuilder<'a> {
             name: self.name,
             metadata: self.metadata,
             dist_target_directory: self.dist_target_directory,
-            dist_working_directory: self.dist_working_directory,
+            dist_base_working_directory: self.dist_base_working_directory,
             packages: self.packages,
         }
     }
@@ -108,7 +108,7 @@ pub struct DistConfig<'a> {
     name: String,
     metadata: &'a Metadata,
     dist_target_directory: Utf8PathBuf,
-    dist_working_directory: Utf8PathBuf,
+    dist_base_working_directory: Utf8PathBuf,
     packages: Vec<PackageConfig<'a>>,
 }
 
@@ -130,9 +130,15 @@ impl<'a> DistConfig<'a> {
         &self.dist_target_directory
     }
 
+    /// Returns the base working directory where the distribution artifacts will be copied at.
+    pub fn dist_base_working_directory(&self) -> &Utf8Path {
+        &self.dist_base_working_directory
+    }
+
     /// Returns the working directory where the distribution artifacts will be copied at.
-    pub fn dist_working_directory(&self) -> &Utf8Path {
-        &self.dist_working_directory
+    pub fn dist_working_directory(&self, target_triple: Option<&str>) -> Utf8PathBuf {
+        let target_triple = target_triple.unwrap_or("noarch");
+        self.dist_base_working_directory.join(target_triple)
     }
 
     /// Returns the configurations of the packages that will be distributed.

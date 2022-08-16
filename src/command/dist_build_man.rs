@@ -19,10 +19,12 @@ impl DistBuildMan {
 
         let Self {} = self;
 
-        let man_dir = config.dist_working_directory().join("share/man");
+        let man_dir = config.dist_working_directory(None).join("man");
         let section = "1";
 
-        crate::fs::create_or_cleanup_dir(&man_dir)?;
+        if man_dir.is_dir() {
+            fs::remove_dir_all(&man_dir)?;
+        }
 
         for package in config.packages() {
             for target in package.targets().into_iter().flatten() {
@@ -57,8 +59,6 @@ fn dist_build_man_pages<'a>(
         }
     };
     let section = section.into();
-    let out_dir = man_dir.join(format!("man{section}"));
-    fs::create_dir_all(&out_dir)?;
 
     let now = OffsetDateTime::now_utc();
     let manual_name = format!("{capitalized_name} Command Manual");
@@ -76,10 +76,12 @@ fn dist_build_man_pages<'a>(
             .unwrap_or_default()
     );
 
+    let man_dir = man_dir.to_owned();
     let it = iterate_commands(cmd).map(move |cmd| {
         let command_name = cmd.get_name().to_string();
         let filename = format!("{command_name}.{}", section);
-        let path = out_dir.join(&filename);
+        fs::create_dir_all(&man_dir)?;
+        let path = man_dir.join(&filename);
         let man = Man::new(cmd.clone())
             .title(command_name.to_uppercase())
             .section(&section)

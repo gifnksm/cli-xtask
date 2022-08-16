@@ -26,11 +26,13 @@ default = [
     "error-handler",
     "archive",
     "cargo",
+    "command-dist-archive",
     "command-dist-build-bin",
     "command-dist-build-completion",
     "command-dist-build-doc",
     "command-dist-build-license",
     "command-dist-build-man",
+    "command-dist-build-readme",
     "command-dist",
 ]
 
@@ -41,12 +43,14 @@ error-handler = ["dep:color-eyre"]
 archive = ["dep:flate2", "dep:tar"]
 cargo = []
 
+command-dist-archive = ["archive", "dep:clap"]
 command-dist-build-bin = ["cargo", "dep:clap"]
 command-dist-build-completion = ["dep:clap", "dep:clap_complete"]
-command-dist-build-doc = ["dep:clap", "dep:regex"]
+command-dist-build-doc = ["dep:clap"]
 command-dist-build-license = ["dep:regex", "dep:clap"]
 command-dist-build-man = ["dep:clap", "dep:clap_mangen", "dep:time"]
-command-dist = ["archive", "dep:clap"]
+command-dist-build-readme = ["dep:clap"]
+command-dist = ["command-dist-archive", "dep:clap"]
 
 [dependencies]
 cargo_metadata = "0.15.0"

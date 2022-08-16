@@ -2,7 +2,7 @@ use clap::Parser;
 
 use crate::DistConfig;
 
-/// `dbuild` subcommand arguments.
+/// `dist-build` subcommand arguments.
 #[derive(Debug, Parser)]
 pub struct DistBuild {
     /// `dist-build-bin` subcommand arguments.
@@ -34,6 +34,12 @@ pub struct DistBuild {
     #[cfg_attr(docsrs, doc(cfg(feature = "command-dist-build-man")))]
     #[clap(flatten)]
     pub dist_build_man_args: super::DistBuildMan,
+
+    /// `dist-build-readme` subcommand arguments.
+    #[cfg(feature = "command-dist-build-readme")]
+    #[cfg_attr(docsrs, doc(cfg(feature = "command-dist-build-readme")))]
+    #[clap(flatten)]
+    pub dist_build_readme_args: super::DistBuildReadme,
 }
 
 impl DistBuild {
@@ -51,6 +57,8 @@ impl DistBuild {
             dist_build_license_args,
             #[cfg(feature = "command-dist-build-man")]
             dist_build_man_args,
+            #[cfg(feature = "command-dist-build-readme")]
+            dist_build_readme_args,
         } = self;
 
         #[cfg(feature = "command-dist-build-bin")]
@@ -67,6 +75,9 @@ impl DistBuild {
 
         #[cfg(feature = "command-dist-build-man")]
         dist_build_man_args.run(config)?;
+
+        #[cfg(feature = "command-dist-build-readme")]
+        dist_build_readme_args.run(config)?;
 
         Ok(())
     }

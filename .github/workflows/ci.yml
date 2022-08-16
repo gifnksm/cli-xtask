@@ -143,7 +143,9 @@ jobs:
       - uses: Swatinem/rust-cache@v2
         with:
           workspaces: ${{ needs.set-workspace.outputs.workspaces }}
-      - uses: taiki-e/install-action@cargo-udeps
+      - uses: taiki-e/install-action@v1
+        with:
+          tool: cargo-udeps,cargo-rdme
       - run: rustup toolchain add nightly --profile minimal
         shell: bash
       - run: cargo xtask lint

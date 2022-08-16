@@ -12,6 +12,37 @@
 //! [dependencies]
 //! cli-xtask = "0.0.0"
 //! ```
+//!
+//! # Minimum supported Rust version (MSRV)
+//!
+//! The minimum supported Rust version is **Rust 1.60.0**.
+//! At least the last 3 versions of stable Rust are supported at any given time.
+//!
+//! While a crate is a pre-release status (0.x.x) it may have its MSRV bumped in a patch release.
+//! Once a crate has reached 1.x, any MSRV bump will be accompanied by a new minor version.
+//!
+//! # License
+//!
+//! This project is licensed under either of
+//!
+//! * Apache License, Version 2.0
+//!    ([LICENSE-APACHE] or <http://www.apache.org/licenses/LICENSE-2.0>)
+//! * MIT license
+//!    ([LICENSE-MIT] or <http://opensource.org/licenses/MIT>)
+//!
+//! at your option.
+//!
+//! # Contribution
+//!
+//! Unless you explicitly state otherwise, any contribution intentionally submitted
+//! for inclusion in the work by you, as defined in the Apache-2.0 license, shall be
+//! dual licensed as above, without any additional terms or conditions.
+//!
+//! See [CONTRIBUTING.md].
+//!
+//! [LICENSE-APACHE]: https://github.com/gifnksm/cli-xtask/blob/main/LICENSE-APACHE
+//! [LICENSE-MIT]: https://github.com/gifnksm/cli-xtask/blob/main/LICENSE-MIT
+//! [CONTRIBUTING.md]: https://github.com/gifnksm/cli-xtask/blob/main/CONTRIBUTING.md
 
 #![doc(html_root_url = "https://docs.rs/cli-xtask/0.0.0")]
 

@@ -57,16 +57,8 @@ impl Args {
 }
 
 fn main() -> eyre::Result<()> {
-    color_eyre::install()?;
-    if std::env::var_os("RUST_LOG").is_none() {
-        std::env::set_var("RUST_LOG", "info");
-    }
-    tracing_subscriber::fmt()
-        .with_env_filter(tracing_subscriber::EnvFilter::from_default_env())
-        .with_writer(std::io::stderr)
-        .with_target(false)
-        .try_init()
-        .map_err(|e| eyre::eyre!(e))?;
+    cli_xtask::install_error_handler()?;
+    cli_xtask::install_logger()?;
 
     tracing::info!("Running on {}", std::env::current_dir()?.display());
     Args::parse().run()?;

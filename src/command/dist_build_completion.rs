@@ -10,7 +10,7 @@ pub struct DistBuildCompletion {}
 
 impl DistBuildCompletion {
     /// Execute `dist-build-completion` subcommand workflow.
-    #[tracing::instrument(name = "dist-build-completion", skip_all, err)]
+    #[tracing::instrument(name = "dist-build-completion", parent = None, skip_all, err)]
     pub fn run(&self, config: &DistConfig) -> eyre::Result<()> {
         tracing::info!("Building shell completion files...");
 

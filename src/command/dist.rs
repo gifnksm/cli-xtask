@@ -15,7 +15,7 @@ pub struct Dist {
 
 impl Dist {
     /// Execute `dist` subcommand workflow.
-    #[tracing::instrument(name = "dist", skip_all, err)]
+    #[tracing::instrument(name = "dist", parent = None, skip_all, err)]
     pub(crate) fn run(&self, config: &DistConfig) -> eyre::Result<()> {
         let Self {
             #[cfg(command_dist_build)]

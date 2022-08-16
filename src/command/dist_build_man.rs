@@ -13,7 +13,7 @@ pub struct DistBuildMan {}
 
 impl DistBuildMan {
     /// Execute `dist-build-man` subcommand workflow
-    #[tracing::instrument(name = "dist-build-man", skip_all, err)]
+    #[tracing::instrument(name = "dist-build-man", parent = None, skip_all, err)]
     pub fn run(&self, config: &DistConfig) -> eyre::Result<()> {
         tracing::info!("Building man pages...");
 

@@ -17,13 +17,13 @@ impl DistBuildCompletion {
         let Self {} = self;
 
         let bash_dir = config
-            .dist_working_directory()
+            .dist_working_directory(None)
             .join("share/bash-completion");
         let fish_dir = config
-            .dist_working_directory()
+            .dist_working_directory(None)
             .join("share/fish/completions");
         let zsh_dir = config
-            .dist_working_directory()
+            .dist_working_directory(None)
             .join("share/zsh/site-functions");
 
         crate::fs::create_or_cleanup_dir(&bash_dir)?;

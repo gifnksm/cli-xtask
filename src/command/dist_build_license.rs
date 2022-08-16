@@ -20,7 +20,7 @@ impl DistBuildLicense {
         for package in config.packages() {
             let src_dir = package.root_dir();
             let dest_dir = config
-                .dist_working_directory()
+                .dist_working_directory(None)
                 .join("share/license")
                 .join(package.name());
             crate::fs::create_or_cleanup_dir(&dest_dir)?;

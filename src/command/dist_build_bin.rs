@@ -28,14 +28,15 @@ impl DistBuildBin {
             use_cross_if_needed,
         } = self;
 
+        let default_target = env!("DEFAULT_TARGET");
         let target_triple = target_triple.as_deref();
         let use_cross = *use_cross
             || (*use_cross_if_needed
-                && target_triple
-                    .map(|t| t != env!("DEFAULT_TARGET"))
-                    .unwrap_or(false));
+                && target_triple.map(|t| t != default_target).unwrap_or(false));
 
-        let bin_dir = config.dist_working_directory().join("bin");
+        let bin_dir = config
+            .dist_working_directory(Some(target_triple.unwrap_or(default_target)))
+            .join("bin");
         crate::fs::create_or_cleanup_dir(&bin_dir)?;
 
         for package in config.packages() {

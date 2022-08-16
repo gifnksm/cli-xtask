@@ -19,7 +19,7 @@ impl DistBuildMan {
 
         let Self {} = self;
 
-        let man_dir = config.dist_working_directory().join("share/man");
+        let man_dir = config.dist_working_directory(None).join("share/man");
         let section = "1";
 
         crate::fs::create_or_cleanup_dir(&man_dir)?;

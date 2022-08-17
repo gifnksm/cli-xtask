@@ -190,6 +190,16 @@ macro_rules! feature_command_fmt {
     };
 }
 
+macro_rules! feature_command_lint {
+    ($($item:item)*) => {
+        $(
+            #[cfg(feature = "command-lint")]
+            #[cfg_attr(docsrs, doc(cfg(feature = "command-lint")))]
+            $item
+        )*
+    };
+}
+
 macro_rules! feature_command_rdme {
     ($($item:item)*) => {
         $(

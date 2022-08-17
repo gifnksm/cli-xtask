@@ -65,6 +65,10 @@ feature_command_fmt! {
     pub use self::fmt::Fmt;
 }
 
+feature_command_lint! {
+    mod lint;
+    pub use self::lint::Lint;
+}
 feature_command_rdme! {
     mod rdme;
     pub use self::rdme::Rdme;
@@ -148,6 +152,11 @@ pub enum Command {
     #[cfg_attr(docsrs, doc(cfg(feature = "command-fmt")))]
     Fmt(Fmt),
 
+    /// Run all lint commands on all workspaces in the current directory and subdirectories
+    #[cfg(feature = "command-lint")]
+    #[cfg_attr(docsrs, doc(cfg(feature = "command-lint")))]
+    Lint(Lint),
+
     /// Run `cargo rdme` on all workspaces in the current directory and subdirectories
     #[cfg(feature = "command-rdme")]
     #[cfg_attr(docsrs, doc(cfg(feature = "command-rdme")))]
@@ -206,6 +215,9 @@ impl Command {
 
             #[cfg(feature = "command-fmt")]
             Self::Fmt(args) => args.run(config),
+
+            #[cfg(feature = "command-lint")]
+            Self::Lint(args) => args.run(config),
 
             #[cfg(feature = "command-rdme")]
             Self::Rdme(args) => args.run(config),

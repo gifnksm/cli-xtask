@@ -34,6 +34,7 @@ bin-crate = [
     "command-dist-clean",
     "command-dist",
     "command-fmt",
+    "command-lint",
     "command-test",
 ]
 bin-crate-extra = [
@@ -45,6 +46,7 @@ lib-crate = [
     "command-build",
     "command-clippy",
     "command-fmt",
+    "command-lint",
     "command-test",
 ]
 lib-crate-extra = [
@@ -72,6 +74,7 @@ command-dist-build-readme = ["dep:clap"]
 command-dist-clean = ["dep:clap"]
 command-dist = ["command-dist-archive", "dep:clap"]
 command-fmt = ["dep:clap"]
+command-lint = ["dep:clap"]
 command-rdme = ["dep:clap"]
 command-test = ["dep:clap"]
 command-udeps = ["dep:clap"]

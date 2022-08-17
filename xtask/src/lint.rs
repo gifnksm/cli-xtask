@@ -10,7 +10,7 @@ impl Args {
         let Self {} = self;
 
         // cargo fmt --check
-        crate::fmt::Args::parse_from(["fmt", "--", "--check"]).run()?;
+        cli_xtask::command::Fmt::parse_from(["fmt", "--", "--check"]).run(config)?;
         // cargo clippy -- -D warnings
         cli_xtask::command::Clippy::parse_from(["clippy", "--", "--", "-D", "warnings"])
             .run(config)?;

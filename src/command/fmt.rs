@@ -1,14 +1,18 @@
-use cli_xtask::{process, workspace};
+use clap::Parser;
 
-#[derive(Debug, clap::Parser)]
-pub(crate) struct Args {
+use crate::{process, workspace, Config};
+
+/// `fmt` subcommand arguments.
+#[derive(Debug, Parser)]
+pub struct Fmt {
     /// Arguments to pass to the `cargo fmt`
     extra_options: Vec<String>,
 }
 
-impl Args {
-    #[tracing::instrument(name = "fmt", skip_all, err)]
-    pub(crate) fn run(&self) -> eyre::Result<()> {
+impl Fmt {
+    /// Execute `fmt` subcommand workflow.
+    #[tracing::instrument(name = "fmt", parent = None, skip_all, err)]
+    pub fn run(&self, _config: &Config) -> eyre::Result<()> {
         let Self { extra_options } = self;
 
         for metadata in workspace::all() {

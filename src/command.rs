@@ -60,6 +60,11 @@ feature_command_dist! {
     pub use self::dist::Dist;
 }
 
+feature_command_fmt! {
+    mod fmt;
+    pub use self::fmt::Fmt;
+}
+
 /// `xtask` command arguments.
 #[derive(Debug, clap::Parser)]
 pub enum Command {
@@ -122,6 +127,11 @@ pub enum Command {
     #[cfg(feature = "command-dist")]
     #[cfg_attr(docsrs, doc(cfg(feature = "command-dist")))]
     Dist(Dist),
+
+    /// Run `cargo fmt` on all workspaces in the current directory and subdirectories
+    #[cfg(feature = "command-fmt")]
+    #[cfg_attr(docsrs, doc(cfg(feature = "command-fmt")))]
+    Fmt(Fmt),
 }
 
 impl Command {
@@ -163,6 +173,9 @@ impl Command {
 
             #[cfg(feature = "command-dist")]
             Self::Dist(args) => args.run(config.dist()?),
+
+            #[cfg(feature = "command-fmt")]
+            Self::Fmt(args) => args.run(config),
         }
     }
 }

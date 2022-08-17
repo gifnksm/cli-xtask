@@ -180,6 +180,16 @@ macro_rules! feature_command_dist_clean {
     };
 }
 
+macro_rules! feature_command_fmt {
+    ($($item:item)*) => {
+        $(
+            #[cfg(feature = "command-fmt")]
+            #[cfg_attr(docsrs, doc(cfg(feature = "command-fmt")))]
+            $item
+        )*
+    };
+}
+
 macro_rules! feature_clap_command {
     ($($item:item)*) => {
         $(

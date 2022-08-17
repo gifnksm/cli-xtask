@@ -3,7 +3,6 @@ use clap::Parser;
 use cli_xtask::{Config, ConfigBuilder};
 
 mod exec;
-mod fmt;
 mod lint;
 mod rdme;
 mod test;
@@ -15,8 +14,6 @@ enum Args {
     Command(cli_xtask::Command),
     /// Run commands on all workspaces in the current directory and subdirectories
     Exec(exec::Args),
-    /// Run `cargo fmt` on all workspaces in the current directory and subdirectories
-    Fmt(fmt::Args),
     /// Run all lint commands on all workspaces in the current directory and subdirectories
     Lint(lint::Args),
     /// Run `cargo rdme` on all workspaces in the current directory and subdirectories
@@ -32,7 +29,6 @@ impl Args {
         match self {
             Self::Command(args) => args.run(config),
             Self::Exec(args) => args.run(),
-            Self::Fmt(args) => args.run(),
             Self::Lint(args) => args.run(config),
             Self::Rdme(args) => args.run(),
             Self::Test(args) => args.run(),

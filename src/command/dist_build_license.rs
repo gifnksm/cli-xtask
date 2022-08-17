@@ -1,6 +1,6 @@
 use clap::Parser;
 
-use crate::DistConfig;
+use crate::Config;
 
 /// `dist-build-license` subcommand arguments.
 #[derive(Debug, Parser)]
@@ -9,13 +9,14 @@ pub struct DistBuildLicense {}
 impl DistBuildLicense {
     /// Execute `dist-build-license` subcommand workflow
     #[tracing::instrument(name = "dist-build-license", parent = None, skip_all, err)]
-    pub fn run(&self, config: &DistConfig) -> eyre::Result<()> {
+    pub fn run(&self, config: &Config) -> eyre::Result<()> {
         use once_cell::sync::Lazy;
         use regex::{Regex, RegexBuilder};
 
         tracing::info!("Building license files...");
 
         let Self {} = self;
+        let config = config.dist()?;
 
         let packages = config.packages();
 

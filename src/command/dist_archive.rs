@@ -1,6 +1,6 @@
 use clap::Parser;
 
-use crate::{archive, DistConfig};
+use crate::{archive, Config};
 
 /// `dist-archive` subcommand arguments.
 #[derive(Debug, Parser)]
@@ -9,8 +9,9 @@ pub struct DistArchive {}
 impl DistArchive {
     /// Execute `dist-archive` subcommand workflow.
     #[tracing::instrument(name = "dist-archive", parent = None, skip_all, err)]
-    pub fn run(&self, config: &DistConfig) -> eyre::Result<()> {
+    pub fn run(&self, config: &Config) -> eyre::Result<()> {
         let Self {} = self;
+        let config = config.dist()?;
 
         if !config.dist_base_working_directory().is_dir() {
             tracing::warn!("no build artifacts found");

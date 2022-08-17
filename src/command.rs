@@ -155,34 +155,34 @@ impl Command {
             Self::Clippy(args) => args.run(config),
 
             #[cfg(feature = "command-dist-archive")]
-            Self::DistArchive(args) => args.run(config.dist()?),
+            Self::DistArchive(args) => args.run(config),
 
             #[cfg(command_dist_build)]
-            Self::DistBuild(args) => args.run(config.dist()?),
+            Self::DistBuild(args) => args.run(config),
 
             #[cfg(feature = "command-dist-build-bin")]
-            Self::DistBuildBin(args) => args.run(config.dist()?),
+            Self::DistBuildBin(args) => args.run(config),
 
             #[cfg(feature = "command-dist-build-completion")]
-            Self::DistBuildCompletion(args) => args.run(config.dist()?),
+            Self::DistBuildCompletion(args) => args.run(config),
 
             #[cfg(feature = "command-dist-build-doc")]
-            Self::DistBuildDoc(args) => args.run(config.dist()?),
+            Self::DistBuildDoc(args) => args.run(config),
 
             #[cfg(feature = "command-dist-build-license")]
-            Self::DistBuildLicense(args) => args.run(config.dist()?),
+            Self::DistBuildLicense(args) => args.run(config),
 
             #[cfg(feature = "command-dist-build-man")]
-            Self::DistBuildMan(args) => args.run(config.dist()?),
+            Self::DistBuildMan(args) => args.run(config),
 
             #[cfg(feature = "command-dist-build-readme")]
-            Self::DistBuildReadme(args) => args.run(config.dist()?),
+            Self::DistBuildReadme(args) => args.run(config),
 
             #[cfg(feature = "command-dist-clean")]
-            Self::DistClean(args) => args.run(config.dist()?),
+            Self::DistClean(args) => args.run(config),
 
             #[cfg(feature = "command-dist")]
-            Self::Dist(args) => args.run(config.dist()?),
+            Self::Dist(args) => args.run(config),
 
             #[cfg(feature = "command-fmt")]
             Self::Fmt(args) => args.run(config),

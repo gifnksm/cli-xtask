@@ -2,7 +2,6 @@ use cargo_metadata::Package;
 use clap::Parser;
 use cli_xtask::{Config, ConfigBuilder};
 
-mod clippy;
 mod exec;
 mod fmt;
 mod lint;
@@ -14,8 +13,6 @@ mod udeps;
 enum Args {
     #[clap(flatten)]
     Command(cli_xtask::Command),
-    /// Run `cargo clippy` on all workspaces in the current directory and subdirectories
-    Clippy(clippy::Args),
     /// Run commands on all workspaces in the current directory and subdirectories
     Exec(exec::Args),
     /// Run `cargo fmt` on all workspaces in the current directory and subdirectories
@@ -34,10 +31,9 @@ impl Args {
     fn run(&self, config: &Config) -> eyre::Result<()> {
         match self {
             Self::Command(args) => args.run(config),
-            Self::Clippy(args) => args.run(),
             Self::Exec(args) => args.run(),
             Self::Fmt(args) => args.run(),
-            Self::Lint(args) => args.run(),
+            Self::Lint(args) => args.run(config),
             Self::Rdme(args) => args.run(),
             Self::Test(args) => args.run(),
             Self::Udeps(args) => args.run(),

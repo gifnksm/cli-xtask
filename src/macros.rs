@@ -70,6 +70,16 @@ macro_rules! feature_command_build {
     };
 }
 
+macro_rules! feature_command_clippy {
+    ($($item:item)*) => {
+        $(
+            #[cfg(feature = "command-clippy")]
+            #[cfg_attr(docsrs, doc(cfg(feature = "command-clippy")))]
+            $item
+        )*
+    };
+}
+
 macro_rules! feature_command_dist {
     ($($item:item)*) => {
         $(

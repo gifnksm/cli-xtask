@@ -24,6 +24,7 @@ default = []
 
 bin-crate = [
     "command-build",
+    "command-clippy",
     "command-dist-build-bin",
     "command-dist-build-completion",
     "command-dist-build-doc",
@@ -35,6 +36,7 @@ bin-crate = [
 ]
 lib-crate = [
     "command-build",
+    "command-clippy",
 ]
 
 main = ["logger", "error-handler"]
@@ -45,6 +47,7 @@ archive = ["dep:flate2", "dep:tar"]
 cargo = []
 
 command-build = ["dep:clap"]
+command-clippy = ["dep:clap"]
 command-dist-archive = ["archive", "dep:clap"]
 command-dist-build-bin = ["cargo", "dep:clap"]
 command-dist-build-completion = ["dep:clap", "dep:clap_complete"]

@@ -1,18 +1,19 @@
 use clap::Parser;
-use cli_xtask::{process, workspace};
+use cli_xtask::{process, workspace, Config};
 
 #[derive(Debug, clap::Parser)]
 pub(crate) struct Args {}
 
 impl Args {
     #[tracing::instrument(name = "lint", skip_all, err)]
-    pub(crate) fn run(&self) -> eyre::Result<()> {
+    pub(crate) fn run(&self, config: &Config) -> eyre::Result<()> {
         let Self {} = self;
 
         // cargo fmt --check
         crate::fmt::Args::parse_from(["fmt", "--", "--check"]).run()?;
         // cargo clippy -- -D warnings
-        crate::clippy::Args::parse_from(["clippy", "--", "--", "-D", "warnings"]).run()?;
+        cli_xtask::command::Clippy::parse_from(["clippy", "--", "--", "-D", "warnings"])
+            .run(config)?;
         // cargo rdme --check
         crate::rdme::Args::parse_from(["rdme", "--", "--check"]).run()?;
         // cargo udeps

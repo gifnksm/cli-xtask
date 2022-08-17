@@ -2,57 +2,62 @@ use crate::Config;
 
 feature_command_build! {
     mod build;
-    pub use build::Build;
+    pub use self::build::Build;
+}
+
+feature_command_clippy! {
+    mod clippy;
+    pub use self::clippy::Clippy;
 }
 
 feature_command_dist_archive! {
     mod dist_archive;
-    pub use dist_archive::DistArchive;
+    pub use self::dist_archive::DistArchive;
 }
 
 feature_command_dist_build! {
     mod dist_build;
-    pub use dist_build::DistBuild;
+    pub use self::dist_build::DistBuild;
 }
 
 feature_command_dist_build_bin! {
     mod dist_build_bin;
-    pub use dist_build_bin::DistBuildBin;
+    pub use self::dist_build_bin::DistBuildBin;
 }
 
 feature_command_dist_build_completion! {
     mod dist_build_completion;
-    pub use dist_build_completion::DistBuildCompletion;
+    pub use self::dist_build_completion::DistBuildCompletion;
 }
 
 feature_command_dist_build_doc! {
     mod dist_build_doc;
-    pub use dist_build_doc::DistBuildDoc;
+    pub use self::dist_build_doc::DistBuildDoc;
 }
 
 feature_command_dist_build_license! {
     mod dist_build_license;
-    pub use dist_build_license::DistBuildLicense;
+    pub use self::dist_build_license::DistBuildLicense;
 }
 
 feature_command_dist_build_man! {
     mod dist_build_man;
-    pub use dist_build_man::DistBuildMan;
+    pub use self::dist_build_man::DistBuildMan;
 }
 
 feature_command_dist_build_readme! {
     mod dist_build_readme;
-    pub use dist_build_readme::DistBuildReadme;
+    pub use self::dist_build_readme::DistBuildReadme;
 }
 
 feature_command_dist_clean! {
     mod dist_clean;
-    pub use dist_clean::DistClean;
+    pub use self::dist_clean::DistClean;
 }
 
 feature_command_dist! {
     mod dist;
-    pub use dist::Dist;
+    pub use self::dist::Dist;
 }
 
 /// `xtask` command arguments.
@@ -62,6 +67,11 @@ pub enum Command {
     #[cfg(feature = "command-build")]
     #[cfg_attr(docsrs, doc(cfg(feature = "command-build")))]
     Build(Build),
+
+    /// Run `cargo clippy` on all workspaces in the current directory and subdirectories
+    #[cfg(feature = "command-clippy")]
+    #[cfg_attr(docsrs, doc(cfg(feature = "command-clippy")))]
+    Clippy(Clippy),
 
     /// Create the archive file for distribution
     #[cfg(feature = "command-dist-archive")]
@@ -120,6 +130,9 @@ impl Command {
         match self {
             #[cfg(feature = "command-build")]
             Self::Build(args) => args.run(config),
+
+            #[cfg(feature = "command-clippy")]
+            Self::Clippy(args) => args.run(config),
 
             #[cfg(feature = "command-dist-archive")]
             Self::DistArchive(args) => args.run(config.dist()?),

@@ -21,9 +21,10 @@ impl Args {
             command_options,
         } = self;
 
-        let current_dir = std::env::current_dir()?;
+        let current_workspace_root = &cli_xtask::current_workspace().workspace_root;
+
         for (workspace_root, metadata) in crate::all_workspaces()? {
-            let is_root = workspace_root == current_dir;
+            let is_root = &workspace_root == current_workspace_root;
             if is_root && *no_root {
                 continue;
             }

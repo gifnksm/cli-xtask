@@ -70,7 +70,9 @@ fn all_workspaces() -> eyre::Result<Vec<(Utf8PathBuf, Metadata)>> {
     let mut workspaces = HashMap::new();
     let mut target_dirs = HashSet::new();
 
-    let mut it = WalkDir::new(".")
+    let current_workspace_root = &cli_xtask::current_workspace().workspace_root;
+
+    let mut it = WalkDir::new(&current_workspace_root)
         .sort_by(
             |a, b| match (a.file_type().is_file(), b.file_type().is_file()) {
                 (true, true) => a.file_name().cmp(b.file_name()),

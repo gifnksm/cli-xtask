@@ -74,7 +74,7 @@ impl<'a> ToRelative for &'a Utf8Path {
     type Output = &'a Utf8Path;
     fn to_relative(self) -> Self::Output {
         let relative = self
-            .strip_prefix(&crate::cargo_workspace().workspace_root)
+            .strip_prefix(&crate::current_workspace().workspace_root)
             .unwrap_or(self);
         if relative == "" {
             Utf8Path::new(".")

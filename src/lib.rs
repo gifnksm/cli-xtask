@@ -87,14 +87,14 @@ pub use config::{
     TargetConfig, TargetConfigBuilder,
 };
 
-/// Returns a cargo workspace metadata.
-pub fn cargo_workspace() -> &'static Metadata {
+/// Returns a current cargo workspace metadata.
+pub fn current_workspace() -> &'static Metadata {
     static METADATA: Lazy<Metadata> = Lazy::new(|| MetadataCommand::new().exec().unwrap());
     &*METADATA
 }
 
 feature_logger! {
-    /// Install a tracing-subscriber as a logger.
+    /// Install a `tracing-subscriber` as a logger.
     pub fn install_logger() -> eyre::Result<()> {
         if std::env::var_os("RUST_LOG").is_none() {
             std::env::set_var("RUST_LOG", "info");
@@ -111,7 +111,7 @@ feature_logger! {
 }
 
 feature_error_handler! {
-    /// Install a color-eyre as a error/panic handler.
+    /// Install a `color-eyre` as a error/panic handler.
     pub fn install_error_handler() -> eyre::Result<()> {
         color_eyre::install()?;
         Ok(())

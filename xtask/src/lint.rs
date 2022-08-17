@@ -1,5 +1,5 @@
 use clap::Parser;
-use cli_xtask::workspace;
+use cli_xtask::{process, workspace};
 
 #[derive(Debug, clap::Parser)]
 pub(crate) struct Args {}
@@ -23,7 +23,7 @@ impl Args {
                 for feature_args in crate::feature_combinations(package) {
                     // rustup run nightly cargo udeps --package <pkg> <features>
                     // cargo +nightly udeps fails on windows, so use rustup instead
-                    crate::execute_on(
+                    process::execute_on(
                         metadata,
                         "rustup",
                         [

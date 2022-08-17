@@ -1,4 +1,4 @@
-use cli_xtask::workspace;
+use cli_xtask::{process, workspace};
 
 #[derive(Debug, clap::Parser)]
 pub(crate) struct Args {
@@ -13,7 +13,7 @@ impl Args {
 
         for metadata in workspace::all() {
             for package in metadata.workspace_packages() {
-                crate::execute_on(
+                process::execute_on(
                     metadata,
                     "cargo",
                     ["fmt", "--package", &package.name]

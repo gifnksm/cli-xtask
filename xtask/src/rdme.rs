@@ -1,4 +1,4 @@
-use cli_xtask::workspace;
+use cli_xtask::{process, workspace};
 
 #[derive(Debug, clap::Parser)]
 pub(crate) struct Args {
@@ -12,7 +12,7 @@ impl Args {
         let Self { extra_options } = self;
 
         for metadata in workspace::all() {
-            crate::execute_on(
+            process::execute_on(
                 metadata,
                 "cargo",
                 ["rdme"]

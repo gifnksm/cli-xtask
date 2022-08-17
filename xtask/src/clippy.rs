@@ -1,4 +1,4 @@
-use cli_xtask::workspace;
+use cli_xtask::{process, workspace};
 
 #[derive(Debug, clap::Parser)]
 pub(crate) struct Args {
@@ -14,7 +14,7 @@ impl Args {
         for metadata in workspace::all() {
             for package in metadata.workspace_packages() {
                 for feature_args in crate::feature_combinations(package) {
-                    crate::execute_on(
+                    process::execute_on(
                         metadata,
                         "cargo",
                         ["clippy", "--all-targets", "--package", &package.name]

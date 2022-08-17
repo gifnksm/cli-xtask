@@ -1,4 +1,4 @@
-use cli_xtask::workspace;
+use cli_xtask::{process, workspace};
 
 #[derive(Debug, clap::Parser)]
 pub(crate) struct Args {
@@ -16,7 +16,7 @@ impl Args {
                 for feature_args in crate::feature_combinations(package) {
                     // cargo test --package <pkg> <features> <extra_options>
                     // DO NOT USE `--all-targets` here, doctests are not built with `--all-targets`
-                    crate::execute_on(
+                    process::execute_on(
                         metadata,
                         "cargo",
                         ["test", "--package", &package.name]

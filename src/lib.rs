@@ -79,6 +79,8 @@ feature_command! {
 mod config;
 /// Utility functions for working with paths.
 pub mod fs;
+/// Utility functions for working with processes.
+pub mod process;
 /// Utility functions for working with workspaces.
 pub mod workspace;
 

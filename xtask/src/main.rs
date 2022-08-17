@@ -1,8 +1,5 @@
-use std::process::Command;
-
-use cargo_metadata::{Metadata, Package};
+use cargo_metadata::Package;
 use clap::Parser;
-use cli_xtask::fs::ToRelative;
 
 mod build;
 mod clippy;
@@ -55,41 +52,6 @@ fn main() -> eyre::Result<()> {
     tracing::info!("Running on {}", std::env::current_dir()?.display());
     Args::parse().run()?;
 
-    Ok(())
-}
-
-fn execute_on(
-    metadata: &Metadata,
-    command: impl AsRef<str>,
-    args: impl IntoIterator<Item = impl Into<String>>,
-) -> eyre::Result<()> {
-    let command = command.as_ref();
-    let args = args.into_iter().map(Into::into).collect::<Vec<_>>();
-
-    let workspace_root = &metadata.workspace_root;
-    tracing::info!(
-        "[{}]$ {} {}",
-        workspace_root.to_relative(),
-        command,
-        args.join(" ")
-    );
-    let status = Command::new(command)
-        .args(args)
-        .current_dir(workspace_root)
-        .status()?;
-
-    if !status.success() {
-        tracing::error!(
-            "Command for {} failed with status {}",
-            workspace_root.to_relative(),
-            status.code().unwrap()
-        );
-        return Err(eyre::eyre!(
-            "command for {} failed with status {}",
-            workspace_root.to_relative(),
-            status.code().unwrap()
-        ));
-    }
     Ok(())
 }
 

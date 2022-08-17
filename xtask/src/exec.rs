@@ -1,4 +1,4 @@
-use cli_xtask::workspace;
+use cli_xtask::{process, workspace};
 
 #[derive(Debug, clap::Parser)]
 pub(crate) struct Args {
@@ -33,7 +33,7 @@ impl Args {
             if !is_root && *root_only {
                 continue;
             }
-            crate::execute_on(metadata, command, command_options)?;
+            process::execute_on(metadata, command, command_options)?;
         }
 
         Ok(())

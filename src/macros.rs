@@ -190,6 +190,16 @@ macro_rules! feature_command_fmt {
     };
 }
 
+macro_rules! feature_command_rdme {
+    ($($item:item)*) => {
+        $(
+            #[cfg(feature = "command-rdme")]
+            #[cfg_attr(docsrs, doc(cfg(feature = "command-rdme")))]
+            $item
+        )*
+    };
+}
+
 macro_rules! feature_command_test {
     ($($item:item)*) => {
         $(

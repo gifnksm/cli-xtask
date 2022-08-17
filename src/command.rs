@@ -65,6 +65,11 @@ feature_command_fmt! {
     pub use self::fmt::Fmt;
 }
 
+feature_command_rdme! {
+    mod rdme;
+    pub use self::rdme::Rdme;
+}
+
 feature_command_test! {
     mod test;
     pub use self::test::Test;
@@ -138,6 +143,11 @@ pub enum Command {
     #[cfg_attr(docsrs, doc(cfg(feature = "command-fmt")))]
     Fmt(Fmt),
 
+    /// Run `cargo rdme` on all workspaces in the current directory and subdirectories
+    #[cfg(feature = "command-rdme")]
+    #[cfg_attr(docsrs, doc(cfg(feature = "command-rdme")))]
+    Rdme(rdme::Rdme),
+
     /// Run `cargo test` on all workspaces in the current directory and subdirectories
     #[cfg(feature = "command-test")]
     #[cfg_attr(docsrs, doc(cfg(feature = "command-test")))]
@@ -186,6 +196,9 @@ impl Command {
 
             #[cfg(feature = "command-fmt")]
             Self::Fmt(args) => args.run(config),
+
+            #[cfg(feature = "command-rdme")]
+            Self::Rdme(args) => args.run(config),
 
             #[cfg(feature = "command-test")]
             Self::Test(args) => args.run(config),

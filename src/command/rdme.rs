@@ -1,14 +1,18 @@
-use cli_xtask::{process, workspace};
+use clap::Parser;
 
-#[derive(Debug, clap::Parser)]
-pub(crate) struct Args {
+use crate::{process, workspace, Config};
+
+/// `rdme` subcommand arguments.
+#[derive(Debug, Parser)]
+pub struct Rdme {
     /// Arguments to pass to the `cargo rdme`
     extra_options: Vec<String>,
 }
 
-impl Args {
-    #[tracing::instrument(name = "rdme", skip_all, err)]
-    pub(crate) fn run(&self) -> eyre::Result<()> {
+impl Rdme {
+    /// Execute `rdme` subcommand workflow.
+    #[tracing::instrument(name = "rdme", parent = None, skip_all, err)]
+    pub fn run(&self, _config: &Config) -> eyre::Result<()> {
         let Self { extra_options } = self;
 
         for metadata in workspace::all() {

@@ -15,7 +15,7 @@ impl Args {
         cli_xtask::command::Clippy::parse_from(["clippy", "--", "--", "-D", "warnings"])
             .run(config)?;
         // cargo rdme --check
-        crate::rdme::Args::parse_from(["rdme", "--", "--check"]).run()?;
+        cli_xtask::command::Rdme::parse_from(["rdme", "--", "--check"]).run(config)?;
         // cargo udeps
         crate::udeps::Args::parse_from(["udeps"]).run()?;
 

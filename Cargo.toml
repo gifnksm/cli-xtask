@@ -36,11 +36,19 @@ bin-crate = [
     "command-fmt",
     "command-test",
 ]
+bin-crate-extra = [
+    "bin-crate",
+    "command-rdme",
+]
 lib-crate = [
     "command-build",
     "command-clippy",
     "command-fmt",
     "command-test",
+]
+lib-crate-extra = [
+    "lib-crate",
+    "command-rdme",
 ]
 
 main = ["logger", "error-handler"]
@@ -62,6 +70,7 @@ command-dist-build-readme = ["dep:clap"]
 command-dist-clean = ["dep:clap"]
 command-dist = ["command-dist-archive", "dep:clap"]
 command-fmt = ["dep:clap"]
+command-rdme = ["dep:clap"]
 command-test = ["dep:clap"]
 
 [dependencies]

@@ -4,7 +4,6 @@ use cli_xtask::{Config, ConfigBuilder};
 
 mod exec;
 mod lint;
-mod udeps;
 
 #[derive(Debug, Parser)]
 enum Args {
@@ -14,8 +13,6 @@ enum Args {
     Exec(exec::Args),
     /// Run all lint commands on all workspaces in the current directory and subdirectories
     Lint(lint::Args),
-    /// Run `cargo udeps` on all workspaces in the current directory and subdirectories
-    Udeps(udeps::Args),
 }
 
 impl Args {
@@ -24,7 +21,6 @@ impl Args {
             Self::Command(args) => args.run(config),
             Self::Exec(args) => args.run(),
             Self::Lint(args) => args.run(config),
-            Self::Udeps(args) => args.run(),
         }
     }
 }

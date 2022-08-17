@@ -209,6 +209,15 @@ macro_rules! feature_command_test {
         )*
     };
 }
+macro_rules! feature_command_udeps {
+    ($($item:item)*) => {
+        $(
+            #[cfg(feature = "command-udeps")]
+            #[cfg_attr(docsrs, doc(cfg(feature = "command-udeps")))]
+            $item
+        )*
+    };
+}
 
 macro_rules! feature_clap_command {
     ($($item:item)*) => {

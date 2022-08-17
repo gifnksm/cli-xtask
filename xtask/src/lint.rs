@@ -17,7 +17,7 @@ impl Args {
         // cargo rdme --check
         cli_xtask::command::Rdme::parse_from(["rdme", "--", "--check"]).run(config)?;
         // cargo udeps
-        crate::udeps::Args::parse_from(["udeps"]).run()?;
+        cli_xtask::command::Udeps::parse_from(["udeps"]).run(config)?;
 
         for metadata in workspace::all() {
             for package in metadata.workspace_packages() {

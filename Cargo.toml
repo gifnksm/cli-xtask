@@ -39,6 +39,7 @@ bin-crate = [
 bin-crate-extra = [
     "bin-crate",
     "command-rdme",
+    "command-udeps",
 ]
 lib-crate = [
     "command-build",
@@ -49,6 +50,7 @@ lib-crate = [
 lib-crate-extra = [
     "lib-crate",
     "command-rdme",
+    "command-udeps",
 ]
 
 main = ["logger", "error-handler"]
@@ -72,6 +74,7 @@ command-dist = ["command-dist-archive", "dep:clap"]
 command-fmt = ["dep:clap"]
 command-rdme = ["dep:clap"]
 command-test = ["dep:clap"]
+command-udeps = ["dep:clap"]
 
 [dependencies]
 cargo_metadata = "0.15.0"

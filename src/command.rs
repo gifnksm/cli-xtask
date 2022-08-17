@@ -75,6 +75,11 @@ feature_command_test! {
     pub use self::test::Test;
 }
 
+feature_command_udeps! {
+    mod udeps;
+    pub use self::udeps::Udeps;
+}
+
 /// `xtask` command arguments.
 #[derive(Debug, clap::Parser)]
 pub enum Command {
@@ -152,6 +157,11 @@ pub enum Command {
     #[cfg(feature = "command-test")]
     #[cfg_attr(docsrs, doc(cfg(feature = "command-test")))]
     Test(Test),
+
+    /// Run `cargo udeps` on all workspaces in the current directory and subdirectories
+    #[cfg(feature = "command-udeps")]
+    #[cfg_attr(docsrs, doc(cfg(feature = "command-udeps")))]
+    Udeps(Udeps),
 }
 
 impl Command {
@@ -202,6 +212,9 @@ impl Command {
 
             #[cfg(feature = "command-test")]
             Self::Test(args) => args.run(config),
+
+            #[cfg(feature = "command-udeps")]
+            Self::Udeps(args) => args.run(config),
         }
     }
 }

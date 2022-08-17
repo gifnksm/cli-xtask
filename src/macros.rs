@@ -150,6 +150,16 @@ macro_rules! feature_command_dist_build_readme {
     };
 }
 
+macro_rules! feature_command_dist_clean {
+    ($($item:item)*) => {
+        $(
+            #[cfg(feature = "command-dist-clean")]
+            #[cfg_attr(docsrs, doc(cfg(feature = "command-dist-clean")))]
+            $item
+        )*
+    };
+}
+
 macro_rules! feature_clap_command {
     ($($item:item)*) => {
         $(

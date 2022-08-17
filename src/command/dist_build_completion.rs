@@ -1,5 +1,3 @@
-use std::fs;
-
 use cargo_metadata::camino::{Utf8Path, Utf8PathBuf};
 use clap::Parser;
 use clap_complete::Shell;
@@ -19,9 +17,7 @@ impl DistBuildCompletion {
         let Self {} = self;
 
         let out_dir = config.dist_working_directory(None).join("completion");
-        if out_dir.is_dir() {
-            fs::remove_dir_all(&out_dir)?;
-        }
+        crate::fs::remove_dir(&out_dir)?;
 
         let shells = [
             Shell::Bash,
@@ -36,7 +32,6 @@ impl DistBuildCompletion {
                 let target_name = target.name();
                 if let Some(cmd) = target.command() {
                     for shell in shells {
-                        fs::create_dir_all(&out_dir)?;
                         generate(shell, cmd, target_name, &out_dir)?;
                     }
                 }
@@ -53,6 +48,7 @@ fn generate(
     bin_name: &str,
     out_dir: &Utf8Path,
 ) -> eyre::Result<Utf8PathBuf> {
+    crate::fs::create_dir(&out_dir)?;
     let path = clap_complete::generate_to(shell, &mut cmd.clone(), bin_name, &out_dir)?;
     let path = Utf8PathBuf::try_from(path)?;
     tracing::info!("Generated {shell} completion file: {}", path.to_relative());

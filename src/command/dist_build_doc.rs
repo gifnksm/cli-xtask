@@ -1,5 +1,3 @@
-use std::fs;
-
 use clap::Parser;
 
 use crate::DistConfig;
@@ -19,10 +17,7 @@ impl DistBuildDoc {
         let working_dir = config.dist_working_directory(None);
         let doc_dir = working_dir.join("doc");
         let add_package_dir = packages.len() > 1;
-
-        if doc_dir.is_dir() {
-            fs::remove_dir_all(&doc_dir)?;
-        }
+        crate::fs::remove_dir(&doc_dir)?;
 
         let Self {} = self;
 
@@ -38,7 +33,6 @@ impl DistBuildDoc {
                 for file in files {
                     let src_file = src_dir.join(file);
                     let dest_file = dest_dir.join(file);
-                    fs::create_dir_all(&dest_dir)?;
                     crate::fs::copy(&src_file, &dest_file)?;
                 }
                 continue;

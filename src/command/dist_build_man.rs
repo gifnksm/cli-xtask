@@ -1,4 +1,4 @@
-use std::{fs, iter};
+use std::iter;
 
 use cargo_metadata::camino::{Utf8Path, Utf8PathBuf};
 use clap::Parser;
@@ -21,10 +21,7 @@ impl DistBuildMan {
 
         let man_dir = config.dist_working_directory(None).join("man");
         let section = "1";
-
-        if man_dir.is_dir() {
-            fs::remove_dir_all(&man_dir)?;
-        }
+        crate::fs::remove_dir(&man_dir)?;
 
         for package in config.packages() {
             for target in package.targets().into_iter().flatten() {
@@ -80,7 +77,6 @@ fn dist_build_man_pages<'a>(
     let it = iterate_commands(cmd).map(move |cmd| {
         let command_name = cmd.get_name().to_string();
         let filename = format!("{command_name}.{}", section);
-        fs::create_dir_all(&man_dir)?;
         let path = man_dir.join(&filename);
         let man = Man::new(cmd.clone())
             .title(command_name.to_uppercase())

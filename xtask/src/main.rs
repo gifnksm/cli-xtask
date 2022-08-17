@@ -1,16 +1,8 @@
-use std::{
-    cmp::Ordering,
-    collections::{hash_map::Entry, HashMap, HashSet},
-    process::Command,
-};
+use std::process::Command;
 
-use cargo_metadata::{
-    camino::{Utf8Path, Utf8PathBuf},
-    Metadata, MetadataCommand, Package,
-};
+use cargo_metadata::{Metadata, Package};
 use clap::Parser;
 use cli_xtask::fs::ToRelative;
-use walkdir::WalkDir;
 
 mod build;
 mod clippy;
@@ -64,62 +56,6 @@ fn main() -> eyre::Result<()> {
     Args::parse().run()?;
 
     Ok(())
-}
-
-fn all_workspaces() -> eyre::Result<Vec<(Utf8PathBuf, Metadata)>> {
-    let mut workspaces = HashMap::new();
-    let mut target_dirs = HashSet::new();
-
-    let current_workspace_root = &cli_xtask::current_workspace().workspace_root;
-
-    let mut it = WalkDir::new(&current_workspace_root)
-        .sort_by(
-            |a, b| match (a.file_type().is_file(), b.file_type().is_file()) {
-                (true, true) => a.file_name().cmp(b.file_name()),
-                (true, false) => Ordering::Less,
-                (false, true) => Ordering::Greater,
-                (false, false) => a.file_name().cmp(b.file_name()),
-            },
-        )
-        .into_iter();
-    while let Some(entry) = it.next() {
-        let entry = entry?;
-        let path = <&Utf8Path>::try_from(entry.path())?;
-
-        if entry.file_type().is_file() && path.file_name() == Some("Cargo.toml") {
-            tracing::debug!("Found manifest {path}");
-            let metadata = MetadataCommand::new().manifest_path(path).exec()?;
-            match workspaces.entry(metadata.workspace_root.clone()) {
-                Entry::Occupied(_e) => {}
-                Entry::Vacant(e) => {
-                    if metadata.target_directory.is_dir() {
-                        let target_dir = metadata.target_directory.canonicalize_utf8()?;
-                        tracing::debug!(
-                            "Found workspace {}",
-                            metadata.workspace_root.to_relative()
-                        );
-                        target_dirs.insert(target_dir);
-                    }
-                    e.insert(metadata);
-                }
-            }
-        }
-
-        if entry.file_type().is_dir() && path.file_name() == Some(".git") {
-            tracing::debug!("Skipping git directory {}", path.to_relative());
-            it.skip_current_dir();
-            continue;
-        }
-        if entry.file_type().is_dir() && target_dirs.contains(&path.canonicalize_utf8()?) {
-            tracing::debug!("Skipping target directory {}", path.to_relative());
-            it.skip_current_dir();
-            continue;
-        }
-    }
-
-    let mut workspaces = workspaces.into_iter().collect::<Vec<_>>();
-    workspaces.sort_by(|(a, _), (b, _)| a.cmp(b));
-    Ok(workspaces)
 }
 
 fn execute_on(

@@ -46,9 +46,6 @@
 
 #![doc(html_root_url = "https://docs.rs/cli-xtask/0.0.0")]
 
-use cargo_metadata::{Metadata, MetadataCommand};
-use once_cell::sync::Lazy;
-
 #[macro_use]
 mod macros;
 
@@ -64,13 +61,13 @@ feature_error_handler! {
     pub use color_eyre;
 }
 
-// module definition & exports
+// Module definition & exports
 feature_archive! {
     /// Utilities for creating archives.
     pub mod archive;
 }
 feature_cargo! {
-    /// Utilities for working with Cargo.
+    /// Utilities for Cargo command execution.
     pub mod cargo;
 }
 feature_command! {
@@ -78,20 +75,17 @@ feature_command! {
     pub mod command;
     pub use command::Command;
 }
-/// Utility functions for working with paths.
-pub mod fs;
 
 mod config;
-pub use config::{
+/// Utility functions for working with paths.
+pub mod fs;
+/// Utility functions for working with workspaces.
+pub mod workspace;
+
+pub use crate::config::{
     Config, ConfigBuilder, DistConfig, DistConfigBuilder, PackageConfig, PackageConfigBuilder,
     TargetConfig, TargetConfigBuilder,
 };
-
-/// Returns a current cargo workspace metadata.
-pub fn current_workspace() -> &'static Metadata {
-    static METADATA: Lazy<Metadata> = Lazy::new(|| MetadataCommand::new().exec().unwrap());
-    &*METADATA
-}
 
 feature_logger! {
     /// Install a `tracing-subscriber` as a logger.
@@ -128,7 +122,7 @@ feature_main! {
 
         #[cfg(command)]
         {
-            let metadata = cargo_workspace();
+            let metadata = workspace::current();
             let (dist, package) = DistConfigBuilder::from_root_package(metadata)?;
             let dist = dist.package(package.all_binaries().build()).build();
             let config = ConfigBuilder::new().dist(dist).build();

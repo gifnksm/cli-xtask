@@ -1,3 +1,5 @@
+use cli_xtask::workspace;
+
 #[derive(Debug, clap::Parser)]
 pub(crate) struct Args {
     /// Arguments to pass to the `cargo fmt`
@@ -9,10 +11,10 @@ impl Args {
     pub(crate) fn run(&self) -> eyre::Result<()> {
         let Self { extra_options } = self;
 
-        for (_path, metadata) in crate::all_workspaces()? {
+        for metadata in workspace::all() {
             for package in metadata.workspace_packages() {
                 crate::execute_on(
-                    &metadata,
+                    metadata,
                     "cargo",
                     ["fmt", "--package", &package.name]
                         .into_iter()

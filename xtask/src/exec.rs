@@ -1,3 +1,5 @@
+use cli_xtask::workspace;
+
 #[derive(Debug, clap::Parser)]
 pub(crate) struct Args {
     /// Do not execute command on the root workspace.
@@ -21,17 +23,17 @@ impl Args {
             command_options,
         } = self;
 
-        let current_workspace_root = &cli_xtask::current_workspace().workspace_root;
+        let current_workspace_root = &workspace::current().workspace_root;
 
-        for (workspace_root, metadata) in crate::all_workspaces()? {
-            let is_root = &workspace_root == current_workspace_root;
+        for metadata in workspace::all() {
+            let is_root = &metadata.workspace_root == current_workspace_root;
             if is_root && *no_root {
                 continue;
             }
             if !is_root && *root_only {
                 continue;
             }
-            crate::execute_on(&metadata, command, command_options)?;
+            crate::execute_on(metadata, command, command_options)?;
         }
 
         Ok(())

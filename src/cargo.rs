@@ -15,14 +15,14 @@ use eyre::ensure;
 /// ```no_run
 /// # fn main() -> eyre::Result<()> {
 /// // executes cargo build
-/// let metadata = cli_xtask::cargo_workspace();
+/// let metadata = cli_xtask::workspace::current();
 /// for bin in cli_xtask::cargo::build(metadata, None, None, None, false, None)? {
 ///     let bin = bin?;
 ///     println!("{bin}");
 /// }
 ///
 /// // executes cross build --profile target --bin foo --target aarch64-unknown-linux-gnu
-/// let metadata = cli_xtask::cargo_workspace();
+/// let metadata = cli_xtask::workspace::current();
 /// let package = metadata.root_package().unwrap();
 /// let target = package.targets.iter().find(|t| t.name == "foo").unwrap();
 /// for bin in cli_xtask::cargo::build(metadata, Some(&package), Some(target), Some("release"), true, Some("aarch64-unknown-linux-gnu"))? {

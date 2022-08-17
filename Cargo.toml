@@ -65,6 +65,7 @@ tar = { version = "0.4.38", optional = true }
 time = { version = "0.3.13", optional = true }
 tracing = "0.1.36"
 tracing-subscriber = { version = "0.3.15", features = ["env-filter"], optional = true }
+walkdir = "2.3.2"
 
 [dev-dependencies]
 assert_cmd = "2.0.4"

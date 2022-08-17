@@ -3,6 +3,8 @@ use std::{fmt, fs::File};
 use cargo_metadata::camino::{Utf8Path, Utf8PathBuf};
 use eyre::ensure;
 
+use crate::workspace;
+
 /// Create a new [`File`](std::fs::File) from a `path`, and output the path to log.
 #[tracing::instrument(name = "create_file" fields(path = %path.as_ref().to_relative()), err)]
 pub fn create_file(path: impl AsRef<Utf8Path>) -> eyre::Result<File> {
@@ -74,7 +76,7 @@ impl<'a> ToRelative for &'a Utf8Path {
     type Output = &'a Utf8Path;
     fn to_relative(self) -> Self::Output {
         let relative = self
-            .strip_prefix(&crate::current_workspace().workspace_root)
+            .strip_prefix(&workspace::current().workspace_root)
             .unwrap_or(self);
         if relative == "" {
             Utf8Path::new(".")

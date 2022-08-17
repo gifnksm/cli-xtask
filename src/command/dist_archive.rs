@@ -20,6 +20,7 @@ impl DistArchive {
         let noarch_path = config.dist_base_working_directory().join("noarch");
         let noarch_path = noarch_path.is_dir().then(|| noarch_path);
 
+        let mut created = false;
         for dir in config.dist_base_working_directory().read_dir_utf8()? {
             let dir = dir?;
             if !dir.file_type()?.is_dir() {
@@ -37,6 +38,16 @@ impl DistArchive {
                 &archive_path,
                 [dir].into_iter().chain(noarch_path.as_deref()),
             )?;
+
+            tracing::info!("Archive created successfully: {archive_path}");
+            created = true;
+        }
+
+        if !created && noarch_path.is_some() {
+            let archive_name = format!("{}-noarch.tar.gz", config.name());
+            let archive_path = dist_dir.join(&archive_name);
+
+            archive::create(&archive_path, [noarch_path.unwrap()].into_iter())?;
 
             tracing::info!("Archive created successfully: {archive_path}");
         }

@@ -23,6 +23,7 @@ rustdoc-args = ["--cfg", "docsrs"]
 default = []
 
 bin-crate = [
+    "command-dist-build-bin",
     "command-dist-build-completion",
     "command-dist-build-doc",
     "command-dist-build-license",

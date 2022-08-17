@@ -35,11 +35,13 @@ impl DistBuildReadme {
         for package in packages {
             if let Some(readme) = &package.package().readme {
                 let src_file = package.root_dir().join(readme);
-                let dest_file = if add_package_dir {
-                    readme_dir.join(package.name()).join(readme)
+                let dest_dir = if add_package_dir {
+                    readme_dir.join(package.name())
                 } else {
-                    readme_dir.join(readme)
+                    readme_dir.clone()
                 };
+                fs::create_dir_all(&dest_dir)?;
+                let dest_file = dest_dir.join(readme);
                 crate::fs::copy(&src_file, &dest_file)?;
             }
         }

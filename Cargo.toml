@@ -29,6 +29,7 @@ bin-crate = [
     "command-dist-build-license",
     "command-dist-build-man",
     "command-dist-build-readme",
+    "command-dist-clean",
     "command-dist",
 ]
 lib-crate = []
@@ -47,6 +48,7 @@ command-dist-build-doc = ["dep:clap"]
 command-dist-build-license = ["dep:regex", "dep:clap"]
 command-dist-build-man = ["dep:clap", "dep:clap_mangen", "dep:time"]
 command-dist-build-readme = ["dep:clap"]
+command-dist-clean = ["dep:clap"]
 command-dist = ["command-dist-archive", "dep:clap"]
 
 [dependencies]

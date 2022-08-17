@@ -1,5 +1,3 @@
-use std::fs;
-
 use clap::Parser;
 
 use crate::{archive, DistConfig};
@@ -14,8 +12,12 @@ impl DistArchive {
     pub fn run(&self, config: &DistConfig) -> eyre::Result<()> {
         let Self {} = self;
 
+        if !config.dist_base_working_directory().is_dir() {
+            tracing::warn!("no build artifacts found");
+            return Ok(());
+        }
+
         let dist_dir = config.dist_target_directory();
-        fs::create_dir_all(&dist_dir)?;
 
         let noarch_path = config.dist_base_working_directory().join("noarch");
         let noarch_path = noarch_path.is_dir().then(|| noarch_path);

@@ -1,5 +1,3 @@
-use std::fs;
-
 use clap::Parser;
 
 use crate::DistConfig;
@@ -22,9 +20,7 @@ impl DistBuildReadme {
         if packages.len() > 1 {
             readme_dir = working_dir.join("readme");
             add_package_dir = true;
-            if readme_dir.is_dir() {
-                fs::remove_dir_all(&readme_dir)?;
-            }
+            crate::fs::remove_dir(&readme_dir)?;
         } else {
             readme_dir = working_dir;
             add_package_dir = false;
@@ -40,7 +36,6 @@ impl DistBuildReadme {
                 } else {
                     readme_dir.clone()
                 };
-                fs::create_dir_all(&dest_dir)?;
                 let dest_file = dest_dir.join(readme);
                 crate::fs::copy(&src_file, &dest_file)?;
             }

@@ -60,6 +60,16 @@ macro_rules! feature_command {
     };
 }
 
+macro_rules! feature_command_build {
+    ($($item:item)*) => {
+        $(
+            #[cfg(feature = "command-build")]
+            #[cfg_attr(docsrs, doc(cfg(feature = "command-build")))]
+            $item
+        )*
+    };
+}
+
 macro_rules! feature_command_dist {
     ($($item:item)*) => {
         $(

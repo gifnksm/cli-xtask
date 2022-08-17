@@ -1,5 +1,10 @@
 use crate::Config;
 
+feature_command_build! {
+    mod build;
+    pub use build::Build;
+}
+
 feature_command_dist_archive! {
     mod dist_archive;
     pub use dist_archive::DistArchive;
@@ -53,6 +58,11 @@ feature_command_dist! {
 /// `xtask` command arguments.
 #[derive(Debug, clap::Parser)]
 pub enum Command {
+    /// Run `cargo build` on all workspaces in the current directory and subdirectories
+    #[cfg(feature = "command-build")]
+    #[cfg_attr(docsrs, doc(cfg(feature = "command-build")))]
+    Build(Build),
+
     /// Create the archive file for distribution
     #[cfg(feature = "command-dist-archive")]
     #[cfg_attr(docsrs, doc(cfg(feature = "command-dist-archive")))]
@@ -108,6 +118,9 @@ impl Command {
     /// Execute subcommand workflow.
     pub fn run(&self, config: &Config) -> eyre::Result<()> {
         match self {
+            #[cfg(feature = "command-build")]
+            Self::Build(args) => args.run(config),
+
             #[cfg(feature = "command-dist-archive")]
             Self::DistArchive(args) => args.run(config.dist()?),
 

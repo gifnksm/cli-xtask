@@ -1,7 +1,7 @@
 use cargo_metadata::Package;
 use clap::Parser;
+use cli_xtask::{Config, ConfigBuilder};
 
-mod build;
 mod clippy;
 mod exec;
 mod fmt;
@@ -12,8 +12,8 @@ mod udeps;
 
 #[derive(Debug, Parser)]
 enum Args {
-    /// Run `cargo build` on all workspaces in the current directory and subdirectories
-    Build(build::Args),
+    #[clap(flatten)]
+    Command(cli_xtask::Command),
     /// Run `cargo clippy` on all workspaces in the current directory and subdirectories
     Clippy(clippy::Args),
     /// Run commands on all workspaces in the current directory and subdirectories
@@ -31,9 +31,9 @@ enum Args {
 }
 
 impl Args {
-    fn run(&self) -> eyre::Result<()> {
+    fn run(&self, config: &Config) -> eyre::Result<()> {
         match self {
-            Self::Build(args) => args.run(),
+            Self::Command(args) => args.run(config),
             Self::Clippy(args) => args.run(),
             Self::Exec(args) => args.run(),
             Self::Fmt(args) => args.run(),
@@ -50,7 +50,8 @@ fn main() -> eyre::Result<()> {
     cli_xtask::install_logger()?;
 
     tracing::info!("Running on {}", std::env::current_dir()?.display());
-    Args::parse().run()?;
+    let config = ConfigBuilder::new().build();
+    Args::parse().run(&config)?;
 
     Ok(())
 }

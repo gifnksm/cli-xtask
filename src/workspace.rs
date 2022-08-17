@@ -5,7 +5,7 @@ use std::{
 
 use cargo_metadata::{
     camino::{Utf8Path, Utf8PathBuf},
-    Metadata, MetadataCommand,
+    Metadata, MetadataCommand, Package,
 };
 use once_cell::sync::Lazy;
 use walkdir::WalkDir;
@@ -97,4 +97,18 @@ fn collect_workspaces(base_dir: &Utf8Path) -> eyre::Result<Vec<Metadata>> {
     workspaces.sort_by(|a, b| a.workspace_root.cmp(&b.workspace_root));
 
     Ok(workspaces)
+}
+
+/// Returns a list of all feature combinations for the given package.
+pub fn feature_combination_args(package: &Package) -> Vec<Vec<&str>> {
+    if package.features.is_empty() {
+        return vec![vec![]];
+    }
+
+    let features = package.features.keys();
+    let mut args = vec![vec!["--all-features"], vec!["--no-default-features"]];
+    for feature in features {
+        args.push(vec!["--features", feature, "--no-default-features"]);
+    }
+    args
 }

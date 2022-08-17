@@ -23,6 +23,7 @@ rustdoc-args = ["--cfg", "docsrs"]
 default = []
 
 bin-crate = [
+    "command-build",
     "command-dist-build-bin",
     "command-dist-build-completion",
     "command-dist-build-doc",
@@ -32,7 +33,9 @@ bin-crate = [
     "command-dist-clean",
     "command-dist",
 ]
-lib-crate = []
+lib-crate = [
+    "command-build",
+]
 
 main = ["logger", "error-handler"]
 logger = ["dep:tracing-subscriber"]
@@ -41,6 +44,7 @@ error-handler = ["dep:color-eyre"]
 archive = ["dep:flate2", "dep:tar"]
 cargo = []
 
+command-build = ["dep:clap"]
 command-dist-archive = ["archive", "dep:clap"]
 command-dist-build-bin = ["cargo", "dep:clap"]
 command-dist-build-completion = ["dep:clap", "dep:clap_complete"]

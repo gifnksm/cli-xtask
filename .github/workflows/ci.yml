@@ -33,6 +33,8 @@ jobs:
           os="$(echo '["ubuntu-latest", "macos-latest", "windows-latest"]' | jq -c)"
           echo "::set-output name=os::${os}"
 
+          jq -n --argjson rust "${rust}" --argjson os "${os}" '{ rust: $rust, os: $os }'
+
   set-workspace:
     runs-on: ubuntu-latest
     outputs:

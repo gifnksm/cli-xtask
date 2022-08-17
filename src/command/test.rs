@@ -1,19 +1,23 @@
-use cli_xtask::{process, workspace};
+use clap::Parser;
 
-#[derive(Debug, clap::Parser)]
-pub(crate) struct Args {
+use crate::{process, workspace, Config};
+
+/// `test` subcommand arguments.
+#[derive(Debug, Parser)]
+pub struct Test {
     /// Arguments to pass to the `cargo test`
     extra_options: Vec<String>,
 }
 
-impl Args {
-    #[tracing::instrument(name = "test", skip_all, err)]
-    pub(crate) fn run(&self) -> eyre::Result<()> {
+impl Test {
+    /// Execute `test` subcommand workflow.
+    #[tracing::instrument(name = "test", parent = None, skip_all, err)]
+    pub fn run(&self, _config: &Config) -> eyre::Result<()> {
         let Self { extra_options } = self;
 
         for metadata in workspace::all() {
             for package in metadata.workspace_packages() {
-                for feature_args in crate::feature_combinations(package) {
+                for feature_args in workspace::feature_combination_args(package) {
                     // cargo test --package <pkg> <features> <extra_options>
                     // DO NOT USE `--all-targets` here, doctests are not built with `--all-targets`
                     process::execute_on(

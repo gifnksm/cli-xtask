@@ -65,6 +65,11 @@ feature_command_fmt! {
     pub use self::fmt::Fmt;
 }
 
+feature_command_test! {
+    mod test;
+    pub use self::test::Test;
+}
+
 /// `xtask` command arguments.
 #[derive(Debug, clap::Parser)]
 pub enum Command {
@@ -132,6 +137,11 @@ pub enum Command {
     #[cfg(feature = "command-fmt")]
     #[cfg_attr(docsrs, doc(cfg(feature = "command-fmt")))]
     Fmt(Fmt),
+
+    /// Run `cargo test` on all workspaces in the current directory and subdirectories
+    #[cfg(feature = "command-test")]
+    #[cfg_attr(docsrs, doc(cfg(feature = "command-test")))]
+    Test(Test),
 }
 
 impl Command {
@@ -176,6 +186,9 @@ impl Command {
 
             #[cfg(feature = "command-fmt")]
             Self::Fmt(args) => args.run(config),
+
+            #[cfg(feature = "command-test")]
+            Self::Test(args) => args.run(config),
         }
     }
 }

@@ -190,6 +190,16 @@ macro_rules! feature_command_fmt {
     };
 }
 
+macro_rules! feature_command_test {
+    ($($item:item)*) => {
+        $(
+            #[cfg(feature = "command-test")]
+            #[cfg_attr(docsrs, doc(cfg(feature = "command-test")))]
+            $item
+        )*
+    };
+}
+
 macro_rules! feature_clap_command {
     ($($item:item)*) => {
         $(

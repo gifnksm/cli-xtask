@@ -5,7 +5,6 @@ use cli_xtask::{Config, ConfigBuilder};
 mod exec;
 mod lint;
 mod rdme;
-mod test;
 mod udeps;
 
 #[derive(Debug, Parser)]
@@ -18,8 +17,6 @@ enum Args {
     Lint(lint::Args),
     /// Run `cargo rdme` on all workspaces in the current directory and subdirectories
     Rdme(rdme::Args),
-    /// Run `cargo test` on all workspaces in the current directory and subdirectories
-    Test(test::Args),
     /// Run `cargo udeps` on all workspaces in the current directory and subdirectories
     Udeps(udeps::Args),
 }
@@ -31,7 +28,6 @@ impl Args {
             Self::Exec(args) => args.run(),
             Self::Lint(args) => args.run(config),
             Self::Rdme(args) => args.run(),
-            Self::Test(args) => args.run(),
             Self::Udeps(args) => args.run(),
         }
     }

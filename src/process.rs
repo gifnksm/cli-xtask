@@ -1,41 +1,86 @@
-use std::process::Command;
+use std::process::{Command, Stdio};
 
 use cargo_metadata::Metadata;
 
 use crate::fs::ToRelative;
 
-/// Executes the given command at the given workspace root direcotory.
-pub fn execute_on(
-    metadata: &Metadata,
-    command: impl AsRef<str>,
-    args: impl IntoIterator<Item = impl Into<String>>,
-) -> eyre::Result<()> {
-    let command = command.as_ref();
-    let args = args.into_iter().map(Into::into).collect::<Vec<_>>();
+/// Extension methods for [`std::process::Command`].
+pub trait CommandExt {
+    /// Executes the command as a child process on the workspace root directory, waiting for it to finish and checking the exit status.
+    fn workspace_spawn(&mut self, workspace: &Metadata) -> eyre::Result<()>;
 
-    let workspace_root = &metadata.workspace_root;
-    tracing::info!(
-        "[{}]$ {} {}",
-        workspace_root.to_relative(),
-        command,
-        args.join(" ")
-    );
-    let status = Command::new(command)
-        .args(args)
-        .current_dir(workspace_root)
-        .status()?;
+    /// Executes the command as a child process on the workspace root directory, waiting for it to finish and collecting all of its standard output.
+    fn workspace_stdout(&mut self, workspace: &Metadata) -> eyre::Result<Vec<u8>>;
+}
 
-    if !status.success() {
-        tracing::error!(
-            "Command for {} failed with status {}",
-            workspace_root.to_relative(),
-            status.code().unwrap()
+impl CommandExt for Command {
+    fn workspace_spawn(&mut self, workspace: &Metadata) -> eyre::Result<()> {
+        let workspace_root = &workspace.workspace_root;
+
+        self.current_dir(&workspace_root);
+
+        let program = self.get_program();
+        let args = self.get_args();
+        tracing::info!(
+            "[{}]$ {}{}",
+            workspace.workspace_root.to_relative(),
+            program.to_string_lossy(),
+            args.fold(String::new(), |mut s, a| {
+                s.push(' ');
+                s.push_str(a.to_string_lossy().as_ref());
+                s
+            })
         );
-        return Err(eyre::eyre!(
-            "command for {} failed with status {}",
-            workspace_root.to_relative(),
-            status.code().unwrap()
-        ));
+
+        let status = self.status()?;
+        if !status.success() {
+            tracing::error!(
+                "Command for {} failed with status {}",
+                workspace_root.to_relative(),
+                status.code().unwrap()
+            );
+            return Err(eyre::eyre!(
+                "command for {} failed with status {}",
+                workspace_root.to_relative(),
+                status.code().unwrap()
+            ));
+        }
+        Ok(())
     }
-    Ok(())
+
+    fn workspace_stdout(&mut self, workspace: &Metadata) -> eyre::Result<Vec<u8>> {
+        let workspace_root = &workspace.workspace_root;
+
+        self.current_dir(&workspace_root).stdout(Stdio::piped());
+
+        let program = self.get_program();
+        let args = self.get_args();
+        tracing::info!(
+            "[{}]$ {}{}",
+            workspace.workspace_root.to_relative(),
+            program.to_string_lossy(),
+            args.fold(String::new(), |mut s, a| {
+                s.push(' ');
+                s.push_str(a.to_string_lossy().as_ref());
+                s
+            })
+        );
+
+        let output = self.spawn()?.wait_with_output()?;
+
+        if !output.status.success() {
+            tracing::error!(
+                "Command for {} failed with status {}",
+                workspace_root.to_relative(),
+                output.status.code().unwrap()
+            );
+            return Err(eyre::eyre!(
+                "command for {} failed with status {}",
+                workspace_root.to_relative(),
+                output.status.code().unwrap()
+            ));
+        }
+
+        Ok(output.stdout)
+    }
 }

@@ -5,6 +5,8 @@ use cli_xtask::{
 };
 use tracing::Level;
 
+mod xtask_test;
+
 #[derive(Debug, clap::Parser)]
 #[clap(bin_name = "cargo xtask")]
 pub struct Args {
@@ -33,12 +35,14 @@ impl Args {
 enum Command {
     #[clap(flatten)]
     Command(cli_xtask::Command),
+    XtaskTest(xtask_test::XtaskTest),
 }
 
 impl Command {
     fn run(&self, config: &Config) -> eyre::Result<()> {
         match self {
             Self::Command(args) => args.run(config),
+            Self::XtaskTest(args) => args.run(config),
         }
     }
 }

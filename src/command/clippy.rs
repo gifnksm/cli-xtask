@@ -1,6 +1,8 @@
+use std::process::Command;
+
 use clap::Parser;
 
-use crate::{config::Config, process, workspace};
+use crate::{config::Config, process::CommandExt, workspace};
 
 /// `clippy` subcommand arguments.
 #[derive(Debug, Parser)]
@@ -15,17 +17,17 @@ impl Clippy {
     pub fn run(&self, _config: &Config) -> eyre::Result<()> {
         let Self { extra_options } = self;
 
-        for metadata in workspace::all() {
-            for package in metadata.workspace_packages() {
+        for workspace in workspace::all() {
+            for package in workspace.workspace_packages() {
                 for feature_args in workspace::feature_combination_args(package) {
-                    process::execute_on(
-                        metadata,
-                        "cargo",
-                        ["clippy", "--all-targets", "--package", &package.name]
-                            .into_iter()
-                            .chain(feature_args.iter().copied())
-                            .chain(extra_options.iter().map(String::as_str)),
-                    )?;
+                    Command::new("cargo")
+                        .args(
+                            ["clippy", "--all-targets", "--package", &package.name]
+                                .into_iter()
+                                .chain(feature_args.iter().copied())
+                                .chain(extra_options.iter().map(String::as_str)),
+                        )
+                        .workspace_spawn(workspace)?;
                 }
             }
         }

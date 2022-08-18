@@ -1,6 +1,8 @@
+use std::process::Command;
+
 use clap::Parser;
 
-use crate::{config::Config, process, workspace};
+use crate::{config::Config, process::CommandExt, workspace};
 
 /// `exec` subcommand arguments.
 #[derive(Debug, Parser)]
@@ -29,7 +31,9 @@ impl Exec {
         });
 
         for workspace in workspaces {
-            process::execute_on(workspace, command, command_options)?;
+            Command::new(command)
+                .args(command_options)
+                .workspace_spawn(workspace)?;
         }
 
         Ok(())

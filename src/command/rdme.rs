@@ -1,6 +1,8 @@
+use std::process::Command;
+
 use clap::Parser;
 
-use crate::{config::Config, process, workspace};
+use crate::{config::Config, process::CommandExt, workspace};
 
 /// `rdme` subcommand arguments.
 #[derive(Debug, Parser)]
@@ -15,14 +17,14 @@ impl Rdme {
     pub fn run(&self, _config: &Config) -> eyre::Result<()> {
         let Self { extra_options } = self;
 
-        for metadata in workspace::all() {
-            process::execute_on(
-                metadata,
-                "cargo",
-                ["rdme"]
-                    .into_iter()
-                    .chain(extra_options.iter().map(String::as_str)),
-            )?;
+        for workspace in workspace::all() {
+            Command::new("cargo")
+                .args(
+                    ["rdme"]
+                        .into_iter()
+                        .chain(extra_options.iter().map(String::as_str)),
+                )
+                .workspace_spawn(workspace)?;
         }
 
         Ok(())

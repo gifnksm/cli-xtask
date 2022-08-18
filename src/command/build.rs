@@ -1,6 +1,8 @@
+use std::process::Command;
+
 use clap::Parser;
 
-use crate::{config::Config, process, workspace};
+use crate::{config::Config, process::CommandExt, workspace};
 
 /// `build` subcommand arguments.
 #[derive(Debug, Parser)]
@@ -15,18 +17,18 @@ impl Build {
     pub fn run(&self, _config: &Config) -> eyre::Result<()> {
         let Self { extra_options } = self;
 
-        for metadata in workspace::all() {
-            for package in metadata.workspace_packages() {
+        for workspace in workspace::all() {
+            for package in workspace.workspace_packages() {
                 for feature_args in workspace::feature_combination_args(package) {
                     // cargo build --package <pkg> <features> <extra_options>
-                    process::execute_on(
-                        metadata,
-                        "cargo",
-                        ["build", "--package", &package.name]
-                            .into_iter()
-                            .chain(feature_args.iter().copied())
-                            .chain(extra_options.iter().map(String::as_str)),
-                    )?;
+                    Command::new("cargo")
+                        .args(
+                            ["build", "--package", &package.name]
+                                .into_iter()
+                                .chain(feature_args.iter().copied())
+                                .chain(extra_options.iter().map(String::as_str)),
+                        )
+                        .workspace_spawn(workspace)?;
                 }
             }
         }

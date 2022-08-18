@@ -1,6 +1,8 @@
+use std::process::Command;
+
 use clap::Parser;
 
-use crate::{config::Config, process, workspace};
+use crate::{config::Config, process::CommandExt, workspace};
 
 /// `fmt` subcommand arguments.
 #[derive(Debug, Parser)]
@@ -15,15 +17,15 @@ impl Fmt {
     pub fn run(&self, _config: &Config) -> eyre::Result<()> {
         let Self { extra_options } = self;
 
-        for metadata in workspace::all() {
-            for package in metadata.workspace_packages() {
-                process::execute_on(
-                    metadata,
-                    "cargo",
-                    ["fmt", "--package", &package.name]
-                        .into_iter()
-                        .chain(extra_options.iter().map(String::as_str)),
-                )?;
+        for workspace in workspace::all() {
+            for package in workspace.workspace_packages() {
+                Command::new("cargo")
+                    .args(
+                        ["fmt", "--package", &package.name]
+                            .into_iter()
+                            .chain(extra_options.iter().map(String::as_str)),
+                    )
+                    .workspace_spawn(workspace)?;
             }
         }
 

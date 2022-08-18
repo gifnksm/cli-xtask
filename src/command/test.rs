@@ -1,6 +1,8 @@
+use std::process::Command;
+
 use clap::Parser;
 
-use crate::{config::Config, process, workspace};
+use crate::{config::Config, process::CommandExt, workspace};
 
 /// `test` subcommand arguments.
 #[derive(Debug, Parser)]
@@ -15,19 +17,19 @@ impl Test {
     pub fn run(&self, _config: &Config) -> eyre::Result<()> {
         let Self { extra_options } = self;
 
-        for metadata in workspace::all() {
-            for package in metadata.workspace_packages() {
+        for workspace in workspace::all() {
+            for package in workspace.workspace_packages() {
                 for feature_args in workspace::feature_combination_args(package) {
                     // cargo test --package <pkg> <features> <extra_options>
                     // DO NOT USE `--all-targets` here, doctests are not built with `--all-targets`
-                    process::execute_on(
-                        metadata,
-                        "cargo",
-                        ["test", "--package", &package.name]
-                            .into_iter()
-                            .chain(feature_args.iter().copied())
-                            .chain(extra_options.iter().map(String::as_str)),
-                    )?;
+                    Command::new("cargo")
+                        .args(
+                            ["test", "--package", &package.name]
+                                .into_iter()
+                                .chain(feature_args.iter().copied())
+                                .chain(extra_options.iter().map(String::as_str)),
+                        )
+                        .workspace_spawn(workspace)?;
                 }
             }
         }

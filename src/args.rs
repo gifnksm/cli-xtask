@@ -3,7 +3,7 @@ use tracing::Level;
 
 use crate::config::Config;
 
-/// xtask command arguments
+/// Rust project automation command.
 #[derive(Debug, Parser)]
 #[clap(bin_name = "cargo xtask")]
 pub struct Args {

@@ -20,16 +20,6 @@ macro_rules! feature_args {
     };
 }
 
-macro_rules! feature_logger {
-    ($($item:item)*) => {
-        $(
-            #[cfg(feature = "logger")]
-            #[cfg_attr(docsrs, doc(cfg(feature = "logger")))]
-            $item
-        )*
-    };
-}
-
 macro_rules! feature_error_handler {
     ($($item:item)*) => {
         $(
@@ -40,21 +30,21 @@ macro_rules! feature_error_handler {
     };
 }
 
-macro_rules! feature_archive {
+macro_rules! feature_logger {
     ($($item:item)*) => {
         $(
-            #[cfg(feature = "archive")]
-            #[cfg_attr(docsrs, doc(cfg(feature = "archive")))]
+            #[cfg(feature = "logger")]
+            #[cfg_attr(docsrs, doc(cfg(feature = "logger")))]
             $item
         )*
     };
 }
 
-macro_rules! feature_cargo {
+macro_rules! feature_archive {
     ($($item:item)*) => {
         $(
-            #[cfg(feature = "cargo")]
-            #[cfg_attr(docsrs, doc(cfg(feature = "cargo")))]
+            #[cfg(feature = "archive")]
+            #[cfg_attr(docsrs, doc(cfg(feature = "archive")))]
             $item
         )*
     };

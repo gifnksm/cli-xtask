@@ -815,7 +815,5 @@ name = "xtask"
 version = "0.1.0"
 dependencies = [
  "app",
- "clap",
  "cli-xtask",
- "eyre",
 ]

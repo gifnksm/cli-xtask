@@ -1,4 +1,4 @@
-fn main() -> eyre::Result<()> {
+fn main() -> cli_xtask::Result<()> {
     cli_xtask::main()?;
     Ok(())
 }

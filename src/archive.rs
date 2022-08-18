@@ -3,7 +3,7 @@ use flate2::{write::GzEncoder, Compression};
 
 use crate::fs::ToRelative;
 
-/// Create a `.tar.gz` archive from a directory.
+/// Create a `tar.gz` archive from a directory.
 ///
 /// # Examples
 ///

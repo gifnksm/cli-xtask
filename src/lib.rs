@@ -2,16 +2,153 @@
 #![warn(missing_debug_implementations)]
 #![warn(missing_docs)]
 
-//! cargo-xtask workflow collection for CLI application.
+//! A number of utility functions and command line interfaces for [cargo-xtask] workflows.
+//!
+//! This crate provides the following utilities:
+//!
+//! * **`cargo xtask dist`** - Builds a distributable tar.gz package for your bin crate.
+//! * **`cargo xtask lint`** - Runs the lints for your bin/lib crate.
+//!   * Integrated with  [`rustfmt`], [`clippy`], [`cargo-rdme`], [`cargo-udeps`].
+//!
+//! [cargo-xtask]: https://github.com/matklad/cargo-xtask
+//! [`rustfmt`]: https://github.com/rust-lang/rustfmt
+//! [`clippy`]: https://github.com/rust-lang/rust-clippy
+//! [`cargo-rdme`]: https://github.com/orium/cargo-rdme
+//! [`cargo-udeps`]: https://github.com/est31/cargo-udeps
 //!
 //! # Usage
 //!
-//! Add this to your `Cargo.toml`:
+//! First, create an `xtask` crate following the [instructions on the cargo-xtask website][xtask-setup].
 //!
-//! ```toml
-//! [dependencies]
-//! cli-xtask = "0.0.0"
+//! Then, run the following command to add `cli-xtask` to the dependencies.
+//!
+//! * For bin crates:
+//!
+//!     ```console
+//!     cargo add -p xtask cli-xtask --features main,bin-crate
+//!     ```
+//!
+//!     If you want to extra tools such as `cargo-rdme` and `cargo-udeps`,
+//!     add the `bin-crate-extra` feature.
+//!
+//!     ```console
+//!     cargo add -p xtask cli-xtask --features main,bin-crate,bin-crate-extra
+//!     ```
+//!
+//! * For lib crates:
+//!
+//!     ```console
+//!     cargo add -p xtask cli-xtask --features main,lib-crate
+//!     ```
+//!
+//!     If you want to extra tools such as `cargo-rdme` and `cargo-udeps`,
+//!     add the `lib-crate-extra` feature.
+//!
+//!     ```console
+//!     cargo add -p xtask cli-xtask --features main,lib-crate,lib-crate-extra
+//!     ```
+//!
+//! Finally, edit `xtask/src/main.rs` as follows
+//!
+//! ```rust
+//! fn main() -> cli_xtask::Result<()> {
+//!     cli_xtask::main()?;
+//!     Ok(())
+//! }
 //! ```
+//!
+//! Now you can run various workflows with `cargo xtask`.
+//!
+//! ```console
+//! $ cargo xtask help
+//! cargo-xtask
+//! Rust project automation command
+//!
+//! USAGE:
+//!     cargo xtask [OPTIONS] [SUBCOMMAND]
+//!
+//! OPTIONS:
+//!     -h, --help       Print help information
+//!     -q, --quiet      Less output per occurrence
+//!     -v, --verbose    More output per occurrence
+//!
+//! SUBCOMMANDS:
+//!     build                    Run `cargo build` on all workspaces in the current directory and
+//!                                  subdirectories
+//!     clippy                   Run `cargo clippy` on all workspaces in the current directory and
+//!                                  subdirectories
+//!     dist                     Create the archive file for distribution
+//!     dist-archive             Create the archive file for distribution
+//!     dist-build               Build all artifacts for distribution
+//!     dist-build-bin           Build the release binaries dor distribution
+//!     dist-build-completion    Build the shell completion files for distribution
+//!     dist-build-doc           Build the documentation for distribution
+//!     dist-build-license       Build the license files for distribution
+//!     dist-build-man           Build the man pages for distribution
+//!     dist-build-readme        Build the readme files for distribution
+//!     dist-clean               Removes the dist artifacts
+//!     fmt                      Run `cargo fmt` on all workspaces in the current directory and
+//!                                  subdirectories
+//!     help                     Print this message or the help of the given subcommand(s)
+//!     lint                     Run all lint commands on all workspaces in the current directory
+//!                                  and subdirectories
+//!     rdme                     Run `cargo rdme` on all workspaces in the current directory and
+//!                                  subdirectories
+//!     test                     Run `cargo test` on all workspaces in the current directory and
+//!                                  subdirectories
+//!     udeps                    Run `cargo udeps` on all workspaces in the current directory and
+//!                                  subdirectories
+//! ```
+//!
+//! [xtask-setup]: https://github.com/matklad/cargo-xtask#defining-xtasks
+//!
+//! # Feature flags
+//!
+//! By using the features flags of cli-xtask, you can enable only the features and commands you need.
+//! By default, all features are disabled.
+//! The following is a list of available features
+//!
+//! ## Composite features
+//!
+//! * **`bin-crate`**:- Enables useful features for bin crates. The included commands invoke only the standard Rust tools.
+//! * **`bin-crate-extra`** - Enables the additional features useful for bin crates. The included commands may invoke third-party tools.
+//! * **`lib-crate`** - Enables useful features for lib crates. The included commands invoke only the standard Rust tools.
+//! * **`lib-crate-extra`** - Enables the additional features useful for lib crates. The included commands may invoke third-party tools.
+//!
+//! ## Individual features
+//!
+//! * **`main`** - Enables [`main`](crate::main) function which is the premade entry point for the CLI.
+//! * **`args`** - Enables [`args::Args`](crate::args::Args) type which defines command line interface of the `xtask`.
+//! * **`error-handler`** - Enables [`install_error_handler`](crate::install_error_handler) function which installs a `color-eyre` as an error/panic handler.
+//! * **`logger`** - Enables [`install_logger`](crate::install_logger) function which installs a `tracing-subscriber` as a logger.
+//! * **`archive`** - Enables [`archive`](crate::archive) module which provides the functionality to create the archive file for distribution.
+//!
+//! ## Subcommand features
+//!
+//! * **`command-build`** - Enables [`build` subcommand](crate::command::Build) which invokes `cargo build` on all workspaces in the current directory and subdirectories.
+//! * **`command-clippy`** - Enables [`clippy` subcommand](crate::command::Clippy) which invokes `cargo clippy` on all workspaces in the current directory and subdirectories.
+//! * **`command-dist`** - Enables [`dist` subcommand](crate::command::Dist) which builds the artifacts and creates the archive file for distribution.
+//!   * **`command-dist-archive`** - Enables [`dist-archive` subcommand](crate::command::DistArchive) which creates the archive file for distribution.
+//!     This feature is enabled by `command-dist` feature.
+//!   * **`command-dist-build-bin`** - Enables [`dist-build-bin` subcommand](crate::command::DistBuildBin) which builds the release binaries for distribution.
+//!     If enabled, release binaries are built and included in the archive file when the dist subcommand is executed.
+//!   * **`command-dist-build-completion`** - Enables [`dist-build-completion` subcommand](crate::command::DistBuildCompletion) which builds the shell completion files for distribution.
+//!     If enabled, shell completion files are built and included in the archive file when the dist subcommand is executed.
+//!   * **`command-dist-build-doc`** - Enables [`dist-build-doc` subcommand](crate::command::DistBuildDoc) which builds the documentation for distribution.
+//!     If enabled, documentation are built and included in the archive file when the dist subcommand is executed.
+//!   * **`command-dist-build-license`** - Enables [`dist-build-license` subcommand](crate::command::DistBuildLicense) which builds the license files for distribution.
+//!     If enabled, license files are built and included in the archive file when the dist subcommand is executed.
+//!   * **`command-dist-build-man`** - Enables [`dist-build-man` subcommand](crate::command::DistBuildMan) which builds the man pages for distribution.
+//!     If enabled, man pages are built and included in the archive file when the dist subcommand is executed.
+//!   * **`command-dist-build-readme`** - Enables [`dist-build-readme` subcommand](crate::command::DistBuildReadme) which builds the readme files for distribution.
+//!     If enabled, a readme files is built and included in the archive file when the dist subcommand is executed.
+//!   * **`command-dist-clean`** - Enables [`dist-clean` subcommand](crate::command::DistClean) which removes the artifacts and archives for distribution.
+//! * **`command-exec`** - Enables `exec` subcommand which invokes the given command on all workspaces in the current directory and subdirectories.
+//! * **`command-fmt`** - Enables `fmt` subcommand which invokes `cargo fmt` on all workspaces in the current directory and subdirectories.
+//! * **`command-lint`** - Enables `lint` subcommand which invokes all lint commands on all workspaces in the current directory and subdirectories.
+//! * **`command-rdme`** - Enables `rdme` subcommand which invokes `cargo rdme` on all workspaces in the current directory and subdirectories.
+//! * **`command-test`** - Enables `test` subcommand which invokes `cargo test` on all workspaces in the current directory and subdirectories.
+//! * **`command-udeps`** - Enables `udeps` subcommand which invokes `cargo udeps` on all workspaces in the current directory and subdirectories.
 //!
 //! # Minimum supported Rust version (MSRV)
 //!
@@ -49,7 +186,6 @@
 #[macro_use]
 mod macros;
 
-// re-exports
 pub use {
     cargo_metadata::{self, camino},
     eyre,
@@ -61,14 +197,9 @@ feature_error_handler! {
     pub use color_eyre;
 }
 
-// Module definition & exports
 feature_archive! {
     /// Utilities for creating archives.
     pub mod archive;
-}
-feature_cargo! {
-    /// Utilities for Cargo command execution.
-    pub mod cargo;
 }
 feature_command! {
     /// Command line interfaces for xtask workflows.
@@ -81,6 +212,8 @@ feature_args! {
     pub mod args;
 }
 
+/// Utilities for Cargo command execution.
+pub mod cargo;
 /// Data structures for workflow configuration.
 pub mod config;
 /// Utility functions for working with paths.
@@ -89,6 +222,11 @@ pub mod fs;
 pub mod process;
 /// Utility functions for working with workspaces.
 pub mod workspace;
+
+/// Error type for this crate.
+pub type Error = eyre::Error;
+/// Result type for this crate.
+pub type Result<T> = eyre::Result<T>;
 
 feature_logger! {
     /// Install a `tracing-subscriber` as a logger.
@@ -117,7 +255,7 @@ feature_logger! {
 }
 
 feature_error_handler! {
-    /// Install a `color-eyre` as a error/panic handler.
+    /// Install a `color-eyre` as an error/panic handler.
     pub fn install_error_handler() -> eyre::Result<()> {
         color_eyre::install()?;
         Ok(())
@@ -131,8 +269,6 @@ feature_main! {
 
         install_error_handler()?;
         install_logger(args.verbosity())?;
-
-        tracing::info!("Running on {}", std::env::current_dir()?.display());
 
         let metadata = workspace::current();
         let (dist, package) = config::DistConfigBuilder::from_root_package(metadata)?;

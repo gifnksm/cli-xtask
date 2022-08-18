@@ -57,23 +57,22 @@ lib-crate-extra = [
 
 main = ["logger", "error-handler", "args"]
 args = ["dep:clap"]
-logger = ["dep:tracing-subscriber"]
 error-handler = ["dep:color-eyre"]
+logger = ["dep:tracing-subscriber"]
 
 archive = ["dep:flate2", "dep:tar"]
-cargo = []
 
 command-build = ["dep:clap"]
 command-clippy = ["dep:clap"]
+command-dist = ["command-dist-archive", "dep:clap"]
 command-dist-archive = ["archive", "dep:clap"]
-command-dist-build-bin = ["cargo", "dep:clap"]
+command-dist-build-bin = ["dep:clap"]
 command-dist-build-completion = ["dep:clap", "dep:clap_complete"]
 command-dist-build-doc = ["dep:clap"]
 command-dist-build-license = ["dep:regex", "dep:clap"]
 command-dist-build-man = ["dep:clap", "dep:clap_mangen", "dep:time"]
 command-dist-build-readme = ["dep:clap"]
 command-dist-clean = ["dep:clap"]
-command-dist = ["command-dist-archive", "dep:clap"]
 command-exec = ["dep:clap"]
 command-fmt = ["dep:clap"]
 command-lint = ["dep:clap"]
@@ -98,7 +97,7 @@ tracing-subscriber = { version = "0.3.15", features = ["env-filter"], optional =
 walkdir = "2.3.2"
 
 [dev-dependencies]
-assert_cmd = "2.0.4"
+cli-xtask = { path = ".", features = ["main"] }
 
 [build-dependencies]
 

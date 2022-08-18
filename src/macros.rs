@@ -190,6 +190,16 @@ macro_rules! feature_command_dist_clean {
     };
 }
 
+macro_rules! feature_command_exec {
+    ($($item:item)*) => {
+        $(
+            #[cfg(feature = "command-exec")]
+            #[cfg_attr(docsrs, doc(cfg(feature = "command-exec")))]
+            $item
+        )*
+    };
+}
+
 macro_rules! feature_command_fmt {
     ($($item:item)*) => {
         $(

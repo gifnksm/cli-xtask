@@ -8,7 +8,7 @@ edition = "2021"
 [dependencies]
 cargo_metadata = "0.15.0"
 clap = { version = "3.2.17", features = ["derive"] }
-cli-xtask = { path = "../", default-features = false, features = ["args", "logger", "error-handler", "lib-crate-extra"] }
+cli-xtask = { path = "../", default-features = false, features = ["args", "logger", "error-handler", "lib-crate-extra", "command-exec"] }
 color-eyre = "0.6.2"
 eyre = "0.6.8"
 tracing = "0.1.36"

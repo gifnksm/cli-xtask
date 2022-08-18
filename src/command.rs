@@ -60,6 +60,11 @@ feature_command_dist! {
     pub use self::dist::Dist;
 }
 
+feature_command_exec! {
+    mod exec;
+    pub use self::exec::Exec;
+}
+
 feature_command_fmt! {
     mod fmt;
     pub use self::fmt::Fmt;
@@ -148,6 +153,11 @@ pub enum Command {
     #[cfg_attr(docsrs, doc(cfg(feature = "command-dist")))]
     Dist(Dist),
 
+    /// Run commands on all workspaces in the current directory and subdirectories
+    #[cfg(feature = "command-exec")]
+    #[cfg_attr(docsrs, doc(cfg(feature = "command-exec")))]
+    Exec(Exec),
+
     /// Run `cargo fmt` on all workspaces in the current directory and subdirectories
     #[cfg(feature = "command-fmt")]
     #[cfg_attr(docsrs, doc(cfg(feature = "command-fmt")))]
@@ -213,6 +223,9 @@ impl Command {
 
             #[cfg(feature = "command-dist")]
             Self::Dist(args) => args.run(config),
+
+            #[cfg(feature = "command-exec")]
+            Self::Exec(args) => args.run(config),
 
             #[cfg(feature = "command-fmt")]
             Self::Fmt(args) => args.run(config),

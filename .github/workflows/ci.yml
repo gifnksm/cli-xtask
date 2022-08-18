@@ -72,7 +72,7 @@ jobs:
         run: |
           # DO NOT USE `--all-targets` here, doctests are not built with `--all-targets`
           cargo xtask test
-          cargo xtask exec --no-root -- cargo xtask dist
+          cargo xtask exec --exclude-current -- cargo xtask dist
         shell: bash
 
   coverage:
@@ -98,7 +98,7 @@ jobs:
       - name: Generate code coverage
         run: |
           cargo xtask exec -- cargo llvm-cov --workspace --lcov --output-path lcov-test.info
-          cargo xtask exec --no-root -- cargo llvm-cov run --lcov --output-path lcov-xtask-dist.info -p xtask -- dist
+          cargo xtask exec --exclude-current -- cargo llvm-cov run --lcov --output-path lcov-xtask-dist.info -p xtask -- dist
         shell: bash
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v3

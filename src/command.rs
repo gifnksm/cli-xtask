@@ -1,58 +1,108 @@
-use crate::Config;
+use crate::config::Config;
+
+feature_command_build! {
+    mod build;
+    pub use self::build::Build;
+}
+
+feature_command_clippy! {
+    mod clippy;
+    pub use self::clippy::Clippy;
+}
 
 feature_command_dist_archive! {
     mod dist_archive;
-    pub use dist_archive::DistArchive;
+    pub use self::dist_archive::DistArchive;
 }
 
 feature_command_dist_build! {
     mod dist_build;
-    pub use dist_build::DistBuild;
+    pub use self::dist_build::DistBuild;
 }
 
 feature_command_dist_build_bin! {
     mod dist_build_bin;
-    pub use dist_build_bin::DistBuildBin;
+    pub use self::dist_build_bin::DistBuildBin;
 }
 
 feature_command_dist_build_completion! {
     mod dist_build_completion;
-    pub use dist_build_completion::DistBuildCompletion;
+    pub use self::dist_build_completion::DistBuildCompletion;
 }
 
 feature_command_dist_build_doc! {
     mod dist_build_doc;
-    pub use dist_build_doc::DistBuildDoc;
+    pub use self::dist_build_doc::DistBuildDoc;
 }
 
 feature_command_dist_build_license! {
     mod dist_build_license;
-    pub use dist_build_license::DistBuildLicense;
+    pub use self::dist_build_license::DistBuildLicense;
 }
 
 feature_command_dist_build_man! {
     mod dist_build_man;
-    pub use dist_build_man::DistBuildMan;
+    pub use self::dist_build_man::DistBuildMan;
 }
 
 feature_command_dist_build_readme! {
     mod dist_build_readme;
-    pub use dist_build_readme::DistBuildReadme;
+    pub use self::dist_build_readme::DistBuildReadme;
 }
 
 feature_command_dist_clean! {
     mod dist_clean;
-    pub use dist_clean::DistClean;
+    pub use self::dist_clean::DistClean;
 }
 
 feature_command_dist! {
     mod dist;
-    pub use dist::Dist;
+    pub use self::dist::Dist;
+}
+
+feature_command_exec! {
+    mod exec;
+    pub use self::exec::Exec;
+}
+
+feature_command_fmt! {
+    mod fmt;
+    pub use self::fmt::Fmt;
+}
+
+feature_command_lint! {
+    mod lint;
+    pub use self::lint::Lint;
+}
+feature_command_rdme! {
+    mod rdme;
+    pub use self::rdme::Rdme;
+}
+
+feature_command_test! {
+    mod test;
+    pub use self::test::Test;
+}
+
+feature_command_udeps! {
+    mod udeps;
+    pub use self::udeps::Udeps;
 }
 
 /// `xtask` command arguments.
 #[derive(Debug, clap::Parser)]
+#[clap(bin_name = "cargo xtask")]
 pub enum Command {
+    /// Run `cargo build` on all workspaces in the current directory and subdirectories
+    #[cfg(feature = "command-build")]
+    #[cfg_attr(docsrs, doc(cfg(feature = "command-build")))]
+    Build(Build),
+
+    /// Run `cargo clippy` on all workspaces in the current directory and subdirectories
+    #[cfg(feature = "command-clippy")]
+    #[cfg_attr(docsrs, doc(cfg(feature = "command-clippy")))]
+    Clippy(Clippy),
+
     /// Create the archive file for distribution
     #[cfg(feature = "command-dist-archive")]
     #[cfg_attr(docsrs, doc(cfg(feature = "command-dist-archive")))]
@@ -98,45 +148,99 @@ pub enum Command {
     #[cfg_attr(docsrs, doc(cfg(feature = "command-dist-clean")))]
     DistClean(DistClean),
 
-    /// Crate the archive file for distribution
+    /// Create the archive file for distribution
     #[cfg(feature = "command-dist")]
     #[cfg_attr(docsrs, doc(cfg(feature = "command-dist")))]
     Dist(Dist),
+
+    /// Run commands on all workspaces in the current directory and subdirectories
+    #[cfg(feature = "command-exec")]
+    #[cfg_attr(docsrs, doc(cfg(feature = "command-exec")))]
+    Exec(Exec),
+
+    /// Run `cargo fmt` on all workspaces in the current directory and subdirectories
+    #[cfg(feature = "command-fmt")]
+    #[cfg_attr(docsrs, doc(cfg(feature = "command-fmt")))]
+    Fmt(Fmt),
+
+    /// Run all lint commands on all workspaces in the current directory and subdirectories
+    #[cfg(feature = "command-lint")]
+    #[cfg_attr(docsrs, doc(cfg(feature = "command-lint")))]
+    Lint(Lint),
+
+    /// Run `cargo rdme` on all workspaces in the current directory and subdirectories
+    #[cfg(feature = "command-rdme")]
+    #[cfg_attr(docsrs, doc(cfg(feature = "command-rdme")))]
+    Rdme(rdme::Rdme),
+
+    /// Run `cargo test` on all workspaces in the current directory and subdirectories
+    #[cfg(feature = "command-test")]
+    #[cfg_attr(docsrs, doc(cfg(feature = "command-test")))]
+    Test(Test),
+
+    /// Run `cargo udeps` on all workspaces in the current directory and subdirectories
+    #[cfg(feature = "command-udeps")]
+    #[cfg_attr(docsrs, doc(cfg(feature = "command-udeps")))]
+    Udeps(Udeps),
 }
 
 impl Command {
-    /// Execute subcommand workflow.
+    /// Runs subcommand workflow.
     pub fn run(&self, config: &Config) -> eyre::Result<()> {
         match self {
+            #[cfg(feature = "command-build")]
+            Self::Build(args) => args.run(config),
+
+            #[cfg(feature = "command-clippy")]
+            Self::Clippy(args) => args.run(config),
+
             #[cfg(feature = "command-dist-archive")]
-            Self::DistArchive(args) => args.run(config.dist()?),
+            Self::DistArchive(args) => args.run(config),
 
             #[cfg(command_dist_build)]
-            Self::DistBuild(args) => args.run(config.dist()?),
+            Self::DistBuild(args) => args.run(config),
 
             #[cfg(feature = "command-dist-build-bin")]
-            Self::DistBuildBin(args) => args.run(config.dist()?),
+            Self::DistBuildBin(args) => args.run(config),
 
             #[cfg(feature = "command-dist-build-completion")]
-            Self::DistBuildCompletion(args) => args.run(config.dist()?),
+            Self::DistBuildCompletion(args) => args.run(config),
 
             #[cfg(feature = "command-dist-build-doc")]
-            Self::DistBuildDoc(args) => args.run(config.dist()?),
+            Self::DistBuildDoc(args) => args.run(config),
 
             #[cfg(feature = "command-dist-build-license")]
-            Self::DistBuildLicense(args) => args.run(config.dist()?),
+            Self::DistBuildLicense(args) => args.run(config),
 
             #[cfg(feature = "command-dist-build-man")]
-            Self::DistBuildMan(args) => args.run(config.dist()?),
+            Self::DistBuildMan(args) => args.run(config),
 
             #[cfg(feature = "command-dist-build-readme")]
-            Self::DistBuildReadme(args) => args.run(config.dist()?),
+            Self::DistBuildReadme(args) => args.run(config),
 
             #[cfg(feature = "command-dist-clean")]
-            Self::DistClean(args) => args.run(config.dist()?),
+            Self::DistClean(args) => args.run(config),
 
             #[cfg(feature = "command-dist")]
-            Self::Dist(args) => args.run(config.dist()?),
+            Self::Dist(args) => args.run(config),
+
+            #[cfg(feature = "command-exec")]
+            Self::Exec(args) => args.run(config),
+
+            #[cfg(feature = "command-fmt")]
+            Self::Fmt(args) => args.run(config),
+
+            #[cfg(feature = "command-lint")]
+            Self::Lint(args) => args.run(config),
+
+            #[cfg(feature = "command-rdme")]
+            Self::Rdme(args) => args.run(config),
+
+            #[cfg(feature = "command-test")]
+            Self::Test(args) => args.run(config),
+
+            #[cfg(feature = "command-udeps")]
+            Self::Udeps(args) => args.run(config),
         }
     }
 }

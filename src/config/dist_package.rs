@@ -5,21 +5,21 @@
 use cargo_metadata::camino::Utf8PathBuf;
 use cargo_metadata::{camino::Utf8Path, Package};
 
-use super::{TargetConfig, TargetConfigBuilder};
+use super::{DistTargetConfig, DistTargetConfigBuilder};
 
-/// Configures and constructs [`PackageConfig`]
+/// Configures and constructs [`DistPackageConfig`]
 #[derive(Debug)]
-pub struct PackageConfigBuilder<'a> {
+pub struct DistPackageConfigBuilder<'a> {
     name: String,
     package: &'a Package,
-    targets: Option<Vec<TargetConfig<'a>>>,
+    targets: Option<Vec<DistTargetConfig<'a>>>,
     #[cfg(feature = "command-dist-build-license")]
     license_files: Option<Vec<Utf8PathBuf>>,
     #[cfg(feature = "command-dist-build-doc")]
     documents: Option<Vec<Utf8PathBuf>>,
 }
 
-impl<'a> PackageConfigBuilder<'a> {
+impl<'a> DistPackageConfigBuilder<'a> {
     pub(crate) fn new(package: &'a Package) -> Self {
         Self {
             name: package.name.clone(),
@@ -39,8 +39,8 @@ impl<'a> PackageConfigBuilder<'a> {
             .targets
             .iter()
             .filter(|target| target.kind.iter().any(|x| x == "bin"))
-            .map(TargetConfigBuilder::from_metadata)
-            .map(TargetConfigBuilder::build);
+            .map(DistTargetConfigBuilder::from_metadata)
+            .map(DistTargetConfigBuilder::build);
         match &mut self.targets {
             Some(binaries) => binaries.extend(it),
             e @ None => *e = Some(it.collect()),
@@ -49,7 +49,7 @@ impl<'a> PackageConfigBuilder<'a> {
     }
 
     /// Add a target of the package to the list of targets to be distributed.
-    pub fn target(mut self, target: TargetConfig<'a>) -> Self {
+    pub fn target(mut self, target: DistTargetConfig<'a>) -> Self {
         self.targets.get_or_insert(vec![]).push(target);
         self
     }
@@ -61,7 +61,7 @@ impl<'a> PackageConfigBuilder<'a> {
         ///
         /// Returns an error if the binary target with the given command name is not found.
         pub fn binary_from_command(mut self, command: clap::Command<'static>) -> eyre::Result<Self> {
-            let binary = TargetConfigBuilder::binary_from_command(command, self.package)?.build();
+            let binary = DistTargetConfigBuilder::binary_from_command(command, self.package)?.build();
             self.targets.get_or_insert(vec![]).push(binary);
             Ok(self)
         }
@@ -83,9 +83,9 @@ impl<'a> PackageConfigBuilder<'a> {
         }
     }
 
-    /// Builds a [`PackageConfig`] from the current configuration.
-    pub fn build(self) -> PackageConfig<'a> {
-        PackageConfig {
+    /// Builds a [`DistPackageConfig`] from the current configuration.
+    pub fn build(self) -> DistPackageConfig<'a> {
+        DistPackageConfig {
             name: self.name,
             package: self.package,
             targets: self.targets,
@@ -99,17 +99,17 @@ impl<'a> PackageConfigBuilder<'a> {
 
 /// Configuration for the distribution of the package.
 #[derive(Debug)]
-pub struct PackageConfig<'a> {
+pub struct DistPackageConfig<'a> {
     name: String,
     package: &'a Package,
-    targets: Option<Vec<TargetConfig<'a>>>,
+    targets: Option<Vec<DistTargetConfig<'a>>>,
     #[cfg(feature = "command-dist-build-license")]
     license_files: Option<Vec<Utf8PathBuf>>,
     #[cfg(feature = "command-dist-build-doc")]
     documents: Option<Vec<Utf8PathBuf>>,
 }
 
-impl<'a> PackageConfig<'a> {
+impl<'a> DistPackageConfig<'a> {
     /// Returns the name of the package.
     pub fn name(&self) -> &str {
         &self.name
@@ -121,7 +121,7 @@ impl<'a> PackageConfig<'a> {
     }
 
     /// Returns the list of targets to be distributed.
-    pub fn targets(&self) -> Option<&[TargetConfig]> {
+    pub fn targets(&self) -> Option<&[DistTargetConfig]> {
         self.targets.as_deref()
     }
 

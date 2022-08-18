@@ -1,6 +1,6 @@
 use clap::Parser;
 
-use crate::{cargo, DistConfig};
+use crate::{cargo, config::Config};
 
 /// `dist-build-bin` subcommand arguments.
 #[derive(Debug, Parser)]
@@ -19,7 +19,7 @@ pub struct DistBuildBin {
 impl DistBuildBin {
     /// Execute `dist-build-bin` subcommand workflow.
     #[tracing::instrument(name = "dist-build-bin", parent = None, skip_all, err)]
-    pub fn run(&self, config: &DistConfig) -> eyre::Result<()> {
+    pub fn run(&self, config: &Config) -> eyre::Result<()> {
         tracing::info!("Building executables...");
 
         let Self {
@@ -27,6 +27,7 @@ impl DistBuildBin {
             use_cross,
             use_cross_if_needed,
         } = self;
+        let config = config.dist()?;
 
         let default_target = env!("DEFAULT_TARGET");
         let target_triple = target_triple.as_deref();

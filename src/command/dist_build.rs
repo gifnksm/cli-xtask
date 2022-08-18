@@ -1,6 +1,6 @@
 use clap::Parser;
 
-use crate::DistConfig;
+use crate::config::Config;
 
 /// `dist-build` subcommand arguments.
 #[derive(Debug, Parser)]
@@ -45,7 +45,7 @@ pub struct DistBuild {
 impl DistBuild {
     /// Execute `dist-build` subcommand workflow.
     #[tracing::instrument(name = "dist-build", parent = None, skip_all, err)]
-    pub fn run(&self, config: &DistConfig) -> eyre::Result<()> {
+    pub fn run(&self, config: &Config) -> eyre::Result<()> {
         let Self {
             #[cfg(feature = "command-dist-build-bin")]
             dist_build_bin_args,

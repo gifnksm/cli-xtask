@@ -23,6 +23,8 @@ rustdoc-args = ["--cfg", "docsrs"]
 default = []
 
 bin-crate = [
+    "command-build",
+    "command-clippy",
     "command-dist-build-bin",
     "command-dist-build-completion",
     "command-dist-build-doc",
@@ -31,16 +33,38 @@ bin-crate = [
     "command-dist-build-readme",
     "command-dist-clean",
     "command-dist",
+    "command-fmt",
+    "command-lint",
+    "command-test",
 ]
-lib-crate = []
+bin-crate-extra = [
+    "bin-crate",
+    "command-rdme",
+    "command-udeps",
+]
+lib-crate = [
+    "command-build",
+    "command-clippy",
+    "command-fmt",
+    "command-lint",
+    "command-test",
+]
+lib-crate-extra = [
+    "lib-crate",
+    "command-rdme",
+    "command-udeps",
+]
 
-main = ["logger", "error-handler"]
+main = ["logger", "error-handler", "args"]
+args = ["dep:clap"]
 logger = ["dep:tracing-subscriber"]
 error-handler = ["dep:color-eyre"]
 
 archive = ["dep:flate2", "dep:tar"]
 cargo = []
 
+command-build = ["dep:clap"]
+command-clippy = ["dep:clap"]
 command-dist-archive = ["archive", "dep:clap"]
 command-dist-build-bin = ["cargo", "dep:clap"]
 command-dist-build-completion = ["dep:clap", "dep:clap_complete"]
@@ -50,6 +74,12 @@ command-dist-build-man = ["dep:clap", "dep:clap_mangen", "dep:time"]
 command-dist-build-readme = ["dep:clap"]
 command-dist-clean = ["dep:clap"]
 command-dist = ["command-dist-archive", "dep:clap"]
+command-exec = ["dep:clap"]
+command-fmt = ["dep:clap"]
+command-lint = ["dep:clap"]
+command-rdme = ["dep:clap"]
+command-test = ["dep:clap"]
+command-udeps = ["dep:clap"]
 
 [dependencies]
 cargo_metadata = "0.15.0"
@@ -65,6 +95,7 @@ tar = { version = "0.4.38", optional = true }
 time = { version = "0.3.13", optional = true }
 tracing = "0.1.36"
 tracing-subscriber = { version = "0.3.15", features = ["env-filter"], optional = true }
+walkdir = "2.3.2"
 
 [dev-dependencies]
 assert_cmd = "2.0.4"

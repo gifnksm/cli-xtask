@@ -10,6 +10,16 @@ macro_rules! feature_main {
     };
 }
 
+macro_rules! feature_args {
+    ($($item:item)*) => {
+        $(
+            #[cfg(feature = "args")]
+            #[cfg_attr(docsrs, doc(cfg(feature = "args")))]
+            $item
+        )*
+    };
+}
+
 macro_rules! feature_logger {
     ($($item:item)*) => {
         $(
@@ -55,6 +65,26 @@ macro_rules! feature_command {
         $(
             #[cfg(command)]
             #[cfg_attr(docsrs, doc(cfg(feature = "command-*")))]
+            $item
+        )*
+    };
+}
+
+macro_rules! feature_command_build {
+    ($($item:item)*) => {
+        $(
+            #[cfg(feature = "command-build")]
+            #[cfg_attr(docsrs, doc(cfg(feature = "command-build")))]
+            $item
+        )*
+    };
+}
+
+macro_rules! feature_command_clippy {
+    ($($item:item)*) => {
+        $(
+            #[cfg(feature = "command-clippy")]
+            #[cfg_attr(docsrs, doc(cfg(feature = "command-clippy")))]
             $item
         )*
     };
@@ -155,6 +185,65 @@ macro_rules! feature_command_dist_clean {
         $(
             #[cfg(feature = "command-dist-clean")]
             #[cfg_attr(docsrs, doc(cfg(feature = "command-dist-clean")))]
+            $item
+        )*
+    };
+}
+
+macro_rules! feature_command_exec {
+    ($($item:item)*) => {
+        $(
+            #[cfg(feature = "command-exec")]
+            #[cfg_attr(docsrs, doc(cfg(feature = "command-exec")))]
+            $item
+        )*
+    };
+}
+
+macro_rules! feature_command_fmt {
+    ($($item:item)*) => {
+        $(
+            #[cfg(feature = "command-fmt")]
+            #[cfg_attr(docsrs, doc(cfg(feature = "command-fmt")))]
+            $item
+        )*
+    };
+}
+
+macro_rules! feature_command_lint {
+    ($($item:item)*) => {
+        $(
+            #[cfg(feature = "command-lint")]
+            #[cfg_attr(docsrs, doc(cfg(feature = "command-lint")))]
+            $item
+        )*
+    };
+}
+
+macro_rules! feature_command_rdme {
+    ($($item:item)*) => {
+        $(
+            #[cfg(feature = "command-rdme")]
+            #[cfg_attr(docsrs, doc(cfg(feature = "command-rdme")))]
+            $item
+        )*
+    };
+}
+
+macro_rules! feature_command_test {
+    ($($item:item)*) => {
+        $(
+            #[cfg(feature = "command-test")]
+            #[cfg_attr(docsrs, doc(cfg(feature = "command-test")))]
+            $item
+        )*
+    };
+}
+macro_rules! feature_command_udeps {
+    ($($item:item)*) => {
+        $(
+            #[cfg(feature = "command-udeps")]
+            #[cfg_attr(docsrs, doc(cfg(feature = "command-udeps")))]
             $item
         )*
     };

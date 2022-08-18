@@ -8,6 +8,6 @@ publish = false
 
 [dependencies]
 clap = "3.2.17"
-cli-xtask = { path = "../../../", features = ["logger", "error-handler", "bin-crate"] }
+cli-xtask = { path = "../../../", features = ["args", "logger", "error-handler", "bin-crate", "bin-crate-extra"] }
 eyre = "0.6.8"
 app = { path = ".." }

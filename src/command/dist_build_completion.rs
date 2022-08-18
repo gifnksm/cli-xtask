@@ -2,7 +2,7 @@ use cargo_metadata::camino::{Utf8Path, Utf8PathBuf};
 use clap::Parser;
 use clap_complete::Shell;
 
-use crate::{fs::ToRelative, DistConfig};
+use crate::{fs::ToRelative, config::Config};
 
 /// `dist-build-completion` subcommand arguments.
 #[derive(Debug, Parser)]
@@ -11,10 +11,11 @@ pub struct DistBuildCompletion {}
 impl DistBuildCompletion {
     /// Execute `dist-build-completion` subcommand workflow.
     #[tracing::instrument(name = "dist-build-completion", parent = None, skip_all, err)]
-    pub fn run(&self, config: &DistConfig) -> eyre::Result<()> {
+    pub fn run(&self, config: &Config) -> eyre::Result<()> {
         tracing::info!("Building shell completion files...");
 
         let Self {} = self;
+        let config = config.dist()?;
 
         let out_dir = config.dist_working_directory(None).join("completion");
         crate::fs::remove_dir(&out_dir)?;

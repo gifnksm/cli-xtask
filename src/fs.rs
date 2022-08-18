@@ -1,4 +1,4 @@
-use std::{fmt, fs::File};
+use std::{borrow::Cow, fmt, fs::File};
 
 use cargo_metadata::camino::{Utf8Path, Utf8PathBuf};
 use eyre::ensure;
@@ -61,31 +61,48 @@ pub fn copy(from: impl AsRef<Utf8Path>, to: impl AsRef<Utf8Path>) -> eyre::Resul
     Ok(())
 }
 
-/// Convert a path to a path relative to the root of the cargo workspace which implements [`Display`](std::fmt::Display).
+/// Convert a path to a path relative to the current directory which implements [`Display`](std::fmt::Display).
 pub trait ToRelative {
     /// Tye type of the converted path that implements [`Display`](std::fmt::Display).
     type Output: fmt::Display;
 
-    /// Convert the path to a path relative to the root of the cargo workspace which implements [`Display`](std::fmt::Display).
+    /// Convert the path to a path relative to the current directory which implements [`Display`](std::fmt::Display).
     fn to_relative(self) -> Self::Output;
 }
 
 impl<'a> ToRelative for &'a Utf8Path {
-    type Output = &'a Utf8Path;
+    type Output = Cow<'a, Utf8Path>;
     fn to_relative(self) -> Self::Output {
-        let relative = self
-            .strip_prefix(&crate::cargo_workspace().workspace_root)
-            .unwrap_or(self);
-        if relative == "" {
-            Utf8Path::new(".")
-        } else {
-            relative
+        if self.is_relative() {
+            return Cow::Borrowed(self);
         }
+
+        let current_dir = std::env::current_dir()
+            .ok()
+            .and_then(|path| Utf8PathBuf::try_from(path).ok());
+        let mut current_dir = current_dir.as_deref();
+        let mut prefix = Utf8PathBuf::new();
+        while let Some(cur_dir) = current_dir {
+            if let Ok(relative) = self.strip_prefix(cur_dir) {
+                if prefix != "" {
+                    return Cow::Owned(prefix.join(relative));
+                }
+                return if relative == "" {
+                    Cow::Borrowed(Utf8Path::new("."))
+                } else {
+                    Cow::Borrowed(relative)
+                };
+            }
+            current_dir = cur_dir.parent();
+            prefix.push("..");
+        }
+
+        Cow::Borrowed(self)
     }
 }
 
 impl<'a> ToRelative for &'a Utf8PathBuf {
-    type Output = &'a Utf8Path;
+    type Output = Cow<'a, Utf8Path>;
     fn to_relative(self) -> Self::Output {
         <&Utf8Path>::to_relative(self)
     }

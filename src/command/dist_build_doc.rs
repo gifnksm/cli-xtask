@@ -1,6 +1,6 @@
 use clap::Parser;
 
-use crate::DistConfig;
+use crate::config::Config;
 
 /// `dist-build-doc` subcommand arguments.
 #[derive(Debug, Parser)]
@@ -9,8 +9,11 @@ pub struct DistBuildDoc {}
 impl DistBuildDoc {
     /// Execute `dist-build-doc` subcommand workflow.
     #[tracing::instrument(name = "dist-build-doc", parent = None, skip_all, err)]
-    pub fn run(&self, config: &DistConfig) -> eyre::Result<()> {
+    pub fn run(&self, config: &Config) -> eyre::Result<()> {
         tracing::info!("Building documents...");
+
+        let Self {} = self;
+        let config = config.dist()?;
 
         let packages = config.packages();
 

@@ -3,9 +3,9 @@ feature_clap_command! {
     use cargo_metadata::Package;
 }
 
-/// Configures and constructs [`TargetConfig`]
+/// Configures and constructs [`DistTargetConfig`]
 #[derive(Debug)]
-pub struct TargetConfigBuilder<'a> {
+pub struct DistTargetConfigBuilder<'a> {
     name: String,
     target: &'a Target,
     #[cfg(any(
@@ -22,7 +22,7 @@ pub struct TargetConfigBuilder<'a> {
     command: Option<clap::Command<'static>>,
 }
 
-impl<'a> TargetConfigBuilder<'a> {
+impl<'a> DistTargetConfigBuilder<'a> {
     pub(crate) fn from_metadata(target: &'a Target) -> Self {
         Self {
             name: target.name.clone(),
@@ -61,9 +61,9 @@ impl<'a> TargetConfigBuilder<'a> {
         }
     }
 
-    /// Builds a [`TargetConfig`] from the current configuration.
-    pub fn build(self) -> TargetConfig<'a> {
-        TargetConfig {
+    /// Builds a [`DistTargetConfig`] from the current configuration.
+    pub fn build(self) -> DistTargetConfig<'a> {
+        DistTargetConfig {
             name: self.name,
             target: self.target,
             #[cfg(any(
@@ -84,7 +84,7 @@ impl<'a> TargetConfigBuilder<'a> {
 
 /// Configuration for the distribution of the target.
 #[derive(Debug)]
-pub struct TargetConfig<'a> {
+pub struct DistTargetConfig<'a> {
     name: String,
     target: &'a Target,
     #[cfg(any(
@@ -101,7 +101,7 @@ pub struct TargetConfig<'a> {
     command: Option<clap::Command<'static>>,
 }
 
-impl<'a> TargetConfig<'a> {
+impl<'a> DistTargetConfig<'a> {
     /// Return the name of the target.
     pub fn name(&self) -> &str {
         &self.name

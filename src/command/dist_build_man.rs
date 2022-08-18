@@ -5,7 +5,7 @@ use clap::Parser;
 use clap_mangen::Man;
 use time::OffsetDateTime;
 
-use crate::DistConfig;
+use crate::config::Config;
 
 /// `dist-build-man` subcommand arguments.
 #[derive(Debug, Parser)]
@@ -14,10 +14,11 @@ pub struct DistBuildMan {}
 impl DistBuildMan {
     /// Execute `dist-build-man` subcommand workflow
     #[tracing::instrument(name = "dist-build-man", parent = None, skip_all, err)]
-    pub fn run(&self, config: &DistConfig) -> eyre::Result<()> {
+    pub fn run(&self, config: &Config) -> eyre::Result<()> {
         tracing::info!("Building man pages...");
 
         let Self {} = self;
+        let config = config.dist()?;
 
         let man_dir = config.dist_working_directory(None).join("man");
         let section = "1";

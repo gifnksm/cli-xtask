@@ -46,9 +46,6 @@
 
 #![doc(html_root_url = "https://docs.rs/cli-xtask/0.0.0")]
 
-use cargo_metadata::{Metadata, MetadataCommand};
-use once_cell::sync::Lazy;
-
 #[macro_use]
 mod macros;
 
@@ -64,13 +61,13 @@ feature_error_handler! {
     pub use color_eyre;
 }
 
-// module definition & exports
+// Module definition & exports
 feature_archive! {
     /// Utilities for creating archives.
     pub mod archive;
 }
 feature_cargo! {
-    /// Utilities for working with Cargo.
+    /// Utilities for Cargo command execution.
     pub mod cargo;
 }
 feature_command! {
@@ -78,26 +75,35 @@ feature_command! {
     pub mod command;
     pub use command::Command;
 }
-/// Utility functions for working with paths.
-pub mod fs;
 
-mod config;
-pub use config::{
-    Config, ConfigBuilder, DistConfig, DistConfigBuilder, PackageConfig, PackageConfigBuilder,
-    TargetConfig, TargetConfigBuilder,
-};
-
-/// Returns a cargo workspace metadata.
-pub fn cargo_workspace() -> &'static Metadata {
-    static METADATA: Lazy<Metadata> = Lazy::new(|| MetadataCommand::new().exec().unwrap());
-    &*METADATA
+feature_args! {
+    /// Data structures for command line arguments parsing.
+    pub mod args;
 }
 
+/// Data structures for workflow configuration.
+pub mod config;
+/// Utility functions for working with paths.
+pub mod fs;
+/// Utility functions for working with processes.
+pub mod process;
+/// Utility functions for working with workspaces.
+pub mod workspace;
+
 feature_logger! {
-    /// Install a tracing-subscriber as a logger.
-    pub fn install_logger() -> eyre::Result<()> {
+    /// Install a `tracing-subscriber` as a logger.
+    pub fn install_logger(verbosity: Option<tracing::Level>) -> eyre::Result<()> {
         if std::env::var_os("RUST_LOG").is_none() {
-            std::env::set_var("RUST_LOG", "info");
+            use tracing::Level;
+            use std::env;
+            match verbosity {
+                Some(Level::ERROR) => env::set_var("RUST_LOG", "error"),
+                Some(Level::WARN) => env::set_var("RUST_LOG", "warn"),
+                Some(Level::INFO) => env::set_var("RUST_LOG", "info"),
+                Some(Level::DEBUG) => env::set_var("RUST_LOG", "debug"),
+                Some(Level::TRACE) => env::set_var("RUST_LOG", "trace"),
+                None => env::set_var("RUST_LOG", "off"),
+            }
         }
         tracing_subscriber::fmt()
             .with_env_filter(tracing_subscriber::EnvFilter::from_default_env())
@@ -111,7 +117,7 @@ feature_logger! {
 }
 
 feature_error_handler! {
-    /// Install a color-eyre as a error/panic handler.
+    /// Install a `color-eyre` as a error/panic handler.
     pub fn install_error_handler() -> eyre::Result<()> {
         color_eyre::install()?;
         Ok(())
@@ -121,19 +127,18 @@ feature_error_handler! {
 feature_main! {
     /// Entry point for xtask crate.
     pub fn main() -> eyre::Result<()> {
+        let args = <args::Args as clap::Parser>::parse();
+
         install_error_handler()?;
-        install_logger()?;
+        install_logger(args.verbosity())?;
 
         tracing::info!("Running on {}", std::env::current_dir()?.display());
 
-        #[cfg(command)]
-        {
-            let metadata = cargo_workspace();
-            let (dist, package) = DistConfigBuilder::from_root_package(metadata)?;
-            let dist = dist.package(package.all_binaries().build()).build();
-            let config = ConfigBuilder::new().dist(dist).build();
-            <Command as clap::Parser>::parse().run(&config)?;
-        }
+        let metadata = workspace::current();
+        let (dist, package) = config::DistConfigBuilder::from_root_package(metadata)?;
+        let dist = dist.package(package.all_binaries().build()).build();
+        let config = config::ConfigBuilder::new().dist(dist).build();
+        args.run(&config)?;
 
         Ok(())
     }

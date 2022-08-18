@@ -7,5 +7,5 @@ publish = false
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-cli-xtask = { path = "../../../", features = ["main", "bin-crate"] }
+cli-xtask = { path = "../../../", features = ["main", "bin-crate", "bin-crate-extra"] }
 eyre = "0.6.8"

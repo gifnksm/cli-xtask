@@ -10,6 +10,16 @@ macro_rules! feature_main {
     };
 }
 
+macro_rules! feature_args {
+    ($($item:item)*) => {
+        $(
+            #[cfg(feature = "args")]
+            #[cfg_attr(docsrs, doc(cfg(feature = "args")))]
+            $item
+        )*
+    };
+}
+
 macro_rules! feature_logger {
     ($($item:item)*) => {
         $(

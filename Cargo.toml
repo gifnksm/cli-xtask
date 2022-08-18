@@ -55,7 +55,8 @@ lib-crate-extra = [
     "command-udeps",
 ]
 
-main = ["logger", "error-handler"]
+main = ["logger", "error-handler", "args"]
+args = ["dep:clap"]
 logger = ["dep:tracing-subscriber"]
 error-handler = ["dep:color-eyre"]
 

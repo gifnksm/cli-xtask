@@ -86,6 +86,7 @@ feature_command_udeps! {
 
 /// `xtask` command arguments.
 #[derive(Debug, clap::Parser)]
+#[clap(bin_name = "cargo xtask")]
 pub enum Command {
     /// Run `cargo build` on all workspaces in the current directory and subdirectories
     #[cfg(feature = "command-build")]
@@ -142,7 +143,7 @@ pub enum Command {
     #[cfg_attr(docsrs, doc(cfg(feature = "command-dist-clean")))]
     DistClean(DistClean),
 
-    /// Crate the archive file for distribution
+    /// Create the archive file for distribution
     #[cfg(feature = "command-dist")]
     #[cfg_attr(docsrs, doc(cfg(feature = "command-dist")))]
     Dist(Dist),
@@ -174,7 +175,7 @@ pub enum Command {
 }
 
 impl Command {
-    /// Execute subcommand workflow.
+    /// Runs subcommand workflow.
     pub fn run(&self, config: &Config) -> eyre::Result<()> {
         match self {
             #[cfg(feature = "command-build")]

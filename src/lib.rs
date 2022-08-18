@@ -76,6 +76,11 @@ feature_command! {
     pub use command::Command;
 }
 
+feature_args! {
+    mod args;
+    pub use crate::args::{Args, Verbosity};
+}
+
 mod config;
 /// Utility functions for working with paths.
 pub mod fs;
@@ -91,9 +96,18 @@ pub use crate::config::{
 
 feature_logger! {
     /// Install a `tracing-subscriber` as a logger.
-    pub fn install_logger() -> eyre::Result<()> {
+    pub fn install_logger(verbosity: Option<tracing::Level>) -> eyre::Result<()> {
         if std::env::var_os("RUST_LOG").is_none() {
-            std::env::set_var("RUST_LOG", "info");
+            use tracing::Level;
+            use std::env;
+            match verbosity {
+                Some(Level::ERROR) => env::set_var("RUST_LOG", "error"),
+                Some(Level::WARN) => env::set_var("RUST_LOG", "warn"),
+                Some(Level::INFO) => env::set_var("RUST_LOG", "info"),
+                Some(Level::DEBUG) => env::set_var("RUST_LOG", "debug"),
+                Some(Level::TRACE) => env::set_var("RUST_LOG", "trace"),
+                None => env::set_var("RUST_LOG", "off"),
+            }
         }
         tracing_subscriber::fmt()
             .with_env_filter(tracing_subscriber::EnvFilter::from_default_env())
@@ -117,19 +131,18 @@ feature_error_handler! {
 feature_main! {
     /// Entry point for xtask crate.
     pub fn main() -> eyre::Result<()> {
+        let args = <Args as clap::Parser>::parse();
+
         install_error_handler()?;
-        install_logger()?;
+        install_logger(args.verbosity())?;
 
         tracing::info!("Running on {}", std::env::current_dir()?.display());
 
-        #[cfg(command)]
-        {
-            let metadata = workspace::current();
-            let (dist, package) = DistConfigBuilder::from_root_package(metadata)?;
-            let dist = dist.package(package.all_binaries().build()).build();
-            let config = ConfigBuilder::new().dist(dist).build();
-            <Command as clap::Parser>::parse().run(&config)?;
-        }
+        let metadata = workspace::current();
+        let (dist, package) = DistConfigBuilder::from_root_package(metadata)?;
+        let dist = dist.package(package.all_binaries().build()).build();
+        let config = ConfigBuilder::new().dist(dist).build();
+        args.run(&config)?;
 
         Ok(())
     }

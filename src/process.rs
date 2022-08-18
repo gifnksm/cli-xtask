@@ -37,12 +37,12 @@ impl CommandExt for Command {
             tracing::error!(
                 "Command for {} failed with status {}",
                 workspace_root.to_relative(),
-                status.code().unwrap()
+                status,
             );
             return Err(eyre::eyre!(
                 "command for {} failed with status {}",
                 workspace_root.to_relative(),
-                status.code().unwrap()
+                status,
             ));
         }
         Ok(())

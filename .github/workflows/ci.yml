@@ -121,7 +121,9 @@ jobs:
       - name: Install cargo-llvm-cov
         uses: taiki-e/install-action@cargo-llvm-cov
       - name: Generate code coverage
-        run: cargo xtask exec -- cargo llvm-cov --workspace --lcov --output-path lcov-test.info
+        run: |
+          cargo llvm-cov --workspace --lcov --output-path lcov-test.info
+          cargo llvm-cov run -p xtask --lcov --output-path lcov-exec.info -- exec --exclude-current -- cargo llvm-cov --workspace --lcov --output-path lcov-test.info
         shell: bash
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v3
@@ -154,7 +156,7 @@ jobs:
       - run: rustup toolchain add nightly --profile minimal
         shell: bash
       - name: Generate code coverage
-        run: cargo xtask xtask-test --cargo-llvm-cov
+        run: cargo llvm-cov run -p xtask --lcov --output-path lcov-xtask.info -- xtask-test --cargo-llvm-cov
         shell: bash
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v3

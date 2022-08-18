@@ -1,5 +1,8 @@
 use clap::{CommandFactory, Parser};
-use cli_xtask::{Config, ConfigBuilder, Verbosity};
+use cli_xtask::{
+    args::Verbosity,
+    config::{Config, ConfigBuilder},
+};
 use tracing::Level;
 
 mod exec;

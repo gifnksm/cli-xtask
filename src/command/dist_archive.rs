@@ -1,6 +1,6 @@
 use clap::Parser;
 
-use crate::{archive, Config};
+use crate::{archive, config::Config};
 
 /// `dist-archive` subcommand arguments.
 #[derive(Debug, Parser)]

@@ -3,9 +3,7 @@ use cargo_metadata::{
     Metadata, Package,
 };
 
-use crate::PackageConfigBuilder;
-
-use super::PackageConfig;
+use super::{DistPackageConfig, DistPackageConfigBuilder};
 
 /// Configures and constructs [`DistConfig`]
 #[derive(Debug)]
@@ -14,7 +12,7 @@ pub struct DistConfigBuilder<'a> {
     metadata: &'a Metadata,
     dist_target_directory: Utf8PathBuf,
     dist_base_working_directory: Utf8PathBuf,
-    packages: Vec<PackageConfig<'a>>,
+    packages: Vec<DistPackageConfig<'a>>,
 }
 
 impl<'a> DistConfigBuilder<'a> {
@@ -42,7 +40,7 @@ impl<'a> DistConfigBuilder<'a> {
     /// Returns an error if the root package is not found.
     pub fn from_root_package(
         metadata: &'a Metadata,
-    ) -> eyre::Result<(Self, PackageConfigBuilder<'a>)> {
+    ) -> eyre::Result<(Self, DistPackageConfigBuilder<'a>)> {
         let package = metadata
             .root_package()
             .ok_or_else(|| eyre::eyre!("no root package found"))?;
@@ -57,7 +55,7 @@ impl<'a> DistConfigBuilder<'a> {
     pub fn from_package_name(
         metadata: &'a Metadata,
         name: &str,
-    ) -> eyre::Result<(Self, PackageConfigBuilder<'a>)> {
+    ) -> eyre::Result<(Self, DistPackageConfigBuilder<'a>)> {
         let workspace_packages = metadata.workspace_packages();
         let package = workspace_packages
             .iter()
@@ -69,23 +67,23 @@ impl<'a> DistConfigBuilder<'a> {
     fn from_package(
         metadata: &'a Metadata,
         package: &'a Package,
-    ) -> (Self, PackageConfigBuilder<'a>) {
+    ) -> (Self, DistPackageConfigBuilder<'a>) {
         let name = format!("{}-v{}", package.name, package.version);
 
         let dist = Self::new(name, metadata);
-        let package_builder = PackageConfigBuilder::new(package);
+        let package_builder = DistPackageConfigBuilder::new(package);
 
         (dist, package_builder)
     }
 
     /// Adds the given package to the `DistConfig`.
-    pub fn package(mut self, package: PackageConfig<'a>) -> Self {
+    pub fn package(mut self, package: DistPackageConfig<'a>) -> Self {
         self.packages.push(package);
         self
     }
 
     /// Adds the given packages to the `DistConfig`.
-    pub fn packages(mut self, packages: impl IntoIterator<Item = PackageConfig<'a>>) -> Self {
+    pub fn packages(mut self, packages: impl IntoIterator<Item = DistPackageConfig<'a>>) -> Self {
         self.packages.extend(packages);
         self
     }
@@ -109,7 +107,7 @@ pub struct DistConfig<'a> {
     metadata: &'a Metadata,
     dist_target_directory: Utf8PathBuf,
     dist_base_working_directory: Utf8PathBuf,
-    packages: Vec<PackageConfig<'a>>,
+    packages: Vec<DistPackageConfig<'a>>,
 }
 
 impl<'a> DistConfig<'a> {
@@ -142,7 +140,7 @@ impl<'a> DistConfig<'a> {
     }
 
     /// Returns the configurations of the packages that will be distributed.
-    pub fn packages(&self) -> &[PackageConfig] {
+    pub fn packages(&self) -> &[DistPackageConfig] {
         &self.packages
     }
 }

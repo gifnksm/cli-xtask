@@ -5,7 +5,7 @@ use clap::Parser;
 use clap_mangen::Man;
 use time::OffsetDateTime;
 
-use crate::Config;
+use crate::config::Config;
 
 /// `dist-build-man` subcommand arguments.
 #[derive(Debug, Parser)]

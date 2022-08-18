@@ -1,4 +1,4 @@
-use crate::Config;
+use crate::config::Config;
 
 feature_command_build! {
     mod build;

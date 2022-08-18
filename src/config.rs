@@ -1,11 +1,11 @@
 mod dist;
-mod package;
-mod target;
+mod dist_package;
+mod dist_target;
 
 pub use self::{
     dist::{DistConfig, DistConfigBuilder},
-    package::{PackageConfig, PackageConfigBuilder},
-    target::{TargetConfig, TargetConfigBuilder},
+    dist_package::{DistPackageConfig, DistPackageConfigBuilder},
+    dist_target::{DistTargetConfig, DistTargetConfigBuilder},
 };
 
 /// Configures and constructs [`Config`]

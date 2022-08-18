@@ -2,7 +2,7 @@ use cargo_metadata::camino::{Utf8Path, Utf8PathBuf};
 use clap::Parser;
 use clap_complete::Shell;
 
-use crate::{fs::ToRelative, Config};
+use crate::{fs::ToRelative, config::Config};
 
 /// `dist-build-completion` subcommand arguments.
 #[derive(Debug, Parser)]

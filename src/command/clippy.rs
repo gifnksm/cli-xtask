@@ -1,6 +1,6 @@
 use clap::Parser;
 
-use crate::{process, workspace, Config};
+use crate::{config::Config, process, workspace};
 
 /// `clippy` subcommand arguments.
 #[derive(Debug, Parser)]

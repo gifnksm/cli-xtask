@@ -1,7 +1,7 @@
 use clap::Parser;
 use tracing::Level;
 
-use crate::Config;
+use crate::config::Config;
 
 /// xtask command arguments
 #[derive(Debug, Parser)]

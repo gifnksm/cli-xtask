@@ -1,6 +1,6 @@
 use clap::Parser;
 
-use crate::Config;
+use crate::config::Config;
 
 /// `dist-clean` subcommand arguments.
 #[derive(Debug, Parser)]

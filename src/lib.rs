@@ -77,22 +77,18 @@ feature_command! {
 }
 
 feature_args! {
-    mod args;
-    pub use crate::args::{Args, Verbosity};
+    /// Data structures for command line arguments parsing.
+    pub mod args;
 }
 
-mod config;
+/// Data structures for workflow configuration.
+pub mod config;
 /// Utility functions for working with paths.
 pub mod fs;
 /// Utility functions for working with processes.
 pub mod process;
 /// Utility functions for working with workspaces.
 pub mod workspace;
-
-pub use crate::config::{
-    Config, ConfigBuilder, DistConfig, DistConfigBuilder, PackageConfig, PackageConfigBuilder,
-    TargetConfig, TargetConfigBuilder,
-};
 
 feature_logger! {
     /// Install a `tracing-subscriber` as a logger.
@@ -131,7 +127,7 @@ feature_error_handler! {
 feature_main! {
     /// Entry point for xtask crate.
     pub fn main() -> eyre::Result<()> {
-        let args = <Args as clap::Parser>::parse();
+        let args = <args::Args as clap::Parser>::parse();
 
         install_error_handler()?;
         install_logger(args.verbosity())?;
@@ -139,9 +135,9 @@ feature_main! {
         tracing::info!("Running on {}", std::env::current_dir()?.display());
 
         let metadata = workspace::current();
-        let (dist, package) = DistConfigBuilder::from_root_package(metadata)?;
+        let (dist, package) = config::DistConfigBuilder::from_root_package(metadata)?;
         let dist = dist.package(package.all_binaries().build()).build();
-        let config = ConfigBuilder::new().dist(dist).build();
+        let config = config::ConfigBuilder::new().dist(dist).build();
         args.run(&config)?;
 
         Ok(())

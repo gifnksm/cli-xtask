@@ -1,6 +1,6 @@
 use clap::Parser;
 
-use crate::{cargo, Config};
+use crate::{cargo, config::Config};
 
 /// `dist-build-bin` subcommand arguments.
 #[derive(Debug, Parser)]

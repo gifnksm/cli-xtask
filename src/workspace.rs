@@ -54,7 +54,7 @@ fn collect_workspaces(base_dir: &Utf8Path) -> eyre::Result<Vec<Metadata>> {
 
         // Check if the path is a cargo manifest file.
         if entry.file_type().is_file() && path.file_name() == Some("Cargo.toml") {
-            tracing::debug!("Found manifest {path}");
+            tracing::debug!("Found manifest {}", path.to_relative());
             let metadata = MetadataCommand::new().manifest_path(path).exec()?;
             match workspaces.entry(metadata.workspace_root.clone()) {
                 Entry::Occupied(_e) => {}

@@ -1,9 +1,11 @@
 use app::Args;
-use clap::CommandFactory;
-use cli_xtask::config::{ConfigBuilder, DistConfigBuilder};
+use cli_xtask::{
+    clap::{CommandFactory, Parser},
+    config::{ConfigBuilder, DistConfigBuilder},
+};
 
-fn main() -> eyre::Result<()> {
-    let args = <cli_xtask::args::Args as clap::Parser>::parse();
+fn main() -> cli_xtask::Result<()> {
+    let args = cli_xtask::args::Args::parse();
 
     cli_xtask::install_error_handler()?;
     cli_xtask::install_logger(args.verbosity())?;

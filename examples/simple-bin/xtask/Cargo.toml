@@ -8,4 +8,3 @@ publish = false
 
 [dependencies]
 cli-xtask = { path = "../../../", features = ["main", "bin-crate", "bin-crate-extra"] }
-eyre = "0.6.8"

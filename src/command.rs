@@ -89,7 +89,7 @@ feature_command_udeps! {
     pub use self::udeps::Udeps;
 }
 
-/// `xtask` command arguments.
+/// Rust project automation command.
 #[derive(Debug, clap::Parser)]
 #[clap(bin_name = "cargo xtask")]
 pub enum Command {
@@ -102,6 +102,11 @@ pub enum Command {
     #[cfg(feature = "command-clippy")]
     #[cfg_attr(docsrs, doc(cfg(feature = "command-clippy")))]
     Clippy(Clippy),
+
+    /// Build the artifacs and create the archive file for distribution
+    #[cfg(feature = "command-dist")]
+    #[cfg_attr(docsrs, doc(cfg(feature = "command-dist")))]
+    Dist(Dist),
 
     /// Create the archive file for distribution
     #[cfg(feature = "command-dist-archive")]
@@ -143,15 +148,10 @@ pub enum Command {
     #[cfg_attr(docsrs, doc(cfg(feature = "command-dist-build-readme")))]
     DistBuildReadme(DistBuildReadme),
 
-    /// Removes the dist artifacts
+    /// Remove the artifacts and archives for distribution
     #[cfg(feature = "command-dist-clean")]
     #[cfg_attr(docsrs, doc(cfg(feature = "command-dist-clean")))]
     DistClean(DistClean),
-
-    /// Create the archive file for distribution
-    #[cfg(feature = "command-dist")]
-    #[cfg_attr(docsrs, doc(cfg(feature = "command-dist")))]
-    Dist(Dist),
 
     /// Run commands on all workspaces in the current directory and subdirectories
     #[cfg(feature = "command-exec")]
@@ -194,6 +194,9 @@ impl Command {
             #[cfg(feature = "command-clippy")]
             Self::Clippy(args) => args.run(config),
 
+            #[cfg(feature = "command-dist")]
+            Self::Dist(args) => args.run(config),
+
             #[cfg(feature = "command-dist-archive")]
             Self::DistArchive(args) => args.run(config),
 
@@ -220,9 +223,6 @@ impl Command {
 
             #[cfg(feature = "command-dist-clean")]
             Self::DistClean(args) => args.run(config),
-
-            #[cfg(feature = "command-dist")]
-            Self::Dist(args) => args.run(config),
 
             #[cfg(feature = "command-exec")]
             Self::Exec(args) => args.run(config),

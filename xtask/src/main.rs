@@ -53,7 +53,6 @@ fn main() -> eyre::Result<()> {
     cli_xtask::install_error_handler()?;
     cli_xtask::install_logger(args.verbosity())?;
 
-    tracing::info!("Running on {}", std::env::current_dir()?.display());
     let config = ConfigBuilder::new().build();
     args.run(&config)?;
 

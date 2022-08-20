@@ -15,7 +15,7 @@ pub struct Args {
     pub command: Subcommand,
 }
 
-#[derive(Debug, clap::Parser)]
+#[derive(Debug, clap::Subcommand)]
 pub enum Subcommand {
     /// Copy the input file to the output file.
     Copy {
@@ -35,7 +35,7 @@ pub enum Subcommand {
     },
 }
 
-#[derive(Debug, clap::Parser)]
+#[derive(Debug, clap::Subcommand)]
 pub enum CopyCommand {
     /// Execute the copy command.
     Execute,
@@ -43,7 +43,7 @@ pub enum CopyCommand {
     DryRun,
 }
 
-#[derive(Debug, clap::Parser)]
+#[derive(Debug, clap::Subcommand)]
 pub enum MoveCommand {
     /// Execute the move command.
     Execute,

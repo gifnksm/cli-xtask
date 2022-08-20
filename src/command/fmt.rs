@@ -1,20 +1,24 @@
 use std::process::Command;
 
-use clap::Parser;
-
-use crate::{config::Config, process::CommandExt, workspace};
+use crate::{config::Config, process::CommandExt, workspace, Result, Run};
 
 /// `fmt` subcommand arguments.
-#[derive(Debug, Parser)]
+#[derive(Debug, clap::Args)]
 pub struct Fmt {
     /// Arguments to pass to the `cargo fmt`
-    extra_options: Vec<String>,
+    pub extra_options: Vec<String>,
+}
+
+impl Run for Fmt {
+    fn run(&self, config: &Config) -> Result<()> {
+        self.run(config)
+    }
 }
 
 impl Fmt {
     /// Execute `fmt` subcommand workflow.
     #[tracing::instrument(name = "fmt", parent = None, skip_all, err)]
-    pub fn run(&self, _config: &Config) -> eyre::Result<()> {
+    pub fn run(&self, _config: &Config) -> Result<()> {
         let Self { extra_options } = self;
 
         for workspace in workspace::all() {

@@ -1,9 +1,7 @@
-use clap::Parser;
-
-use crate::{cargo, config::Config};
+use crate::{cargo, config::Config, Result, Run};
 
 /// `dist-build-bin` subcommand arguments.
-#[derive(Debug, Parser)]
+#[derive(Debug, clap::Args)]
 pub struct DistBuildBin {
     /// Target triple for the build
     #[clap(long = "target")]
@@ -16,10 +14,16 @@ pub struct DistBuildBin {
     pub use_cross_if_needed: bool,
 }
 
+impl Run for DistBuildBin {
+    fn run(&self, config: &Config) -> Result<()> {
+        self.run(config)
+    }
+}
+
 impl DistBuildBin {
     /// Execute `dist-build-bin` subcommand workflow.
     #[tracing::instrument(name = "dist-build-bin", parent = None, skip_all, err)]
-    pub fn run(&self, config: &Config) -> eyre::Result<()> {
+    pub fn run(&self, config: &Config) -> Result<()> {
         tracing::info!("Building executables...");
 
         let Self {
@@ -39,11 +43,11 @@ impl DistBuildBin {
         crate::fs::create_or_cleanup_dir(&bin_dir)?;
 
         for package in config.packages() {
-            for target in package.targets().into_iter().flatten() {
+            for target in package.targets() {
                 let artifacts = cargo::build(
                     config.metadata(),
-                    Some(package.package()),
-                    Some(target.target()),
+                    Some(package.metadata()),
+                    Some(target.metadata()),
                     Some("release"),
                     use_cross,
                     target_triple,

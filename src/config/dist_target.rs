@@ -1,24 +1,16 @@
-use cargo_metadata::Target;
-feature_clap_command! {
-    use cargo_metadata::Package;
-}
+use cargo_metadata::{Package, Target};
+use eyre::eyre;
 
-/// Configures and constructs [`DistTargetConfig`]
+use crate::Result;
+
+/// Configures and constructs [`DistTargetConfig`].
+///
+/// This struct is build from
+/// [`DistPackageConfigBuilder`](super::DistPackageConfigBuilder).
 #[derive(Debug)]
 pub struct DistTargetConfigBuilder<'a> {
     name: String,
-    target: &'a Target,
-    #[cfg(any(
-        feature = "command-dist-build-man",
-        feature = "command-dist-build-completion"
-    ))]
-    #[cfg_attr(
-        docsrs,
-        doc(cfg(any(
-            feature = "command-dist-build-man",
-            feature = "command-dist-build-completion"
-        )))
-    )]
+    metadata: &'a Target,
     command: Option<clap::Command<'static>>,
 }
 
@@ -26,59 +18,41 @@ impl<'a> DistTargetConfigBuilder<'a> {
     pub(crate) fn from_metadata(target: &'a Target) -> Self {
         Self {
             name: target.name.clone(),
-            target,
-            #[cfg(any(
-                feature = "command-dist-build-man",
-                feature = "command-dist-build-completion"
-            ))]
-            #[cfg_attr(
-                docsrs,
-                doc(cfg(any(
-                    feature = "command-dist-build-man",
-                    feature = "command-dist-build-completion"
-                )))
-            )]
+            metadata: target,
             command: None,
         }
     }
 
-    feature_clap_command! {
-        pub(crate) fn binary_from_command(
-            command: clap::Command<'static>,
-            package: &'a Package,
-        ) -> eyre::Result<Self> {
-            let name = command.get_name().to_string();
-            let target = package
-                .targets
-                .iter()
-                .find(|t| t.name == name && t.kind.iter().any(|k| k == "bin"))
-                .ok_or_else(|| eyre::eyre!("command not found: {name}"))?;
-            Ok(Self {
-                name,
-                target,
-                command: Some(command),
-            })
-        }
+    pub(crate) fn target_by_name(package: &'a Package, name: &str, kind: &str) -> Result<Self> {
+        let target = package
+            .targets
+            .iter()
+            .find(|t| t.name == name && t.kind.iter().any(|k| k == kind))
+            .ok_or_else(|| eyre!("command not found: {name}, {kind}"))?;
+        Ok(Self {
+            name: name.to_string(),
+            metadata: target,
+            command: None,
+        })
+    }
+
+    /// Set the command line interface definition for the target.
+    pub fn command(mut self, command: clap::Command<'static>) -> Self {
+        self.command = Some(command);
+        self
     }
 
     /// Builds a [`DistTargetConfig`] from the current configuration.
-    pub fn build(self) -> DistTargetConfig<'a> {
-        DistTargetConfig {
+    ///
+    /// # Errors
+    ///
+    /// Returns an error if the [`DistTargetConfig`] cannot be built.
+    pub fn build(self) -> Result<DistTargetConfig<'a>> {
+        Ok(DistTargetConfig {
             name: self.name,
-            target: self.target,
-            #[cfg(any(
-                feature = "command-dist-build-man",
-                feature = "command-dist-build-completion"
-            ))]
-            #[cfg_attr(
-                docsrs,
-                doc(cfg(any(
-                    feature = "command-dist-build-man",
-                    feature = "command-dist-build-completion"
-                )))
-            )]
+            metadata: self.metadata,
             command: self.command,
-        }
+        })
     }
 }
 
@@ -86,18 +60,7 @@ impl<'a> DistTargetConfigBuilder<'a> {
 #[derive(Debug)]
 pub struct DistTargetConfig<'a> {
     name: String,
-    target: &'a Target,
-    #[cfg(any(
-        feature = "command-dist-build-man",
-        feature = "command-dist-build-completion"
-    ))]
-    #[cfg_attr(
-        docsrs,
-        doc(cfg(any(
-            feature = "command-dist-build-man",
-            feature = "command-dist-build-completion"
-        )))
-    )]
+    metadata: &'a Target,
     command: Option<clap::Command<'static>>,
 }
 
@@ -108,14 +71,12 @@ impl<'a> DistTargetConfig<'a> {
     }
 
     /// Returns the metadata of the target.
-    pub fn target(&self) -> &Target {
-        self.target
+    pub fn metadata(&self) -> &Target {
+        self.metadata
     }
 
-    feature_clap_command! {
-        /// Returns the [`clap::Command`] for the target.
-        pub fn command(&self) -> Option<&clap::Command<'static>> {
-            self.command.as_ref()
-        }
+    /// Returns the command line interface definition for the target.
+    pub fn command(&self) -> Option<&clap::Command<'static>> {
+        self.command.as_ref()
     }
 }

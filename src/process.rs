@@ -1,20 +1,25 @@
+//! Utility functions for working with processes.
+
 use std::process::{Command, Stdio};
 
 use cargo_metadata::Metadata;
+use eyre::eyre;
 
-use crate::fs::ToRelative;
+use crate::{fs::ToRelative, Result};
 
 /// Extension methods for [`std::process::Command`].
 pub trait CommandExt {
-    /// Executes the command as a child process on the workspace root directory, waiting for it to finish and checking the exit status.
-    fn workspace_spawn(&mut self, workspace: &Metadata) -> eyre::Result<()>;
+    /// Executes the command as a child process on the workspace root directory,
+    /// waiting for it to finish and checking the exit status.
+    fn workspace_spawn(&mut self, workspace: &Metadata) -> Result<()>;
 
-    /// Executes the command as a child process on the workspace root directory, waiting for it to finish and collecting all of its standard output.
-    fn workspace_stdout(&mut self, workspace: &Metadata) -> eyre::Result<Vec<u8>>;
+    /// Executes the command as a child process on the workspace root directory,
+    /// waiting for it to finish and collecting all of its standard output.
+    fn workspace_stdout(&mut self, workspace: &Metadata) -> Result<Vec<u8>>;
 }
 
 impl CommandExt for Command {
-    fn workspace_spawn(&mut self, workspace: &Metadata) -> eyre::Result<()> {
+    fn workspace_spawn(&mut self, workspace: &Metadata) -> Result<()> {
         let workspace_root = &workspace.workspace_root;
 
         self.current_dir(&workspace_root);
@@ -39,7 +44,7 @@ impl CommandExt for Command {
                 workspace_root.to_relative(),
                 status,
             );
-            return Err(eyre::eyre!(
+            return Err(eyre!(
                 "command for {} failed with status {}",
                 workspace_root.to_relative(),
                 status,
@@ -48,7 +53,7 @@ impl CommandExt for Command {
         Ok(())
     }
 
-    fn workspace_stdout(&mut self, workspace: &Metadata) -> eyre::Result<Vec<u8>> {
+    fn workspace_stdout(&mut self, workspace: &Metadata) -> Result<Vec<u8>> {
         let workspace_root = &workspace.workspace_root;
 
         self.current_dir(&workspace_root).stdout(Stdio::piped());
@@ -74,7 +79,7 @@ impl CommandExt for Command {
                 workspace_root.to_relative(),
                 output.status.code().unwrap()
             );
-            return Err(eyre::eyre!(
+            return Err(eyre!(
                 "command for {} failed with status {}",
                 workspace_root.to_relative(),
                 output.status.code().unwrap()

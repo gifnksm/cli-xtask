@@ -120,9 +120,12 @@ jobs:
           workspaces: ${{ needs.set-workspace.outputs.workspaces }}
       - name: Install cargo-llvm-cov
         uses: taiki-e/install-action@cargo-llvm-cov
+      - run: rustup toolchain add nightly --profile minimal --component llvm-tools-preview
+        shell: bash
       - name: Generate code coverage
         run: |
-          cargo llvm-cov --workspace --lcov --output-path lcov-test.info
+          cargo llvm-cov --workspace --all-targets --all-features --lcov --output-path lcov-test.info
+          cargo +nightly llvm-cov --doctests --workspace --all-features --lcov --output-path lcov-doctest.info
           cargo llvm-cov run -p xtask --lcov --output-path lcov-exec.info -- exec --exclude-current -- cargo llvm-cov --workspace --lcov --output-path lcov-test.info
         shell: bash
       - name: Upload coverage to Codecov

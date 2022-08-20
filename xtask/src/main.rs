@@ -1,60 +1,24 @@
-use clap::{CommandFactory, Parser};
-use cli_xtask::{
-    args::Verbosity,
-    config::{Config, ConfigBuilder},
-};
-use tracing::Level;
+use cli_xtask::{args::GenericArgs, clap, config::Config, Result, Run};
 
 mod xtask_test;
 
-#[derive(Debug, clap::Parser)]
-#[clap(bin_name = "cargo xtask")]
-pub struct Args {
-    #[clap(flatten)]
-    verbosity: Verbosity,
-
-    #[clap(subcommand)]
-    command: Option<Command>,
-}
-
-impl Args {
-    pub fn run(&self, config: &Config) -> eyre::Result<()> {
-        match &self.command {
-            Some(command) => command.run(config)?,
-            None => Self::command().print_help()?,
-        }
-        Ok(())
-    }
-
-    pub fn verbosity(&self) -> Option<Level> {
-        self.verbosity.get()
-    }
-}
-
-#[derive(Debug, Parser)]
+#[derive(Debug, clap::Subcommand)]
 enum Command {
     #[clap(flatten)]
-    Command(cli_xtask::Command),
+    Command(cli_xtask::command::Command),
     XtaskTest(xtask_test::XtaskTest),
 }
 
-impl Command {
-    fn run(&self, config: &Config) -> eyre::Result<()> {
+impl Run for Command {
+    fn run(&self, config: &Config) -> Result<()> {
         match self {
-            Self::Command(args) => args.run(config),
-            Self::XtaskTest(args) => args.run(config),
+            Command::Command(command) => command.run(config)?,
+            Command::XtaskTest(xtask_test) => xtask_test.run(config)?,
         }
+        Ok(())
     }
 }
 
-fn main() -> eyre::Result<()> {
-    let args = Args::parse();
-
-    cli_xtask::install_error_handler()?;
-    cli_xtask::install_logger(args.verbosity())?;
-
-    let config = ConfigBuilder::new().build();
-    args.run(&config)?;
-
-    Ok(())
+fn main() -> Result<()> {
+    GenericArgs::<Command>::main()
 }

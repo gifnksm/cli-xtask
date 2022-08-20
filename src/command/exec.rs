@@ -1,25 +1,29 @@
 use std::process::Command;
 
-use clap::Parser;
-
-use crate::{config::Config, process::CommandExt, workspace};
+use crate::{config::Config, process::CommandExt, workspace, Result, Run};
 
 /// `exec` subcommand arguments.
-#[derive(Debug, Parser)]
+#[derive(Debug, clap::Args)]
 pub struct Exec {
     /// Do not execute command on the current workspace.
     #[clap(long)]
-    exclude_current: bool,
+    pub exclude_current: bool,
     /// Command to execute
-    command: String,
+    pub command: String,
     /// Arguments to pass to the command
-    command_options: Vec<String>,
+    pub command_options: Vec<String>,
+}
+
+impl Run for Exec {
+    fn run(&self, config: &Config) -> Result<()> {
+        self.run(config)
+    }
 }
 
 impl Exec {
     /// Execute `exec` subcommand workflow.
     #[tracing::instrument(name = "exec", parent = None, skip_all, err)]
-    pub fn run(&self, _config: &Config) -> eyre::Result<()> {
+    pub fn run(&self, _config: &Config) -> Result<()> {
         let Self {
             exclude_current,
             command,

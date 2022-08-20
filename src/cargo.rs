@@ -1,3 +1,5 @@
+//! Utilities for Cargo command execution.
+
 use std::{
     io::BufReader,
     process::{Command, Stdio},
@@ -6,26 +8,35 @@ use std::{
 use cargo_metadata::{
     camino::Utf8PathBuf, Artifact, Message, Metadata, MetadataCommand, Package, Target,
 };
-use eyre::ensure;
+use eyre::{bail, ensure};
+
+use crate::{Error, Result};
 
 /// Executes a `cargo build` command and returns paths to the build artifacts.
 ///
 /// # Examples
 ///
 /// ```no_run
-/// # fn main() -> eyre::Result<()> {
+/// # fn main() -> cli_xtask::Result<()> {
 /// // executes cargo build
-/// let metadata = cli_xtask::workspace::current();
-/// for bin in cli_xtask::cargo::build(metadata, None, None, None, false, None)? {
+/// let workspace = cli_xtask::workspace::current();
+/// for bin in cli_xtask::cargo::build(workspace, None, None, None, false, None)? {
 ///     let bin = bin?;
 ///     println!("{bin}");
 /// }
 ///
 /// // executes cross build --profile target --bin foo --target aarch64-unknown-linux-gnu
-/// let metadata = cli_xtask::workspace::current();
-/// let package = metadata.root_package().unwrap();
+/// let workspace = cli_xtask::workspace::current();
+/// let package = workspace.root_package().unwrap();
 /// let target = package.targets.iter().find(|t| t.name == "foo").unwrap();
-/// for bin in cli_xtask::cargo::build(metadata, Some(&package), Some(target), Some("release"), true, Some("aarch64-unknown-linux-gnu"))? {
+/// for bin in cli_xtask::cargo::build(
+///     workspace,
+///     Some(&package),
+///     Some(target),
+///     Some("release"),
+///     true,
+///     Some("aarch64-unknown-linux-gnu"),
+/// )? {
 ///     let bin = bin?;
 ///     println!("{bin}");
 /// }
@@ -40,7 +51,7 @@ pub fn build<'a>(
     profile: Option<&str>,
     use_cross: bool,
     target_triple: Option<&str>,
-) -> eyre::Result<impl Iterator<Item = eyre::Result<Utf8PathBuf>> + 'a> {
+) -> Result<impl Iterator<Item = Result<Utf8PathBuf>> + 'a> {
     let cmd_name = if use_cross { "cross" } else { "cargo" };
     let mut args = vec!["build"];
 
@@ -56,7 +67,7 @@ pub fn build<'a>(
                 "test" => args.extend(["--test", target.name.as_str()]),
                 "bench" => args.extend(["--bench", target.name.as_str()]),
                 "lib" => args.extend(["--lib"]),
-                _ => eyre::bail!("unsupported target kind: {}", kind),
+                _ => bail!("unsupported target kind: {}", kind),
             }
         }
     }
@@ -91,7 +102,7 @@ pub fn build<'a>(
 
     let reader = BufReader::new(stdout);
     let it = Message::parse_stream(reader)
-        .map(|res| res.map_err(eyre::Error::from))
+        .map(|res| res.map_err(Error::from))
         .filter_map(|res| match res {
             Ok(Message::CompilerArtifact(Artifact { executable, .. })) => executable.map(Ok),
             Err(e) => Some(Err(e)),

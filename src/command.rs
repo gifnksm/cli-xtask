@@ -1,104 +1,188 @@
-use crate::config::Config;
+//! Command line interfaces for xtask workflows.
 
-feature_command_build! {
-    mod build;
-    pub use self::build::Build;
-}
+use crate::{config::Config, Result, Run};
 
-feature_command_clippy! {
-    mod clippy;
-    pub use self::clippy::Clippy;
-}
+#[cfg(feature = "command-build")]
+#[cfg_attr(docsrs, doc(cfg(feature = "command-build")))]
+mod build;
+#[cfg(feature = "command-build")]
+#[cfg_attr(docsrs, doc(cfg(feature = "command-build")))]
+pub use self::build::Build;
 
-feature_command_dist_archive! {
-    mod dist_archive;
-    pub use self::dist_archive::DistArchive;
-}
+#[cfg(feature = "command-clippy")]
+#[cfg_attr(docsrs, doc(cfg(feature = "command-clippy")))]
+mod clippy;
+#[cfg(feature = "command-clippy")]
+#[cfg_attr(docsrs, doc(cfg(feature = "command-clippy")))]
+pub use self::clippy::Clippy;
 
-feature_command_dist_build! {
-    mod dist_build;
-    pub use self::dist_build::DistBuild;
-}
+#[cfg(feature = "command-dist-archive")]
+#[cfg_attr(docsrs, doc(cfg(feature = "command-dist-archive")))]
+mod dist_archive;
+#[cfg(feature = "command-dist-archive")]
+#[cfg_attr(docsrs, doc(cfg(feature = "command-dist-archive")))]
+pub use self::dist_archive::DistArchive;
 
-feature_command_dist_build_bin! {
-    mod dist_build_bin;
-    pub use self::dist_build_bin::DistBuildBin;
-}
+#[cfg(command_dist_build)]
+#[cfg_attr(docsrs, doc(cfg(feature = "command-dist-build-*")))]
+mod dist_build;
+#[cfg(command_dist_build)]
+#[cfg_attr(docsrs, doc(cfg(feature = "command-dist-build-*")))]
+pub use self::dist_build::DistBuild;
 
-feature_command_dist_build_completion! {
-    mod dist_build_completion;
-    pub use self::dist_build_completion::DistBuildCompletion;
-}
+#[cfg(feature = "command-dist-build-bin")]
+#[cfg_attr(docsrs, doc(cfg(feature = "command-dist-build-bin")))]
+mod dist_build_bin;
+#[cfg(feature = "command-dist-build-bin")]
+#[cfg_attr(docsrs, doc(cfg(feature = "command-dist-build-bin")))]
+pub use self::dist_build_bin::DistBuildBin;
 
-feature_command_dist_build_doc! {
-    mod dist_build_doc;
-    pub use self::dist_build_doc::DistBuildDoc;
-}
+#[cfg(feature = "command-dist-build-completion")]
+#[cfg_attr(docsrs, doc(cfg(feature = "command-dist-build-completion")))]
+mod dist_build_completion;
+#[cfg(feature = "command-dist-build-completion")]
+#[cfg_attr(docsrs, doc(cfg(feature = "command-dist-build-completion")))]
+pub use self::dist_build_completion::DistBuildCompletion;
 
-feature_command_dist_build_license! {
-    mod dist_build_license;
-    pub use self::dist_build_license::DistBuildLicense;
-}
+#[cfg(feature = "command-dist-build-doc")]
+#[cfg_attr(docsrs, doc(cfg(feature = "command-dist-build-doc")))]
+mod dist_build_doc;
+#[cfg(feature = "command-dist-build-doc")]
+#[cfg_attr(docsrs, doc(cfg(feature = "command-dist-build-doc")))]
+pub use self::dist_build_doc::DistBuildDoc;
 
-feature_command_dist_build_man! {
-    mod dist_build_man;
-    pub use self::dist_build_man::DistBuildMan;
-}
+#[cfg(feature = "command-dist-build-license")]
+#[cfg_attr(docsrs, doc(cfg(feature = "command-dist-build-license")))]
+mod dist_build_license;
+#[cfg(feature = "command-dist-build-license")]
+#[cfg_attr(docsrs, doc(cfg(feature = "command-dist-build-license")))]
+pub use self::dist_build_license::DistBuildLicense;
 
-feature_command_dist_build_readme! {
-    mod dist_build_readme;
-    pub use self::dist_build_readme::DistBuildReadme;
-}
+#[cfg(feature = "command-dist-build-man")]
+#[cfg_attr(docsrs, doc(cfg(feature = "command-dist-build-man")))]
+mod dist_build_man;
+#[cfg(feature = "command-dist-build-man")]
+#[cfg_attr(docsrs, doc(cfg(feature = "command-dist-build-man")))]
+pub use self::dist_build_man::DistBuildMan;
 
-feature_command_dist_clean! {
-    mod dist_clean;
-    pub use self::dist_clean::DistClean;
-}
+#[cfg(feature = "command-dist-build-readme")]
+#[cfg_attr(docsrs, doc(cfg(feature = "command-dist-build-readme")))]
+mod dist_build_readme;
+#[cfg(feature = "command-dist-build-readme")]
+#[cfg_attr(docsrs, doc(cfg(feature = "command-dist-build-readme")))]
+pub use self::dist_build_readme::DistBuildReadme;
 
-feature_command_dist! {
-    mod dist;
-    pub use self::dist::Dist;
-}
+#[cfg(feature = "command-dist-clean")]
+#[cfg_attr(docsrs, doc(cfg(feature = "command-dist-clean")))]
+mod dist_clean;
+#[cfg(feature = "command-dist-clean")]
+#[cfg_attr(docsrs, doc(cfg(feature = "command-dist-clean")))]
+pub use self::dist_clean::DistClean;
 
-feature_command_exec! {
-    mod exec;
-    pub use self::exec::Exec;
-}
+#[cfg(feature = "command-dist")]
+#[cfg_attr(docsrs, doc(cfg(feature = "command-dist")))]
+mod dist;
+#[cfg(feature = "command-dist")]
+#[cfg_attr(docsrs, doc(cfg(feature = "command-dist")))]
+pub use self::dist::Dist;
 
-feature_command_fmt! {
-    mod fmt;
-    pub use self::fmt::Fmt;
-}
+#[cfg(feature = "command-exec")]
+#[cfg_attr(docsrs, doc(cfg(feature = "command-exec")))]
+mod exec;
+#[cfg(feature = "command-exec")]
+#[cfg_attr(docsrs, doc(cfg(feature = "command-exec")))]
+pub use self::exec::Exec;
 
-feature_command_lint! {
-    mod lint;
-    pub use self::lint::Lint;
-}
-feature_command_rdme! {
-    mod rdme;
-    pub use self::rdme::Rdme;
-}
+#[cfg(feature = "command-fmt")]
+#[cfg_attr(docsrs, doc(cfg(feature = "command-fmt")))]
+mod fmt;
+#[cfg(feature = "command-fmt")]
+#[cfg_attr(docsrs, doc(cfg(feature = "command-fmt")))]
+pub use self::fmt::Fmt;
 
-feature_command_test! {
-    mod test;
-    pub use self::test::Test;
-}
+#[cfg(feature = "command-lint")]
+#[cfg_attr(docsrs, doc(cfg(feature = "command-lint")))]
+mod lint;
+#[cfg(feature = "command-lint")]
+#[cfg_attr(docsrs, doc(cfg(feature = "command-lint")))]
+pub use self::lint::Lint;
 
-feature_command_udeps! {
-    mod udeps;
-    pub use self::udeps::Udeps;
-}
+#[cfg(feature = "command-rdme")]
+#[cfg_attr(docsrs, doc(cfg(feature = "command-rdme")))]
+mod rdme;
+#[cfg(feature = "command-rdme")]
+#[cfg_attr(docsrs, doc(cfg(feature = "command-rdme")))]
+pub use self::rdme::Rdme;
 
-/// Rust project automation command.
-#[derive(Debug, clap::Parser)]
-#[clap(bin_name = "cargo xtask")]
+#[cfg(feature = "command-test")]
+#[cfg_attr(docsrs, doc(cfg(feature = "command-test")))]
+mod test;
+#[cfg(feature = "command-test")]
+#[cfg_attr(docsrs, doc(cfg(feature = "command-test")))]
+pub use self::test::Test;
+
+#[cfg(feature = "command-udeps")]
+#[cfg_attr(docsrs, doc(cfg(feature = "command-udeps")))]
+mod udeps;
+#[cfg(feature = "command-udeps")]
+#[cfg_attr(docsrs, doc(cfg(feature = "command-udeps")))]
+pub use self::udeps::Udeps;
+
+/// Subcommand definition.
+///
+/// # Examples
+///
+/// You can use this struct to define a subcommand of your application:
+///
+/// ```rust
+/// use cli_xtask::{clap, command::Command, config::Config, Result};
+///
+/// #[derive(Debug, clap::Parser)]
+/// struct Args {
+///     #[clap(subcommand)]
+///     command: Command,
+/// }
+///
+/// impl Args {
+///     pub fn run(&self, config: &Config) -> Result<()> {
+///         self.command.run(config)
+///     }
+/// }
+/// ```
+///
+/// You can mix the subcommands defined in this enum with your own subcommands:
+///
+/// ```rust
+/// use cli_xtask::{clap, config::Config, Result};
+///
+/// #[derive(Debug, clap::Parser)]
+/// struct Args {
+///     #[clap(subcommand)]
+///     command: Command,
+/// }
+///
+/// #[derive(Debug, clap::Subcommand)]
+/// enum Command {
+///     #[clap(flatten)]
+///     Command(cli_xtask::command::Command),
+///     YourOwnCommand(YourOwnCommand),
+/// }
+///
+/// #[derive(Debug, clap::Args)]
+/// struct YourOwnCommand {}
+/// ```
+#[derive(Debug, clap::Subcommand)]
+#[clap(bin_name = "cargo xtask", about = "Rust project automation command", long_about = None)]
+#[non_exhaustive]
 pub enum Command {
-    /// Run `cargo build` on all workspaces in the current directory and subdirectories
+    /// Run `cargo build` on all workspaces in the current directory and
+    /// subdirectories
     #[cfg(feature = "command-build")]
     #[cfg_attr(docsrs, doc(cfg(feature = "command-build")))]
     Build(Build),
 
-    /// Run `cargo clippy` on all workspaces in the current directory and subdirectories
+    /// Run `cargo clippy` on all workspaces in the current directory and
+    /// subdirectories
     #[cfg(feature = "command-clippy")]
     #[cfg_attr(docsrs, doc(cfg(feature = "command-clippy")))]
     Clippy(Clippy),
@@ -153,40 +237,52 @@ pub enum Command {
     #[cfg_attr(docsrs, doc(cfg(feature = "command-dist-clean")))]
     DistClean(DistClean),
 
-    /// Run commands on all workspaces in the current directory and subdirectories
+    /// Run commands on all workspaces in the current directory and
+    /// subdirectories
     #[cfg(feature = "command-exec")]
     #[cfg_attr(docsrs, doc(cfg(feature = "command-exec")))]
     Exec(Exec),
 
-    /// Run `cargo fmt` on all workspaces in the current directory and subdirectories
+    /// Run `cargo fmt` on all workspaces in the current directory and
+    /// subdirectories
     #[cfg(feature = "command-fmt")]
     #[cfg_attr(docsrs, doc(cfg(feature = "command-fmt")))]
     Fmt(Fmt),
 
-    /// Run all lint commands on all workspaces in the current directory and subdirectories
+    /// Run all lint commands on all workspaces in the current directory and
+    /// subdirectories
     #[cfg(feature = "command-lint")]
     #[cfg_attr(docsrs, doc(cfg(feature = "command-lint")))]
     Lint(Lint),
 
-    /// Run `cargo rdme` on all workspaces in the current directory and subdirectories
+    /// Run `cargo rdme` on all workspaces in the current directory and
+    /// subdirectories
     #[cfg(feature = "command-rdme")]
     #[cfg_attr(docsrs, doc(cfg(feature = "command-rdme")))]
     Rdme(rdme::Rdme),
 
-    /// Run `cargo test` on all workspaces in the current directory and subdirectories
+    /// Run `cargo test` on all workspaces in the current directory and
+    /// subdirectories
     #[cfg(feature = "command-test")]
     #[cfg_attr(docsrs, doc(cfg(feature = "command-test")))]
     Test(Test),
 
-    /// Run `cargo udeps` on all workspaces in the current directory and subdirectories
+    /// Run `cargo udeps` on all workspaces in the current directory and
+    /// subdirectories
     #[cfg(feature = "command-udeps")]
     #[cfg_attr(docsrs, doc(cfg(feature = "command-udeps")))]
     Udeps(Udeps),
 }
 
+impl Run for Command {
+    fn run(&self, config: &Config) -> Result<()> {
+        self.run(config)
+    }
+}
+
 impl Command {
     /// Runs subcommand workflow.
-    pub fn run(&self, config: &Config) -> eyre::Result<()> {
+    pub fn run(&self, config: &Config) -> Result<()> {
         match self {
             #[cfg(feature = "command-build")]
             Self::Build(args) => args.run(config),
@@ -241,6 +337,9 @@ impl Command {
 
             #[cfg(feature = "command-udeps")]
             Self::Udeps(args) => args.run(config),
+
+            #[cfg(not(command))]
+            _ => unreachable!("no commands defined: {config:?}"),
         }
     }
 }

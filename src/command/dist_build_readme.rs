@@ -1,15 +1,19 @@
-use clap::Parser;
-
-use crate::config::Config;
+use crate::{config::Config, Result, Run};
 
 /// `dist-build-doc` subcommand arguments.
-#[derive(Debug, Parser)]
+#[derive(Debug, clap::Args)]
 pub struct DistBuildReadme {}
+
+impl Run for DistBuildReadme {
+    fn run(&self, config: &Config) -> Result<()> {
+        self.run(config)
+    }
+}
 
 impl DistBuildReadme {
     /// Execute `dist-build-doc` subcommand workflow.
     #[tracing::instrument(name = "dist-build-readme", parent = None, skip_all, err)]
-    pub fn run(&self, config: &Config) -> eyre::Result<()> {
+    pub fn run(&self, config: &Config) -> Result<()> {
         tracing::info!("Building READMEs...");
 
         let Self {} = self;
@@ -32,7 +36,7 @@ impl DistBuildReadme {
         let Self {} = self;
 
         for package in packages {
-            if let Some(readme) = &package.package().readme {
+            if let Some(readme) = &package.metadata().readme {
                 let src_file = package.root_dir().join(readme);
                 let dest_dir = if add_package_dir {
                     readme_dir.join(package.name())

@@ -1,3 +1,5 @@
+//! Utility functions for working with workspaces.
+
 use std::{
     cmp::Ordering,
     collections::{hash_map::Entry, HashMap, HashSet},
@@ -10,7 +12,7 @@ use cargo_metadata::{
 use once_cell::sync::Lazy;
 use walkdir::WalkDir;
 
-use crate::fs::ToRelative;
+use crate::{fs::ToRelative, Result};
 
 static WORKSPACES: Lazy<Vec<Metadata>> = Lazy::new(|| {
     let current_dir = std::env::current_dir().unwrap();
@@ -28,7 +30,7 @@ pub fn all() -> &'static [Metadata] {
     &WORKSPACES
 }
 
-fn collect_workspaces(base_dir: &Utf8Path) -> eyre::Result<Vec<Metadata>> {
+fn collect_workspaces(base_dir: &Utf8Path) -> Result<Vec<Metadata>> {
     let mut workspaces = HashMap::new();
     let mut target_dirs = HashSet::new();
 
@@ -55,19 +57,19 @@ fn collect_workspaces(base_dir: &Utf8Path) -> eyre::Result<Vec<Metadata>> {
         // Check if the path is a cargo manifest file.
         if entry.file_type().is_file() && path.file_name() == Some("Cargo.toml") {
             tracing::debug!("Found manifest {}", path.to_relative());
-            let metadata = MetadataCommand::new().manifest_path(path).exec()?;
-            match workspaces.entry(metadata.workspace_root.clone()) {
+            let workspace = MetadataCommand::new().manifest_path(path).exec()?;
+            match workspaces.entry(workspace.workspace_root.clone()) {
                 Entry::Occupied(_e) => {}
                 Entry::Vacant(e) => {
-                    if metadata.target_directory.is_dir() {
-                        let target_dir = metadata.target_directory.canonicalize_utf8()?;
+                    if workspace.target_directory.is_dir() {
+                        let target_dir = workspace.target_directory.canonicalize_utf8()?;
                         tracing::debug!(
                             "Found workspace {}",
-                            metadata.workspace_root.to_relative()
+                            workspace.workspace_root.to_relative()
                         );
                         target_dirs.insert(target_dir);
                     }
-                    e.insert(metadata);
+                    e.insert(workspace);
                 }
             }
         }
@@ -80,7 +82,8 @@ fn collect_workspaces(base_dir: &Utf8Path) -> eyre::Result<Vec<Metadata>> {
         }
 
         // Skip the current workspace's target directories.
-        // This prevents the `target/package` directory from being included in the workspace.
+        // This prevents the `target/package` directory from being included in the
+        // workspace.
         if entry.file_type().is_dir() && target_dirs.contains(&path.canonicalize_utf8()?) {
             tracing::debug!("Skipping target directory {}", path.to_relative());
             it.skip_current_dir();

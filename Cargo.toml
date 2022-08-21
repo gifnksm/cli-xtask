@@ -12,6 +12,7 @@ repository = "https://github.com/gifnksm/cli-xtask"
 license = "MIT OR Apache-2.0"
 keywords = []
 categories = []
+autobins = false
 
 [package.metadata.docs.rs]
 all-features = true
@@ -55,34 +56,34 @@ lib-crate-extra = [
     "command-udeps",
 ]
 
-main = ["logger", "error-handler", "args"]
-args = ["dep:clap"]
+main = ["args", "logger", "error-handler"]
+args = []
+
 error-handler = ["dep:color-eyre"]
 logger = ["dep:tracing-subscriber"]
-
 archive = ["dep:flate2", "dep:tar"]
 
-command-build = ["dep:clap"]
-command-clippy = ["dep:clap"]
-command-dist = ["command-dist-archive", "dep:clap"]
-command-dist-archive = ["archive", "dep:clap"]
-command-dist-build-bin = ["dep:clap"]
-command-dist-build-completion = ["dep:clap", "dep:clap_complete"]
-command-dist-build-doc = ["dep:clap"]
-command-dist-build-license = ["dep:regex", "dep:clap"]
-command-dist-build-man = ["dep:clap", "dep:clap_mangen", "dep:time"]
-command-dist-build-readme = ["dep:clap"]
-command-dist-clean = ["dep:clap"]
-command-exec = ["dep:clap"]
-command-fmt = ["dep:clap"]
-command-lint = ["dep:clap"]
-command-rdme = ["dep:clap"]
-command-test = ["dep:clap"]
-command-udeps = ["dep:clap"]
+command-build = []
+command-clippy = []
+command-dist = ["command-dist-archive"]
+command-dist-archive = ["archive"]
+command-dist-build-bin = []
+command-dist-build-completion = ["dep:clap_complete"]
+command-dist-build-doc = []
+command-dist-build-license = ["dep:regex"]
+command-dist-build-man = ["dep:clap_mangen", "dep:time"]
+command-dist-build-readme = []
+command-dist-clean = []
+command-exec = []
+command-fmt = []
+command-lint = []
+command-rdme = []
+command-test = []
+command-udeps = []
 
 [dependencies]
 cargo_metadata = "0.15.0"
-clap = { version = "3.2.17", features = ["derive"], optional = true }
+clap = { version = "3.2.17", features = ["derive"] }
 clap_complete = { version = "3.2.4", optional = true }
 clap_mangen = { version = "0.1.10", optional = true }
 color-eyre = { version = "0.6.2", optional = true }
@@ -97,7 +98,6 @@ tracing-subscriber = { version = "0.3.15", features = ["env-filter"], optional =
 walkdir = "2.3.2"
 
 [dev-dependencies]
-cli-xtask = { path = ".", features = ["main"] }
 
 [build-dependencies]
 

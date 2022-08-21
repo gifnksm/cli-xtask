@@ -5,16 +5,21 @@ use std::{
     process::Command,
 };
 
-use cargo_metadata::{
-    camino::{Utf8Path, Utf8PathBuf},
-    Metadata,
+use cli_xtask::{
+    cargo_metadata::{
+        camino::{Utf8Path, Utf8PathBuf},
+        Metadata,
+    },
+    clap,
+    config::Config,
+    eyre::eyre,
+    fs::ToRelative,
+    process::CommandExt,
+    tracing, workspace, Result,
 };
-use clap::Parser;
-
-use cli_xtask::{config::Config, fs::ToRelative, process::CommandExt, workspace};
 
 /// `xtask-test` subcommand arguments.
-#[derive(Debug, Parser)]
+#[derive(Debug, clap::Args)]
 pub struct XtaskTest {
     /// Collect coverage information using cargo-llvm-cov.
     #[clap(long)]
@@ -24,7 +29,7 @@ pub struct XtaskTest {
 impl XtaskTest {
     /// Execute `xtask-test` subcommand workflow.
     #[tracing::instrument(name = "xtask-test", parent = None, skip_all, err)]
-    pub fn run(&self, _config: &Config) -> eyre::Result<()> {
+    pub fn run(&self, _config: &Config) -> Result<()> {
         let Self { cargo_llvm_cov } = self;
 
         for workspace in &workspace::all()[1..] {
@@ -35,7 +40,7 @@ impl XtaskTest {
     }
 }
 
-fn test_workspace(workspace: &Metadata, cargo_llvm_cov: bool) -> eyre::Result<()> {
+fn test_workspace(workspace: &Metadata, cargo_llvm_cov: bool) -> Result<()> {
     let mut envs = vec![];
     if cargo_llvm_cov {
         envs = cargo_llvm_cov_init(workspace)?;
@@ -97,7 +102,7 @@ fn test_workspace(workspace: &Metadata, cargo_llvm_cov: bool) -> eyre::Result<()
     Ok(())
 }
 
-fn test_dist_archive(cargo: &Cargo) -> eyre::Result<()> {
+fn test_dist_archive(cargo: &Cargo) -> Result<()> {
     // if working directory is empty, no artifacts and dist directory created
     cargo.cleanup()?;
     cargo.spawn(["xtask", "dist-archive"])?;
@@ -126,7 +131,8 @@ fn test_dist_archive(cargo: &Cargo) -> eyre::Result<()> {
     assert!(distdir.join("app-v0.1.0-arch1.tar.gz").exists());
     assert!(!distdir.join("app-v0.1.0-noarch.tar.gz").exists());
 
-    // noarch archive created if noarch directory exists and other directory not exists
+    // noarch archive created if noarch directory exists and other directory not
+    // exists
     cargo.cleanup()?;
     let noarch = workdir.join("noarch");
     fs::create_dir_all(&noarch)?;
@@ -171,23 +177,20 @@ impl<'a> Cargo<'a> {
         cmd
     }
 
-    fn spawn(&self, args: impl IntoIterator<Item = impl AsRef<OsStr>>) -> eyre::Result<()> {
+    fn spawn(&self, args: impl IntoIterator<Item = impl AsRef<OsStr>>) -> Result<()> {
         self.build().args(args).workspace_spawn(self.workspace)
     }
 
-    fn stdout_raw(
-        &self,
-        args: impl IntoIterator<Item = impl AsRef<OsStr>>,
-    ) -> eyre::Result<Vec<u8>> {
+    fn stdout_raw(&self, args: impl IntoIterator<Item = impl AsRef<OsStr>>) -> Result<Vec<u8>> {
         self.build().args(args).workspace_stdout(self.workspace)
     }
 
-    fn stdout(&self, args: impl IntoIterator<Item = impl AsRef<OsStr>>) -> eyre::Result<String> {
+    fn stdout(&self, args: impl IntoIterator<Item = impl AsRef<OsStr>>) -> Result<String> {
         let output = self.stdout_raw(args)?;
         Ok(String::from_utf8(output)?)
     }
 
-    fn cleanup(&self) -> eyre::Result<()> {
+    fn cleanup(&self) -> Result<()> {
         tracing::info!("cleaning {}", self.target_directory.to_relative());
         let dist_dir = self.target_directory.join("dist");
         if dist_dir.is_dir() {
@@ -201,7 +204,7 @@ impl<'a> Cargo<'a> {
     }
 }
 
-fn cargo_llvm_cov_init(workspace: &Metadata) -> eyre::Result<Vec<(String, String)>> {
+fn cargo_llvm_cov_init(workspace: &Metadata) -> Result<Vec<(String, String)>> {
     let target_dir = workspace.target_directory.join("llvm-cov-target");
 
     // get environment variables to pass to the child process
@@ -214,7 +217,7 @@ fn cargo_llvm_cov_init(workspace: &Metadata) -> eyre::Result<Vec<(String, String
     for line in String::from_utf8(output)?.lines() {
         let (k, v) = line
             .split_once('=')
-            .ok_or_else(|| eyre::eyre!("invalid line: {}", line))?;
+            .ok_or_else(|| eyre!("invalid line: {}", line))?;
         let v = v.trim_matches('"');
         envs.push((k.to_string(), v.to_string()));
     }
@@ -228,11 +231,7 @@ fn cargo_llvm_cov_init(workspace: &Metadata) -> eyre::Result<Vec<(String, String
     Ok(envs)
 }
 
-fn cargo_llvm_cov_fini(
-    cargo: &Cargo,
-    // workspace: &Metadata,
-    // envs: impl IntoIterator<Item = (impl AsRef<OsStr>, impl AsRef<OsStr>)>,
-) -> eyre::Result<()> {
+fn cargo_llvm_cov_fini(cargo: &Cargo) -> Result<()> {
     cargo.spawn([
         "llvm-cov",
         "--no-run",

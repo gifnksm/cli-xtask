@@ -1,15 +1,19 @@
-use clap::Parser;
-
-use crate::{archive, config::Config};
+use crate::{archive, config::Config, Result, Run};
 
 /// `dist-archive` subcommand arguments.
-#[derive(Debug, Parser)]
+#[derive(Debug, clap::Args)]
 pub struct DistArchive {}
+
+impl Run for DistArchive {
+    fn run(&self, config: &Config) -> Result<()> {
+        self.run(config)
+    }
+}
 
 impl DistArchive {
     /// Execute `dist-archive` subcommand workflow.
     #[tracing::instrument(name = "dist-archive", parent = None, skip_all, err)]
-    pub fn run(&self, config: &Config) -> eyre::Result<()> {
+    pub fn run(&self, config: &Config) -> Result<()> {
         let Self {} = self;
         let config = config.dist()?;
 
@@ -37,10 +41,13 @@ impl DistArchive {
             let archive_name = format!("{}-{}.tar.gz", config.name(), target_triple);
             let archive_path = dist_dir.join(&archive_name);
 
-            archive::create(
-                &archive_path,
-                [dir].into_iter().chain(noarch_path.as_deref()),
-            )?;
+            let mut targets = vec![];
+            for dir in [dir].into_iter().chain(noarch_path.as_deref()) {
+                for entry in dir.read_dir_utf8()? {
+                    targets.push(entry?.path().to_owned());
+                }
+            }
+            archive::create(&archive_path, &targets)?;
 
             tracing::info!("Archive created successfully: {archive_path}");
             created = true;

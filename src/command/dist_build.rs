@@ -1,9 +1,7 @@
-use clap::Parser;
-
-use crate::config::Config;
+use crate::{config::Config, Result, Run};
 
 /// `dist-build` subcommand arguments.
-#[derive(Debug, Parser)]
+#[derive(Debug, clap::Args)]
 pub struct DistBuild {
     /// `dist-build-bin` subcommand arguments.
     #[cfg(feature = "command-dist-build-bin")]
@@ -42,10 +40,16 @@ pub struct DistBuild {
     pub dist_build_readme_args: super::DistBuildReadme,
 }
 
+impl Run for DistBuild {
+    fn run(&self, config: &Config) -> Result<()> {
+        self.run(config)
+    }
+}
+
 impl DistBuild {
     /// Execute `dist-build` subcommand workflow.
     #[tracing::instrument(name = "dist-build", parent = None, skip_all, err)]
-    pub fn run(&self, config: &Config) -> eyre::Result<()> {
+    pub fn run(&self, config: &Config) -> Result<()> {
         let Self {
             #[cfg(feature = "command-dist-build-bin")]
             dist_build_bin_args,

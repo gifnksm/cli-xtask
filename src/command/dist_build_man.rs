@@ -1,20 +1,25 @@
 use std::iter;
 
 use cargo_metadata::camino::{Utf8Path, Utf8PathBuf};
-use clap::Parser;
 use clap_mangen::Man;
 use time::OffsetDateTime;
 
-use crate::config::Config;
+use crate::{config::Config, Result, Run};
 
 /// `dist-build-man` subcommand arguments.
-#[derive(Debug, Parser)]
+#[derive(Debug, clap::Args)]
 pub struct DistBuildMan {}
+
+impl Run for DistBuildMan {
+    fn run(&self, config: &Config) -> Result<()> {
+        self.run(config)
+    }
+}
 
 impl DistBuildMan {
     /// Execute `dist-build-man` subcommand workflow
     #[tracing::instrument(name = "dist-build-man", parent = None, skip_all, err)]
-    pub fn run(&self, config: &Config) -> eyre::Result<()> {
+    pub fn run(&self, config: &Config) -> Result<()> {
         tracing::info!("Building man pages...");
 
         let Self {} = self;
@@ -25,7 +30,7 @@ impl DistBuildMan {
         crate::fs::remove_dir(&man_dir)?;
 
         for package in config.packages() {
-            for target in package.targets().into_iter().flatten() {
+            for target in package.targets() {
                 if let Some(cmd) = target.command() {
                     let it = dist_build_man_pages(&man_dir, package.name(), cmd.clone(), section)?;
                     for res in it {
@@ -46,7 +51,7 @@ fn dist_build_man_pages<'a>(
     package_name: &str,
     mut cmd: clap::Command<'a>,
     section: impl Into<String>,
-) -> eyre::Result<impl Iterator<Item = eyre::Result<(Utf8PathBuf, Man<'a>)>> + 'a> {
+) -> Result<impl Iterator<Item = Result<(Utf8PathBuf, Man<'a>)>> + 'a> {
     cmd._build_all(); // https://github.com/clap-rs/clap/discussions/3603
 
     let capitalized_name = {

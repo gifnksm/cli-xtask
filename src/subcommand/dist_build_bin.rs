@@ -1,7 +1,8 @@
 use crate::{cargo, config::Config, Result, Run};
 
 /// `dist-build-bin` subcommand arguments.
-#[derive(Debug, clap::Args)]
+#[derive(Debug, Clone, Default, clap::Args)]
+#[non_exhaustive]
 pub struct DistBuildBin {
     /// Target triple for the build
     #[clap(long = "target")]

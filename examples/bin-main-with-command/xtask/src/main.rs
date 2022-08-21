@@ -1,16 +1,15 @@
-use app::Args as AppArgs;
+use app::App;
 use cli_xtask::{
-    args::Args,
     clap::CommandFactory,
     config::{ConfigBuilder, DistConfigBuilder},
-    workspace, Result,
+    workspace, Result, Xtask,
 };
 
 fn main() -> Result<()> {
-    Args::main_with_config(|| {
+    <Xtask>::main_with_config(|| {
         let workspace = workspace::current();
         let (dist, package) = DistConfigBuilder::from_root_package(workspace)?;
-        let command = AppArgs::command();
+        let command = App::command();
         let target = package
             .binary_by_name(command.get_name())?
             .command(command)

@@ -1,7 +1,8 @@
 use crate::{config::Config, Result, Run};
 
 /// `dist-build-doc` subcommand arguments.
-#[derive(Debug, clap::Args)]
+#[derive(Debug, Clone, Default, clap::Args)]
+#[non_exhaustive]
 pub struct DistBuildReadme {}
 
 impl Run for DistBuildReadme {
@@ -37,7 +38,7 @@ impl DistBuildReadme {
 
         for package in packages {
             if let Some(readme) = &package.metadata().readme {
-                let src_file = package.root_dir().join(readme);
+                let src_file = package.root_directory().join(readme);
                 let dest_dir = if add_package_dir {
                     readme_dir.join(package.name())
                 } else {

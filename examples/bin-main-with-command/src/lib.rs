@@ -4,7 +4,7 @@ use std::path::PathBuf;
 
 #[derive(Debug, clap::Parser)]
 #[clap(about, version, author)]
-pub struct Args {
+pub struct App {
     /// The path to the file to read.
     #[clap(long)]
     pub input: PathBuf,

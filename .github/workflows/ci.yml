@@ -68,9 +68,8 @@ jobs:
       - uses: Swatinem/rust-cache@v2
         with:
           workspaces: ${{ needs.set-workspace.outputs.workspaces }}
-      - name: cargo xtask test
-        # DO NOT USE `--all-targets` here, doctests are not built with `--all-targets`
-        run: cargo xtask test
+      # DO NOT USE `--all-targets` here, doctests are not built with `--all-targets`
+      - run: cargo xtask test --exhaustive
         shell: bash
 
   integration_test:
@@ -96,8 +95,7 @@ jobs:
           tool: cargo-udeps,cargo-rdme
       - run: rustup toolchain add nightly --profile minimal
         shell: bash
-      - name: cargo xtask test
-        run: cargo xtask xtask-test
+      - run: cargo xtask xtask-test
         shell: bash
 
   coverage_test:
@@ -187,7 +185,7 @@ jobs:
         with:
           workspaces: ${{ needs.set-workspace.outputs.workspaces }}
       - name: cargo xtask build
-        run: cargo xtask build -- --all-targets
+        run: cargo xtask build --exhaustive -- --all-targets
         shell: bash
 
   lint:
@@ -211,7 +209,7 @@ jobs:
           tool: cargo-udeps,cargo-rdme
       - run: rustup toolchain add nightly --profile minimal
         shell: bash
-      - run: cargo xtask lint
+      - run: cargo xtask lint --exhaustive
         shell: bash
 
   rustdoc:

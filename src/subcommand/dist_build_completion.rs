@@ -4,7 +4,8 @@ use clap_complete::Shell;
 use crate::{config::Config, fs::ToRelative, Result, Run};
 
 /// `dist-build-completion` subcommand arguments.
-#[derive(Debug, clap::Args)]
+#[derive(Debug, Clone, Default, clap::Args)]
+#[non_exhaustive]
 pub struct DistBuildCompletion {}
 
 impl Run for DistBuildCompletion {

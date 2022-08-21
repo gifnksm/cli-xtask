@@ -1,11 +1,12 @@
 use crate::{config::Config, Result, Run};
 
 /// `dist` subcommand arguments.
-#[derive(Debug, clap::Args)]
+#[derive(Debug, Clone, Default, clap::Args)]
+#[non_exhaustive]
 pub struct Dist {
     /// Arguments for the `dist-build` subcommand.
-    #[cfg(command_dist_build)]
-    #[cfg_attr(docsrs, doc(cfg(feature = "command-dist-build-*")))]
+    #[cfg(subcommand_dist_build)]
+    #[cfg_attr(docsrs, doc(cfg(feature = "subcommand-dist-build-*")))]
     #[clap(flatten)]
     pub dist_build_args: super::DistBuild,
     /// Arguments for the `dist-archive` subcommand.
@@ -24,7 +25,7 @@ impl Dist {
     #[tracing::instrument(name = "dist", parent = None, skip_all, err)]
     pub(crate) fn run(&self, config: &Config) -> Result<()> {
         let Self {
-            #[cfg(command_dist_build)]
+            #[cfg(subcommand_dist_build)]
             dist_build_args,
             dist_archive_args,
         } = self;
@@ -33,7 +34,7 @@ impl Dist {
         let working_dir = dist_config.dist_base_working_directory();
         crate::fs::create_or_cleanup_dir(&working_dir)?;
 
-        #[cfg(command_dist_build)]
+        #[cfg(subcommand_dist_build)]
         dist_build_args.run(config)?;
 
         dist_archive_args.run(config)?;

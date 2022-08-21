@@ -10,8 +10,8 @@
 
 <!-- cargo-rdme start -->
 
-A number of utility functions and command line interfaces for [cargo-xtask]
-workflows.
+A collection of utility functions and command line interfaces for
+[cargo-xtask].
 
 This crate provides the following utilities:
 
@@ -35,7 +35,7 @@ Then, run the following command to add `cli-xtask` to the dependencies.
     cargo add -p xtask cli-xtask --features main,bin-crate
     ```
 
-    If you want to extra tools such as `cargo-rdme` and `cargo-udeps`,
+    If you want to use extra tools such as `cargo-rdme` and `cargo-udeps`,
     add the `bin-crate-extra` feature.
 
     ```console
@@ -48,7 +48,7 @@ Then, run the following command to add `cli-xtask` to the dependencies.
     cargo add -p xtask cli-xtask --features main,lib-crate
     ```
 
-    If you want to extra tools such as `cargo-rdme` and `cargo-udeps`,
+    If you want to use extra tools such as `cargo-rdme` and `cargo-udeps`,
     add the `lib-crate-extra` feature.
 
     ```console
@@ -58,10 +58,10 @@ Then, run the following command to add `cli-xtask` to the dependencies.
 Finally, edit `xtask/src/main.rs` as follows
 
 ```rust
-use cli_xtask::{args::Args, Result};
+use cli_xtask::{Result, Xtask};
 
 fn main() -> Result<()> {
-    Args::main()
+    <Xtask>::main()
 }
 ```
 
@@ -119,7 +119,7 @@ See the [Feature flags section](#feature-flags) for more information.
 If you want to add the subcommands that are not included in this crate,
 you can add them by creating a new data structure that implements the
 `clap::Subcommand` and `Run`.
-See the documentation of `GenericArgs` for more
+See the documentation of `Xtask` for more
 information.
 
 ## Feature flags
@@ -132,10 +132,8 @@ The following section contains a list of available features:
 ### CLI features
 
 * **`main`** - Enables `main` function and
-  `main_with_config` function
-  that are the premade entry point for the CLI.
-* **`args`** - Enables data structures for command line parsing in
-  `args` module.
+  `main_with_config` function that are the
+  premade entry point for the CLI.
 * **`error-handler`** - Enables functions for error handling in
   `error_handler` module.
 * **`logger`** - Enables functions for logging in `logger`
@@ -158,45 +156,50 @@ There are two types of features that enable subcommands:
 * **`lib-crate-extra`** - Enables the additional subcommands useful for lib
   crates.
 
-The `{bin,lib}-crate` feature require only the standard Rust tools that can
+The `{bin,lib}-crate` feature requires only the standard Rust tools that can
 be installed with `rustup`. The `{bin,lib}-crate-extra` feature may require
 third-party tools.
 
 #### Separated features
 
-The following features requireing only the standard Rust tools:
+The following features require only the standard Rust tools:
 
-* **`command-build`** - Enables `cargo xtask
+* **`subcommand-build`** - Enables `cargo xtask
   build`.
-* **`command-clippy`** - Enables `cargo xtask
+* **`subcommand-clippy`** - Enables `cargo xtask
   clippy`.
-* **`command-dist`** - Enables `cargo xtask dist`.
-* **`command-dist-archive`** - Enables `cargo xtask
+* **`subcommand-dist`** - Enables `cargo xtask
+  dist`.
+* **`subcommand-dist-archive`** - Enables `cargo xtask
   dist-archive`.
-* **`command-dist-build-bin`** - Enables `cargo xtask
+* **`subcommand-dist-build-bin`** - Enables `cargo xtask
   dist-build-bin`.
-* **`command-dist-build-completion`** - Enables `cargo xtask
+* **`subcommand-dist-build-completion`** - Enables `cargo xtask
   dist-build-completion`.
-* **`command-dist-build-doc`** - Enables `cargo xtask
+* **`subcommand-dist-build-doc`** - Enables `cargo xtask
   dist-build-doc`.
-* **`command-dist-build-license`** - Enables `cargo xtask
+* **`subcommand-dist-build-license`** - Enables `cargo xtask
   dist-build-license`.
-* **`command-dist-build-man`** - Enables `cargo xtask
+* **`subcommand-dist-build-man`** - Enables `cargo xtask
   dist-build-man`.
-* **`command-dist-build-readme`** - Enables `cargo xtask
+* **`subcommand-dist-build-readme`** - Enables `cargo xtask
   dist-build-readme`.
-* **`command-dist-clean`** - Enables `cargo xtask
+* **`subcommand-dist-clean`** - Enables `cargo xtask
   dist-clean`.
-* **`command-exec`** - Enables `cargo xtask exec`.
-* **`command-fmt`** - Enables `cargo xtask fmt`.
-* **`command-lint`** - Enables `cargo xtask lint`.
-* **`command-test`** - Enables `cargo xtask test`.
+* **`subcommand-exec`** - Enables `cargo xtask
+  exec`.
+* **`subcommand-fmt`** - Enables `cargo xtask
+  fmt`.
+* **`subcommand-lint`** - Enables `cargo xtask
+  lint`.
+* **`subcommand-test`** - Enables `cargo xtask
+  test`.
 
-The following features requiring third-party tools:
+The following features require third-party tools:
 
-* **`command-rdme`** - Enables `cargo xtask rdme`.
-  Requires [`cargo-rdme`] installed.
-* **`command-udeps`** - Enables `cargo xtask
+* **`subcommand-rdme`** - Enables `cargo xtask
+  rdme`. Requires [`cargo-rdme`] installed.
+* **`subcommand-udeps`** - Enables `cargo xtask
   udeps`. Requires [`cargo-udeps`] installed.
 
 ### Other features

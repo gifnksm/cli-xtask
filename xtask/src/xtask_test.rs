@@ -19,11 +19,12 @@ use cli_xtask::{
 };
 
 /// `xtask-test` subcommand arguments.
-#[derive(Debug, clap::Args)]
+#[derive(Debug, Clone, Default, clap::Args)]
+#[non_exhaustive]
 pub struct XtaskTest {
     /// Collect coverage information using cargo-llvm-cov.
     #[clap(long)]
-    cargo_llvm_cov: bool,
+    pub cargo_llvm_cov: bool,
 }
 
 impl XtaskTest {

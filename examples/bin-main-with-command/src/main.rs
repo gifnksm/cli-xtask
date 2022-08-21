@@ -1,7 +1,7 @@
-use app::Args;
+use app::App;
 use clap::Parser;
 
 fn main() {
-    let args = Args::parse();
+    let args = App::parse();
     println!("{args:?}");
 }

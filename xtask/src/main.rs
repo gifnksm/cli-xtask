@@ -1,24 +1,27 @@
-use cli_xtask::{args::GenericArgs, clap, config::Config, Result, Run};
+use cli_xtask::{clap, config::Config, Result, Run, Xtask};
 
+mod pre_release;
 mod xtask_test;
 
 #[derive(Debug, clap::Subcommand)]
-enum Command {
+enum Subcommand {
     #[clap(flatten)]
-    Command(cli_xtask::command::Command),
+    Predefined(cli_xtask::subcommand::Subcommand),
     XtaskTest(xtask_test::XtaskTest),
+    PreRelease(pre_release::PreRelease),
 }
 
-impl Run for Command {
+impl Run for Subcommand {
     fn run(&self, config: &Config) -> Result<()> {
         match self {
-            Command::Command(command) => command.run(config)?,
-            Command::XtaskTest(xtask_test) => xtask_test.run(config)?,
+            Self::Predefined(args) => args.run(config)?,
+            Self::XtaskTest(args) => args.run(config)?,
+            Self::PreRelease(args) => args.run(config)?,
         }
         Ok(())
     }
 }
 
 fn main() -> Result<()> {
-    GenericArgs::<Command>::main()
+    Xtask::<Subcommand>::main()
 }

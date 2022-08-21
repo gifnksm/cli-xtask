@@ -3,7 +3,8 @@ use std::process::Command;
 use crate::{config::Config, process::CommandExt, workspace, Result, Run};
 
 /// `exec` subcommand arguments.
-#[derive(Debug, clap::Args)]
+#[derive(Debug, Clone, Default, clap::Args)]
+#[non_exhaustive]
 pub struct Exec {
     /// Do not execute command on the current workspace.
     #[clap(long)]

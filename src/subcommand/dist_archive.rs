@@ -1,7 +1,8 @@
 use crate::{archive, config::Config, Result, Run};
 
 /// `dist-archive` subcommand arguments.
-#[derive(Debug, clap::Args)]
+#[derive(Debug, Clone, Default, clap::Args)]
+#[non_exhaustive]
 pub struct DistArchive {}
 
 impl Run for DistArchive {

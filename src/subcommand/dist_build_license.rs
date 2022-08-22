@@ -3,7 +3,8 @@ use eyre::eyre;
 use crate::{config::Config, fs::ToRelative, Result, Run};
 
 /// `dist-build-license` subcommand arguments.
-#[derive(Debug, clap::Args)]
+#[derive(Debug, Clone, Default, clap::Args)]
+#[non_exhaustive]
 pub struct DistBuildLicense {}
 
 impl Run for DistBuildLicense {

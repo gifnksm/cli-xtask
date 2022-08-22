@@ -6,7 +6,7 @@ name = "cli-xtask"
 version = "0.1.0-alpha.0"
 edition = "2021"
 rust-version = "1.60.0"
-description = "xtask workflow collection for cli application"
+description = "A collection of utility functions and command line interfaces for cargo-xtask"
 readme = "README.md"
 repository = "https://github.com/gifnksm/cli-xtask"
 license = "MIT OR Apache-2.0"
@@ -24,62 +24,61 @@ rustdoc-args = ["--cfg", "docsrs"]
 default = []
 
 bin-crate = [
-    "command-build",
-    "command-clippy",
-    "command-dist-build-bin",
-    "command-dist-build-completion",
-    "command-dist-build-doc",
-    "command-dist-build-license",
-    "command-dist-build-man",
-    "command-dist-build-readme",
-    "command-dist-clean",
-    "command-dist",
-    "command-fmt",
-    "command-lint",
-    "command-test",
+    "subcommand-build",
+    "subcommand-clippy",
+    "subcommand-dist-build-bin",
+    "subcommand-dist-build-completion",
+    "subcommand-dist-build-doc",
+    "subcommand-dist-build-license",
+    "subcommand-dist-build-man",
+    "subcommand-dist-build-readme",
+    "subcommand-dist-clean",
+    "subcommand-dist",
+    "subcommand-fmt",
+    "subcommand-lint",
+    "subcommand-test",
 ]
 bin-crate-extra = [
     "bin-crate",
-    "command-rdme",
-    "command-udeps",
+    "subcommand-rdme",
+    "subcommand-udeps",
 ]
 lib-crate = [
-    "command-build",
-    "command-clippy",
-    "command-fmt",
-    "command-lint",
-    "command-test",
+    "subcommand-build",
+    "subcommand-clippy",
+    "subcommand-fmt",
+    "subcommand-lint",
+    "subcommand-test",
 ]
 lib-crate-extra = [
     "lib-crate",
-    "command-rdme",
-    "command-udeps",
+    "subcommand-rdme",
+    "subcommand-udeps",
 ]
 
-main = ["args", "logger", "error-handler"]
-args = []
+main = ["logger", "error-handler"]
 
 error-handler = ["dep:color-eyre"]
 logger = ["dep:tracing-subscriber"]
 archive = ["dep:flate2", "dep:tar"]
 
-command-build = []
-command-clippy = []
-command-dist = ["command-dist-archive"]
-command-dist-archive = ["archive"]
-command-dist-build-bin = []
-command-dist-build-completion = ["dep:clap_complete"]
-command-dist-build-doc = []
-command-dist-build-license = ["dep:regex"]
-command-dist-build-man = ["dep:clap_mangen", "dep:time"]
-command-dist-build-readme = []
-command-dist-clean = []
-command-exec = []
-command-fmt = []
-command-lint = []
-command-rdme = []
-command-test = []
-command-udeps = []
+subcommand-build = []
+subcommand-clippy = []
+subcommand-dist = ["subcommand-dist-archive"]
+subcommand-dist-archive = ["archive"]
+subcommand-dist-build-bin = []
+subcommand-dist-build-completion = ["dep:clap_complete"]
+subcommand-dist-build-doc = []
+subcommand-dist-build-license = ["dep:regex"]
+subcommand-dist-build-man = ["dep:clap_mangen", "dep:time"]
+subcommand-dist-build-readme = []
+subcommand-dist-clean = []
+subcommand-exec = []
+subcommand-fmt = []
+subcommand-lint = []
+subcommand-rdme = []
+subcommand-test = []
+subcommand-udeps = []
 
 [dependencies]
 cargo_metadata = "0.15.0"
@@ -89,7 +88,7 @@ clap_mangen = { version = "0.1.10", optional = true }
 color-eyre = { version = "0.6.2", optional = true }
 eyre = "0.6.8"
 flate2 = { version = "1.0.24", optional = true }
-once_cell = "1.13.0"
+once_cell = "1.13.1"
 regex = { version = "1.6.0", optional = true }
 tar = { version = "0.4.38", optional = true }
 time = { version = "0.3.13", optional = true }

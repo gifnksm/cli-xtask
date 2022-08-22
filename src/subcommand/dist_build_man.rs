@@ -7,7 +7,8 @@ use time::OffsetDateTime;
 use crate::{config::Config, Result, Run};
 
 /// `dist-build-man` subcommand arguments.
-#[derive(Debug, clap::Args)]
+#[derive(Debug, Clone, Default, clap::Args)]
+#[non_exhaustive]
 pub struct DistBuildMan {}
 
 impl Run for DistBuildMan {

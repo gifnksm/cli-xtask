@@ -1,7 +1,8 @@
 use crate::{config::Config, Result, Run};
 
 /// `dist-clean` subcommand arguments.
-#[derive(Debug, clap::Args)]
+#[derive(Debug, Clone, Default, clap::Args)]
+#[non_exhaustive]
 pub struct DistClean {}
 
 impl Run for DistClean {

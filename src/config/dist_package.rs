@@ -1,12 +1,12 @@
 #[cfg(any(
-    feature = "command-dist-build-license",
-    feature = "command-dist-build-doc"
+    feature = "subcommand-dist-build-license",
+    feature = "subcommand-dist-build-doc"
 ))]
 use cargo_metadata::camino::Utf8PathBuf;
 use cargo_metadata::{camino::Utf8Path, Package};
 
 use super::{DistTargetConfig, DistTargetConfigBuilder};
-use crate::Result;
+use crate::{workspace::PackageExt, Result};
 
 /// Configures and constructs [`DistPackageConfig`].
 ///
@@ -63,9 +63,9 @@ pub struct DistPackageConfigBuilder<'a> {
     name: String,
     metadata: &'a Package,
     targets: Option<Vec<DistTargetConfig<'a>>>,
-    #[cfg(feature = "command-dist-build-license")]
+    #[cfg(feature = "subcommand-dist-build-license")]
     license_files: Option<Vec<Utf8PathBuf>>,
-    #[cfg(feature = "command-dist-build-doc")]
+    #[cfg(feature = "subcommand-dist-build-doc")]
     documents: Option<Vec<Utf8PathBuf>>,
 }
 
@@ -75,9 +75,9 @@ impl<'a> DistPackageConfigBuilder<'a> {
             name: package.name.clone(),
             metadata: package,
             targets: None,
-            #[cfg(feature = "command-dist-build-license")]
+            #[cfg(feature = "subcommand-dist-build-license")]
             license_files: None,
-            #[cfg(feature = "command-dist-build-doc")]
+            #[cfg(feature = "subcommand-dist-build-doc")]
             documents: None,
         }
     }
@@ -307,10 +307,10 @@ impl<'a> DistPackageConfigBuilder<'a> {
     /// # Ok(())
     /// # }
     /// ```
-    #[cfg(feature = "command-dist-build-license")]
-    #[cfg_attr(docsrs, doc(cfg(feature = "command-dist-build-license")))]
+    #[cfg(feature = "subcommand-dist-build-license")]
+    #[cfg_attr(docsrs, doc(cfg(feature = "subcommand-dist-build-license")))]
     pub fn license_files(mut self, files: impl IntoIterator<Item = Utf8PathBuf>) -> Self {
-        let package_root = self.metadata.manifest_path.parent().unwrap();
+        let package_root = self.metadata.root_directory();
         let files = files.into_iter().map(|file| {
             if file.is_relative() {
                 package_root.join(file)
@@ -344,10 +344,10 @@ impl<'a> DistPackageConfigBuilder<'a> {
     /// # Ok(())
     /// # }
     /// ```
-    #[cfg(feature = "command-dist-build-doc")]
-    #[cfg_attr(docsrs, doc(cfg(feature = "command-dist-build-doc")))]
+    #[cfg(feature = "subcommand-dist-build-doc")]
+    #[cfg_attr(docsrs, doc(cfg(feature = "subcommand-dist-build-doc")))]
     pub fn documents(mut self, files: impl IntoIterator<Item = Utf8PathBuf>) -> Self {
-        let package_root = self.metadata.manifest_path.parent().unwrap();
+        let package_root = self.metadata.root_directory();
         let files = files.into_iter().map(|file| {
             if file.is_relative() {
                 package_root.join(file)
@@ -379,9 +379,9 @@ impl<'a> DistPackageConfigBuilder<'a> {
             name: self.name,
             metadata: self.metadata,
             targets,
-            #[cfg(feature = "command-dist-build-license")]
+            #[cfg(feature = "subcommand-dist-build-license")]
             license_files: collect_license_files(self.metadata, self.license_files)?,
-            #[cfg(feature = "command-dist-build-doc")]
+            #[cfg(feature = "subcommand-dist-build-doc")]
             documents: self.documents.unwrap_or_default(),
         })
     }
@@ -393,9 +393,9 @@ pub struct DistPackageConfig<'a> {
     name: String,
     metadata: &'a Package,
     targets: Vec<DistTargetConfig<'a>>,
-    #[cfg(feature = "command-dist-build-license")]
+    #[cfg(feature = "subcommand-dist-build-license")]
     license_files: Vec<Utf8PathBuf>,
-    #[cfg(feature = "command-dist-build-doc")]
+    #[cfg(feature = "subcommand-dist-build-doc")]
     documents: Vec<Utf8PathBuf>,
 }
 
@@ -422,8 +422,8 @@ impl<'a> DistPackageConfig<'a> {
     }
 
     /// Returns the path to the package's root directory.
-    pub fn root_dir(&self) -> &Utf8Path {
-        self.metadata.manifest_path.parent().unwrap()
+    pub fn root_directory(&self) -> &Utf8Path {
+        self.metadata.root_directory()
     }
 
     /// Returns the list of license files to be distributed.
@@ -438,8 +438,8 @@ impl<'a> DistPackageConfig<'a> {
     /// If no license files are added and the `license-file` field is not
     /// present, the file matches the pattern `/^LICENSE(?:-|_|\.|$)/i` in the
     /// root directory of the package.
-    #[cfg(feature = "command-dist-build-license")]
-    #[cfg_attr(docsrs, doc(cfg(feature = "command-dist-build-license")))]
+    #[cfg(feature = "subcommand-dist-build-license")]
+    #[cfg_attr(docsrs, doc(cfg(feature = "subcommand-dist-build-license")))]
     pub fn license_files(&self) -> &[Utf8PathBuf] {
         &self.license_files
     }
@@ -449,8 +449,8 @@ impl<'a> DistPackageConfig<'a> {
     /// Documentation files can be added by
     /// [`DistPackageConfigBuilder::documents`] function.
     /// If no documentation files are added, this function returns empty list.
-    #[cfg(feature = "command-dist-build-doc")]
-    #[cfg_attr(docsrs, doc(cfg(feature = "command-dist-build-doc")))]
+    #[cfg(feature = "subcommand-dist-build-doc")]
+    #[cfg_attr(docsrs, doc(cfg(feature = "subcommand-dist-build-doc")))]
     pub fn documents(&self) -> &[Utf8PathBuf] {
         &self.documents
     }
@@ -465,14 +465,14 @@ fn collect_targets<'a>(package: &'a Package, kind: &str) -> Vec<DistTargetConfig
         .collect()
 }
 
-#[cfg(feature = "command-dist-build-license")]
+#[cfg(feature = "subcommand-dist-build-license")]
 fn collect_license_files(
     package: &Package,
     files: Option<Vec<Utf8PathBuf>>,
 ) -> Result<Vec<Utf8PathBuf>> {
     use once_cell::sync::Lazy;
     use regex::{Regex, RegexBuilder};
-    let src_dir = package.manifest_path.parent().unwrap();
+    let src_dir = package.root_directory();
 
     if let Some(files) = files {
         return Ok(files);

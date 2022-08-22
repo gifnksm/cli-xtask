@@ -1,17 +1,26 @@
 use crate::{
-    args::GenericArgs,
     config::{Config, ConfigBuilder, DistConfigBuilder, DistTargetConfigBuilder},
-    workspace, Result, Run,
+    workspace, Result, Run, Xtask,
 };
 
-impl<Command> GenericArgs<Command>
+impl<Subcommand> Xtask<Subcommand>
 where
-    Command: clap::Subcommand + Run,
+    Subcommand: clap::Subcommand + Run,
 {
     /// Entry point for xtask crate.
     ///
     /// This function initializes error handler and logger, then runs the
     /// subcommand. Default configuration will be passed to subcommand.
+    ///
+    /// # Examples
+    ///
+    /// ```rust
+    /// use cli_xtask::{Result, Xtask};
+    ///
+    /// fn main() -> Result<()> {
+    ///     <Xtask>::main()
+    /// }
+    /// ```
     pub fn main() -> Result<()> {
         Self::main_with_config(|| {
             let workspace = workspace::current();
@@ -33,11 +42,21 @@ where
     /// This function initializes error handler and logger, then runs the
     /// subcommand. Generated configuration by `config` argument will be
     /// passed to subcommand.
+    ///
+    /// # Examples
+    ///
+    /// ```rust
+    /// use cli_xtask::{config::Config, Result, Xtask};
+    ///
+    /// fn main() -> Result<()> {
+    ///     <Xtask>::main_with_config(|| Ok(Config::new()))
+    /// }
+    /// ```
     pub fn main_with_config<'a>(config: impl FnOnce() -> Result<Config<'a>>) -> Result<()> {
-        let args = <GenericArgs<Command> as clap::Parser>::parse();
+        let args = <Self as clap::Parser>::parse();
 
         crate::error_handler::install()?;
-        crate::logger::install(args.verbosity())?;
+        crate::logger::install(args.verbosity.get())?;
 
         args.run(&config()?)?;
 

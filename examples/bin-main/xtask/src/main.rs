@@ -1,5 +1,5 @@
-use cli_xtask::{args::Args, Result};
+use cli_xtask::{Result, Xtask};
 
 fn main() -> Result<()> {
-    Args::main()
+    <Xtask>::main()
 }

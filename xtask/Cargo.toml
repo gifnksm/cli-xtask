@@ -6,4 +6,4 @@ edition = "2021"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-cli-xtask = { path = "../", default-features = false, features = ["main", "lib-crate-extra", "command-exec"] }
+cli-xtask = { path = "../", default-features = false, features = ["main", "lib-crate-extra", "subcommand-exec"] }

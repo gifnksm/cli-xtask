@@ -1,281 +1,15 @@
 //! Data structures for command line arguments parsing.
-//!
-//! If you want to use the subcomamnds of cli-xtask as-is, see the
-//! [`Args`](crate::args::Args) type for more details. If you want to use the
-//! subcomamnds of cli-xtask with your own arguments, see the
-//! [`GenericArgs`](crate::args::GenericArgs) struct for more details.
-//!
-//! # Examples
-//!
-//! Use the premade entry point function with default configuration (`main`
-//! feature is required):
-//!
-//! ```rust
-//! # #[cfg(all(command, feature="main"))]
-//! # {
-//! use cli_xtask::{args::Args, Result};
-//!
-//! fn main() -> Result<()> {
-//!     Args::main()
-//! }
-//! # }
-//! ```
-//!
-//! Use the premade entry point function and custom configuration (`main`
-//! feature is required):
-//!
-//! ```rust
-//! # #[cfg(all(command, feature = "main"))]
-//! # {
-//! use cli_xtask::{args::Args, config::Config, Result};
-//!
-//! fn main() -> Result<()> {
-//!     Args::main_with_config(|| Ok(Config::new()))
-//! }
-//! # }
-//! ```
-//!
-//! If you don't want to use the `main` feature, write the main function as
-//! follows:
-//!
-//! ```rust
-//! # #[cfg(all(command, feature = "error-handler", feature = "logger"))]
-//! # {
-//! use cli_xtask::{args::Args, clap::Parser, config::Config, error_handler, logger, Result};
-//!
-//! fn main() -> Result<()> {
-//!     // Parse command line arguments
-//!     let args = Args::parse();
-//!
-//!     // Setup error handler and logger
-//!     error_handler::install()?; // `error-handler` feature is required
-//!     logger::install(args.verbosity())?; // `logger` feature is required
-//!
-//!     // Run the subcommand specified by the command line arguments
-//!     args.run(&Config::new())?;
-//!
-//!     Ok(())
-//! }
-//! # }
-//! ```
 
+use std::{env, iter};
+
+use cargo_metadata::{camino::Utf8PathBuf, Metadata, Package};
+use eyre::eyre;
 use tracing::Level;
 
-use crate::{config::Config, Result, Run};
-
-/// Command line interface definition.
-///
-/// If you want to use the subcomamnds of cli-xtask as-is, use this type.
-/// If you want to use the subcomamnds of cli-xtask with your own arguments, use
-/// [`GenericArgs`](crate::args::GenericArgs).
-///
-/// # Examples
-///
-/// Use the premade entry point function with default configuration (`main`
-/// feature is required):
-///
-/// ```rust
-/// # #[cfg(all(command, feature="main"))]
-/// # {
-/// use cli_xtask::{args::Args, Result};
-///
-/// fn main() -> Result<()> {
-///     Args::main()
-/// }
-/// # }
-/// ```
-///
-/// Use the premade entry point function and custom configuration (`main`
-/// feature is required):
-///
-/// ```rust
-/// # #[cfg(all(command, feature = "main"))]
-/// # {
-/// use cli_xtask::{args::Args, config::Config, Result};
-///
-/// fn main() -> Result<()> {
-///     Args::main_with_config(|| Ok(Config::new()))
-/// }
-/// # }
-/// ```
-///
-/// If you don't want to use the `main` feature, write the main function as
-/// follows:
-///
-/// ```rust
-/// # #[cfg(all(command, feature = "error-handler", feature = "logger"))]
-/// # {
-/// use cli_xtask::{args::Args, clap::Parser, config::Config, error_handler, logger, Result};
-///
-/// fn main() -> Result<()> {
-///     // Parse command line arguments
-///     let args = Args::parse();
-///
-///     // Setup error handler and logger
-///     error_handler::install()?; // `error-handler` feature is required
-///     logger::install(args.verbosity())?; // `logger` feature is required
-///
-///     // Run the subcommand specified by the command line arguments
-///     args.run(&Config::new())?;
-///
-///     Ok(())
-/// }
-/// # }
-/// ```
-#[cfg(command)]
-#[cfg_attr(docsrs, doc(cfg(feature = "command-*")))]
-pub type Args = GenericArgs<crate::command::Command>;
-
-/// Generic command line interface definition.
-///
-/// If you want to use the subcomamnds of cli-xtask as-is, use
-/// [`Args`](crate::args::Args). If you want to use the subcomamnds of cli-xtask
-/// with your own arguments, use this type.
-///
-/// # Examples
-///
-/// Use the premade entry point function with default configuration (`main`
-/// feature is required):
-///
-/// ```rust
-/// # #[cfg(all(command, feature = "main"))]
-/// # {
-/// use cli_xtask::{
-///     args::GenericArgs,
-///     clap::{self, Parser},
-///     command,
-///     config::Config,
-///     Result, Run,
-/// };
-///
-/// // Define your own subcommand arguments
-/// #[derive(Debug, clap::Subcommand)]
-/// enum YourOwnCommand {
-///     #[clap(flatten)]
-///     Command(command::Command),
-///     /// Run foo function.
-///     Foo,
-///     /// Run bar function
-///     Bar,
-/// }
-///
-/// impl Run for YourOwnCommand {
-///     fn run(&self, config: &Config) -> Result<()> {
-///         match self {
-///             Self::Command(command) => command.run(config)?,
-///             Self::Foo => println!("foo!"),
-///             Self::Bar => println!("bar!"),
-///         }
-///         Ok(())
-///     }
-/// }
-///
-/// fn main() -> Result<()> {
-///     GenericArgs::<YourOwnCommand>::main()
-/// }
-/// # }
-/// ```
-///
-/// Use the premade entry point function and custom configuration (`main`
-/// feature is required):
-///
-/// ```rust
-/// # #[cfg(all(command, feature = "main"))]
-/// # {
-/// use cli_xtask::{args::GenericArgs, config::Config, Result};
-///
-/// // Denifition of `YourOwnCommand` is omitted.
-///
-/// fn main() -> Result<()> {
-///     GenericArgs::<YourOwnCommand>::main_with_config(|| Ok(Config::new()))
-/// }
-/// # #[derive(Debug, clap::Subcommand)]
-/// # enum YourOwnCommand{}
-/// # impl cli_xtask::Run for YourOwnCommand {
-/// #   fn run(&self, _config: &Config) -> Result<()> {
-/// #       Ok(())
-/// #   }
-/// # }
-/// # }
-/// ```
-///
-/// If you don't want to use the `main` feature, write the main function as
-/// follows:
-///
-/// ```rust
-/// # #[cfg(all(command, feature = "error-handler", feature = "logger"))]
-/// # {
-/// use cli_xtask::{
-///     args::GenericArgs, clap::Parser, config::Config, error_handler, logger, Result,
-/// };
-///
-/// // Denifition of `YourOwnCommand` is omitted.
-///
-/// fn main() -> Result<()> {
-///     // Parse command line arguments
-///     let args = GenericArgs::<YourOwnCommand>::parse();
-///
-///     // Setup error handler and logger
-///     error_handler::install()?; // `error-handler` feature is required
-///     logger::install(args.verbosity())?; // `logger` feature is required
-///
-///     // Run the subcommand specified by the command line arguments
-///     args.run(&Config::new())?;
-///
-///     Ok(())
-/// }
-/// # #[derive(Debug, clap::Subcommand)]
-/// # enum YourOwnCommand {}
-/// # impl cli_xtask::Run for YourOwnCommand {
-/// #   fn run(&self, _config: &Config) -> Result<()> {
-/// #       Ok(())
-/// #   }
-/// # }
-/// # }
-/// ```
-#[derive(Debug, clap::Parser)]
-#[clap(bin_name = "cargo xtask", about = "Rust project automation command", long_about = None)]
-pub struct GenericArgs<Command>
-where
-    Command: clap::Subcommand,
-{
-    #[clap(flatten)]
-    verbosity: Verbosity,
-
-    #[clap(subcommand)]
-    command: Option<Command>,
-}
-
-impl<Command> GenericArgs<Command>
-where
-    Command: clap::Subcommand,
-{
-    /// Runs the subcommand specified by the command line arguments.
-    pub fn run(&self, config: &Config) -> Result<()>
-    where
-        Command: Run,
-    {
-        let _config = config; // suppress unused-var warnings
-
-        match &self.command {
-            Some(command) => command.run(config)?,
-            None => <Self as clap::CommandFactory>::command().print_help()?,
-        }
-
-        Ok(())
-    }
-
-    /// Returns the verbosity level of the log specified by the command line
-    /// arguments.
-    pub fn verbosity(&self) -> Option<Level> {
-        self.verbosity.get()
-    }
-
-    /// Returns the subcommand specified by the command line arguments.
-    pub fn command(&self) -> Option<&Command> {
-        self.command.as_ref()
-    }
-}
+use crate::{
+    workspace::{self, FeatureOption, MetadataExt, PackageExt},
+    Result,
+};
 
 /// Commmand line arguments to control log verbosity level.
 ///
@@ -285,10 +19,10 @@ where
 /// program, just `flattern` this struct:
 ///
 /// ```rust
-/// use cli_xtask::{args::Verbosity, clap::Parser};
+/// use cli_xtask::{args::Verbosity, clap};
 ///
-/// #[derive(Debug, Parser)]
-/// struct Args {
+/// #[derive(Debug, clap::Parser)]
+/// struct App {
 ///     #[clap(flatten)]
 ///     verbosity: Verbosity,
 /// }
@@ -303,7 +37,7 @@ where
 /// * `Some(Level::INFO)`: no arguments
 /// * `Some(Level::DEBUG)`: `-v`
 /// * `Some(Level::TRACE)`: `-vv`
-#[derive(Debug, clap::Args)]
+#[derive(Debug, Clone, Default, clap::Args)]
 pub struct Verbosity {
     /// More output per occurrence
     #[clap(long, short = 'v', parse(from_occurrences), global = true)]
@@ -334,6 +68,153 @@ impl Verbosity {
     }
 }
 
+/// Command line arguments to specify the workspaces where the subcommand runs
+/// on.
+#[derive(Debug, Clone, Default, clap::Args)]
+#[non_exhaustive]
+pub struct WorkspaceArgs {
+    /// Run the subcommand on all option combinations (workspaces, packages,
+    /// features if available)
+    #[clap(long)]
+    pub exhaustive: bool,
+    /// Run the subcommand on all workspaces
+    #[clap(long, conflicts_with = "exhaustive")]
+    pub all_workspaces: bool,
+}
+
+impl WorkspaceArgs {
+    /// `WorkspaceArgs` value with `--exhaustive` flag enabled.
+    pub const EXHAUSTIVE: Self = Self {
+        exhaustive: true,
+        all_workspaces: false,
+    };
+
+    /// Returns the workspaces to run the subcommand on.
+    pub fn workspaces(&self) -> impl Iterator<Item = &'static Metadata> {
+        let workspaces = if self.exhaustive || self.all_workspaces {
+            workspace::all()
+        } else {
+            &workspace::all()[..1]
+        };
+        workspaces.iter()
+    }
+}
+
+/// Command line arguments to specify the packages to run the subcommand for.
+#[derive(Debug, Clone, Default, clap::Args)]
+#[non_exhaustive]
+pub struct PackageArgs {
+    /// Command line arguments to specify the workspaces where the subcommand
+    /// runs on.
+    #[clap(flatten)]
+    pub workspace_args: WorkspaceArgs,
+    /// Run the subcommand for all packages in the workspace
+    #[clap(long, conflicts_with = "exhaustive")]
+    pub workspace: bool,
+    /// Package name to run the subcommand for
+    #[clap(long = "package", short = 'p', conflicts_with = "exhaustive")]
+    pub package: Option<String>,
+}
+
+impl PackageArgs {
+    /// `PackageArgs` value with `--exhaustive` flag enabled.
+    pub const EXHAUSTIVE: Self = Self {
+        workspace_args: WorkspaceArgs::EXHAUSTIVE,
+        workspace: false,
+        package: None,
+    };
+
+    /// Returns the packages to run the subcommand on.
+    pub fn packages(
+        &self,
+    ) -> impl Iterator<Item = Result<(&'static Metadata, &'static Package)>> + '_ {
+        self.workspace_args
+            .workspaces()
+            .map(move |workspace| {
+                let packages = if self.workspace_args.exhaustive || self.workspace {
+                    workspace.workspace_packages()
+                } else if let Some(name) = &self.package {
+                    let pkg = workspace
+                        .workspace_package_by_name(name)
+                        .ok_or_else(|| eyre!("Package not found"))?;
+                    vec![pkg]
+                } else {
+                    let current_dir = Utf8PathBuf::try_from(env::current_dir()?)?;
+                    let pkg = workspace
+                        .workspace_package_by_path(&current_dir)
+                        .or_else(|| workspace.root_package())
+                        .ok_or_else(|| eyre!("Package not found"))?;
+                    vec![pkg]
+                };
+                let it = packages
+                    .into_iter()
+                    .map(move |package| (workspace, package));
+                Ok(it)
+            })
+            .flat_map(|res| -> Box<dyn Iterator<Item = _>> {
+                match res {
+                    Ok(it) => Box::new(it.map(Ok)),
+                    Err(err) => Box::new(iter::once(Err(err))),
+                }
+            })
+    }
+}
+
+/// Command line arguments to specify the features to run the subcommand with.
+#[derive(Debug, Clone, Default, clap::Args)]
+#[non_exhaustive]
+pub struct FeatureArgs {
+    /// Command line arguments to specify the packages to run the subcommand
+    /// for.
+    #[clap(flatten)]
+    pub package_args: PackageArgs,
+    /// Run the subcommand with each feature enabled
+    #[clap(long, conflicts_with = "exhaustive")]
+    pub each_feature: bool,
+}
+
+impl FeatureArgs {
+    /// `FeatureArgs` value with `--exhaustive` flag enabled.
+    pub const EXHAUSTIVE: Self = Self {
+        package_args: PackageArgs::EXHAUSTIVE,
+        each_feature: false,
+    };
+
+    /// Returns the features to run the subcommand with.
+    pub fn features(
+        &self,
+    ) -> impl Iterator<
+        Item = Result<(
+            &'static Metadata,
+            &'static Package,
+            Option<FeatureOption<'static>>,
+        )>,
+    > + '_ {
+        self.package_args
+            .packages()
+            .map(move |res| {
+                res.map(move |(workspace, package)| -> Box<dyn Iterator<Item = _>> {
+                    let exhaustive = self.package_args.workspace_args.exhaustive;
+                    if (exhaustive || self.each_feature) && !package.features.is_empty() {
+                        Box::new(
+                            package
+                                .each_feature()
+                                .map(move |feature| (workspace, package, Some(feature))),
+                        )
+                    } else {
+                        Box::new(iter::once((workspace, package, None)))
+                    }
+                })
+            })
+            .flat_map(|res| -> Box<dyn Iterator<Item = _>> {
+                match res {
+                    Ok(it) => Box::new(it.map(Ok)),
+                    Err(err) => Box::new(iter::once(Err(err))),
+                }
+            })
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -341,15 +222,10 @@ mod tests {
     #[test]
     fn verbosity() {
         use clap::Parser;
-        #[derive(Debug, Parser)]
-        struct Args {
+        #[derive(Debug, clap::Parser)]
+        struct App {
             #[clap(flatten)]
             verbosity: Verbosity,
-        }
-        impl Args {
-            fn verbosity(&self) -> Option<Level> {
-                self.verbosity.get()
-            }
         }
 
         let cases: &[(&[&str], Option<Level>)] = &[
@@ -363,8 +239,8 @@ mod tests {
         ];
 
         for (arg, level) in cases {
-            let args = Args::parse_from(["app"].into_iter().chain(arg.iter().copied()));
-            assert_eq!(args.verbosity(), *level, "arg: {}", arg.join(" "));
+            let args = App::parse_from(["app"].into_iter().chain(arg.iter().copied()));
+            assert_eq!(args.verbosity.get(), *level, "arg: {}", arg.join(" "));
         }
     }
 }

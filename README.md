@@ -190,6 +190,8 @@ The following features require only the standard Rust tools:
   exec`.
 * **`subcommand-fmt`** - Enables `cargo xtask
   fmt`.
+* **`subcommand-pre-release`** - Enables `cargo xtask
+  pre-release`.
 * **`subcommand-lint`** - Enables `cargo xtask
   lint`.
 * **`subcommand-test`** - Enables `cargo xtask

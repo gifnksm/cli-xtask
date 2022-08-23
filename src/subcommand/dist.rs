@@ -1,6 +1,7 @@
 use crate::{config::Config, Result, Run};
 
-/// `dist` subcommand arguments.
+/// Arguments definition of the `dist` subcommand.
+#[cfg_attr(doc, doc = include_str!("../../doc/cargo-xtask-dist.md"))]
 #[derive(Debug, Clone, Default, clap::Args)]
 #[non_exhaustive]
 pub struct Dist {
@@ -21,7 +22,7 @@ impl Run for Dist {
 }
 
 impl Dist {
-    /// Execute `dist` subcommand workflow.
+    /// Runs the `dist` subcommand.
     #[tracing::instrument(name = "dist", parent = None, skip_all, err)]
     pub(crate) fn run(&self, config: &Config) -> Result<()> {
         let Self {

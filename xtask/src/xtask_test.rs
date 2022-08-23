@@ -18,6 +18,8 @@ use cli_xtask::{
     tracing, workspace, Result,
 };
 
+use crate::util;
+
 /// `xtask-test` subcommand arguments.
 #[derive(Debug, Clone, Default, clap::Args)]
 #[non_exhaustive]
@@ -28,7 +30,7 @@ pub struct XtaskTest {
 }
 
 impl XtaskTest {
-    /// Execute `xtask-test` subcommand workflow.
+    /// Runs the `xtask-test` subcommand.
     #[tracing::instrument(name = "xtask-test", parent = None, skip_all, err)]
     pub fn run(&self, _config: &Config) -> Result<()> {
         let Self { cargo_llvm_cov } = self;
@@ -56,16 +58,7 @@ fn test_workspace(workspace: &Metadata, cargo_llvm_cov: bool) -> Result<()> {
     assert_eq!(help.lines().next(), Some("cargo-xtask "));
 
     // extract subcommands from help message
-    let subcommands = help
-        .lines()
-        .skip_while(|l| !l.starts_with("SUBCOMMANDS:"))
-        .skip(1)
-        .take_while(|l| l.starts_with("    "))
-        .filter_map(|l| {
-            let cmd = l.strip_prefix("    ")?.split_once(' ')?.0;
-            (!cmd.is_empty()).then(|| cmd)
-        })
-        .collect::<Vec<_>>();
+    let subcommands = util::subcommands_from_help(&help);
     tracing::info!("subcommands: {subcommands:?}");
 
     // no subcommands or help subcomand emit same help message with --help
@@ -92,6 +85,7 @@ fn test_workspace(workspace: &Metadata, cargo_llvm_cov: bool) -> Result<()> {
             "lint" => cargo.spawn(["xtask", "lint"])?,
             "pre-release" => cargo.spawn(["xtask", "pre-release"])?,
             "rdme" => cargo.spawn(["xtask", "rdme"])?,
+            "tidy" => cargo.spawn(["xtask", "tidy"])?,
             "test" => cargo.spawn(["xtask", "test"])?,
             "udeps" => cargo.spawn(["xtask", "udeps"])?,
             _ => panic!("unknown subcommand: {subcommand}"),
@@ -183,13 +177,8 @@ impl<'a> Cargo<'a> {
         self.build().args(args).workspace_spawn(self.workspace)
     }
 
-    fn stdout_raw(&self, args: impl IntoIterator<Item = impl AsRef<OsStr>>) -> Result<Vec<u8>> {
-        self.build().args(args).workspace_stdout(self.workspace)
-    }
-
     fn stdout(&self, args: impl IntoIterator<Item = impl AsRef<OsStr>>) -> Result<String> {
-        let output = self.stdout_raw(args)?;
-        Ok(String::from_utf8(output)?)
+        self.build().args(args).workspace_stdout(self.workspace)
     }
 
     fn cleanup(&self) -> Result<()> {
@@ -216,7 +205,7 @@ fn cargo_llvm_cov_init(workspace: &Metadata) -> Result<Vec<(String, String)>> {
         .workspace_stdout(workspace)?;
 
     let mut envs = vec![("CARGO_TARGET_DIR".to_string(), target_dir.into_string())];
-    for line in String::from_utf8(output)?.lines() {
+    for line in output.lines() {
         let (k, v) = line
             .split_once('=')
             .ok_or_else(|| eyre!("invalid line: {}", line))?;

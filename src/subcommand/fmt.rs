@@ -2,7 +2,8 @@ use std::process::Command;
 
 use crate::{args::PackageArgs, config::Config, process::CommandExt, Result, Run};
 
-/// `fmt` subcommand arguments.
+/// Arguments definition of the `fmt` subcommand.
+#[cfg_attr(doc, doc = include_str!("../../doc/cargo-xtask-fmt.md"))]
 #[derive(Debug, Clone, Default, clap::Args)]
 #[non_exhaustive]
 pub struct Fmt {
@@ -20,7 +21,7 @@ impl Run for Fmt {
 }
 
 impl Fmt {
-    /// Execute `fmt` subcommand workflow.
+    /// Runs the `fmt` subcommand.
     #[tracing::instrument(name = "fmt", parent = None, skip_all, err)]
     pub fn run(&self, _config: &Config) -> Result<()> {
         let Self {

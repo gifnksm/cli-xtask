@@ -1,0 +1,36 @@
+use tempdir::TempDir;
+
+use cli_xtask::{
+    camino::Utf8Path, clap, config::Config, eyre::eyre, tracing, workspace, Error, Result,
+};
+
+/// `lint-doc` subcommand arguments.
+#[derive(Debug, Clone, Default, clap::Args)]
+#[non_exhaustive]
+pub struct LintDoc {}
+
+impl LintDoc {
+    /// Runs the `lint-doc` subcommand.
+    #[tracing::instrument(name = "lint-doc", parent = None, skip_all, err)]
+    pub fn run(&self, _config: &Config) -> Result<()> {
+        let Self {} = self;
+
+        let workspace = workspace::current();
+        let doc_dir = workspace.workspace_root.join("doc");
+
+        let reference_dir = TempDir::new("reference")?;
+        super::tidy_doc::emit_doc(workspace, <&Utf8Path>::try_from(reference_dir.path())?)?;
+
+        if dir_diff::is_different(&doc_dir, &reference_dir).map_err(|e| -> Error {
+            match e {
+                dir_diff::Error::Io(e) => e.into(),
+                dir_diff::Error::StripPrefix(e) => e.into(),
+                dir_diff::Error::WalkDir(e) => e.into(),
+            }
+        })? {
+            return Err(eyre!("doc directory is not up to date"));
+        }
+
+        Ok(())
+    }
+}

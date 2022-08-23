@@ -2,7 +2,8 @@ use eyre::eyre;
 
 use crate::{config::Config, fs::ToRelative, Result, Run};
 
-/// `dist-build-license` subcommand arguments.
+/// Arguments definition of the `dist-build-license` subcommand.
+#[cfg_attr(doc, doc = include_str!("../../doc/cargo-xtask-dist-build-license.md"))]
 #[derive(Debug, Clone, Default, clap::Args)]
 #[non_exhaustive]
 pub struct DistBuildLicense {}

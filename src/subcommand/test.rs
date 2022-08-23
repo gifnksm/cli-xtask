@@ -2,7 +2,8 @@ use std::process::Command;
 
 use crate::{args::FeatureArgs, config::Config, process::CommandExt, Result, Run};
 
-/// `test` subcommand arguments.
+/// Arguments definition of the `test` subcommand.
+#[cfg_attr(doc, doc = include_str!("../../doc/cargo-xtask-test.md"))]
 #[derive(Debug, Clone, Default, clap::Args)]
 #[non_exhaustive]
 pub struct Test {
@@ -20,7 +21,7 @@ impl Run for Test {
 }
 
 impl Test {
-    /// Execute `test` subcommand workflow.
+    /// Runs the `test` subcommand.
     #[tracing::instrument(name = "test", parent = None, skip_all, err)]
     pub fn run(&self, _config: &Config) -> Result<()> {
         let Self {

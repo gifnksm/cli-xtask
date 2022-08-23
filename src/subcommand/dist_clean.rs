@@ -1,6 +1,7 @@
 use crate::{config::Config, Result, Run};
 
-/// `dist-clean` subcommand arguments.
+/// Arguments definition of the `dist-clean` subcommand.
+#[cfg_attr(doc, doc = include_str!("../../doc/cargo-xtask-dist-clean.md"))]
 #[derive(Debug, Clone, Default, clap::Args)]
 #[non_exhaustive]
 pub struct DistClean {}
@@ -12,7 +13,7 @@ impl Run for DistClean {
 }
 
 impl DistClean {
-    /// Execute `dist-clean` subcommand workflow.
+    /// Runs the `dist-clean` subcommand.
     #[tracing::instrument(name = "dist-clean", parent = None, skip_all, err)]
     pub fn run(&self, config: &Config) -> Result<()> {
         let Self {} = self;

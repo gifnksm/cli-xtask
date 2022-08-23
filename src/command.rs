@@ -1,6 +1,11 @@
 use crate::{args::Verbosity, config::Config, Result, Run};
 
+#[cfg(feature = "main")]
+#[cfg_attr(docsrs, doc(cfg(feature = "main")))]
+mod main;
+
 /// Command line interface definition for cargo xtask command.
+#[cfg_attr(doc, doc = include_str!("../doc/cargo-xtask.md"))]
 ///
 /// # Examples
 ///

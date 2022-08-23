@@ -21,6 +21,9 @@ This crate provides the following utilities:
   bin/lib crate.
   * Integrated with  [`rustfmt`], [`clippy`], [`cargo-rdme`],
     [`cargo-udeps`].
+* **`cargo xtask tidy`** and related subcommands - Fix the problems on your
+  bin/lib crate.
+  * Integrated with  [`rustfmt`], [`clippy`], [`cargo-rdme`].
 
 ## Usage
 
@@ -66,47 +69,6 @@ fn main() -> Result<()> {
 ```
 
 Now you can run various workflows with `cargo xtask`.
-
-```console
-$ cargo xtask help
-cargo-xtask
-Rust project automation command
-
-USAGE:
-    cargo xtask [OPTIONS] [SUBCOMMAND]
-
-OPTIONS:
-    -h, --help       Print help information
-    -q, --quiet      Less output per occurrence
-    -v, --verbose    More output per occurrence
-
-SUBCOMMANDS:
-    build                    Run `cargo build` on all workspaces in the current directory and
-                                 subdirectories
-    clippy                   Run `cargo clippy` on all workspaces in the current directory and
-                                 subdirectories
-    dist                     Create the archive file for distribution
-    dist-archive             Create the archive file for distribution
-    dist-build               Build all artifacts for distribution
-    dist-build-bin           Build the release binaries dor distribution
-    dist-build-completion    Build the shell completion files for distribution
-    dist-build-doc           Build the documentation for distribution
-    dist-build-license       Build the license files for distribution
-    dist-build-man           Build the man pages for distribution
-    dist-build-readme        Build the readme files for distribution
-    dist-clean               Removes the dist artifacts
-    fmt                      Run `cargo fmt` on all workspaces in the current directory and
-                                 subdirectories
-    help                     Print this message or the help of the given subcommand(s)
-    lint                     Run all lint commands on all workspaces in the current directory
-                                 and subdirectories
-    rdme                     Run `cargo rdme` on all workspaces in the current directory and
-                                 subdirectories
-    test                     Run `cargo test` on all workspaces in the current directory and
-                                 subdirectories
-    udeps                    Run `cargo udeps` on all workspaces in the current directory and
-                                 subdirectories
-```
 
 [xtask-setup]: https://github.com/matklad/cargo-xtask#defining-xtasks
 
@@ -196,6 +158,8 @@ The following features require only the standard Rust tools:
   lint`.
 * **`subcommand-test`** - Enables `cargo xtask
   test`.
+* **`subcommand-tidy`** - Enables `cargo xtask
+  tidy`.
 
 The following features require third-party tools:
 

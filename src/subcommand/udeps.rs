@@ -2,7 +2,8 @@ use std::process::Command;
 
 use crate::{args::FeatureArgs, config::Config, process::CommandExt, Result, Run};
 
-/// `udeps` subcommand arguments.
+/// Arguments definition of the `udeps` subcommand.
+#[cfg_attr(doc, doc = include_str!("../../doc/cargo-xtask-udeps.md"))]
 #[derive(Debug, Clone, Default, clap::Args)]
 #[non_exhaustive]
 pub struct Udeps {
@@ -20,7 +21,7 @@ impl Run for Udeps {
 }
 
 impl Udeps {
-    /// Execute `udeps` subcommand workflow.
+    /// Runs the `udeps` subcommand.
     #[tracing::instrument(name = "udeps", parent = None, skip_all, err)]
     pub fn run(&self, _config: &Config) -> Result<()> {
         let Self {

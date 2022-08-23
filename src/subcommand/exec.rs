@@ -2,7 +2,8 @@ use std::process::Command;
 
 use crate::{config::Config, process::CommandExt, workspace, Result, Run};
 
-/// `exec` subcommand arguments.
+/// Arguments definition of the `exec` subcommand.
+#[cfg_attr(doc, doc = include_str!("../../doc/cargo-xtask-exec.md"))]
 #[derive(Debug, Clone, Default, clap::Args)]
 #[non_exhaustive]
 pub struct Exec {
@@ -22,7 +23,7 @@ impl Run for Exec {
 }
 
 impl Exec {
-    /// Execute `exec` subcommand workflow.
+    /// Runs the `exec` subcommand.
     #[tracing::instrument(name = "exec", parent = None, skip_all, err)]
     pub fn run(&self, _config: &Config) -> Result<()> {
         let Self {

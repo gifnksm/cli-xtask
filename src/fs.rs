@@ -90,6 +90,9 @@ impl<'a> ToRelative for &'a Utf8Path {
         let mut current_dir = current_dir.as_deref();
         let mut prefix = Utf8PathBuf::new();
         while let Some(cur_dir) = current_dir {
+            if cur_dir.parent().is_none() {
+                return Cow::Borrowed(self);
+            }
             if let Ok(relative) = self.strip_prefix(cur_dir) {
                 if prefix != "" {
                     return Cow::Owned(prefix.join(relative));

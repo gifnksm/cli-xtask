@@ -34,6 +34,7 @@ jobs:
           echo "::set-output name=os::${os}"
 
           jq -n --argjson rust "${rust}" --argjson os "${os}" '{ rust: $rust, os: $os }'
+        shell: bash
 
   set-workspace:
     runs-on: ubuntu-latest
@@ -50,6 +51,7 @@ jobs:
           echo "${value}"
           value="${value//$'\n'/'%0A'}"
           echo "::set-output name=workspaces::${value}"
+        shell: bash
 
   test:
     name: Test
@@ -237,17 +239,20 @@ jobs:
           command: doc
           args: --no-deps --document-private-items --workspace --all-features --examples
 
-  publish-dry-run:
-    name: Publish dry run
+  release-dry-run:
+    name: Release dry run
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
       - uses: dtolnay/rust-toolchain@stable
       - uses: Swatinem/rust-cache@v2
-      - uses: actions-rs/cargo@v1
+      - uses: taiki-e/install-action@v1
         with:
-          command: publish
-          args: --dry-run
+          tool: cargo-udeps,cargo-rdme,cargo-release
+      - run: rustup toolchain add nightly --profile minimal
+        shell: bash
+      - run: cargo release patch -vv --allow-branch HEAD
+        shell: bash
 
   actionlint:
     runs-on: ubuntu-latest

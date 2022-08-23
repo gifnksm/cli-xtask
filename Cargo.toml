@@ -12,7 +12,6 @@ repository = "https://github.com/gifnksm/cli-xtask"
 license = "MIT OR Apache-2.0"
 keywords = []
 categories = []
-autobins = false
 
 [package.metadata.docs.rs]
 all-features = true
@@ -38,6 +37,7 @@ bin-crate = [
     "subcommand-lint",
     "subcommand-pre-release",
     "subcommand-test",
+    "subcommand-tidy",
 ]
 bin-crate-extra = [
     "bin-crate",
@@ -51,6 +51,7 @@ lib-crate = [
     "subcommand-lint",
     "subcommand-pre-release",
     "subcommand-test",
+    "subcommand-tidy",
 ]
 lib-crate-extra = [
     "lib-crate",
@@ -81,6 +82,7 @@ subcommand-lint = []
 subcommand-pre-release = []
 subcommand-rdme = []
 subcommand-test = []
+subcommand-tidy = []
 subcommand-udeps = []
 
 [dependencies]

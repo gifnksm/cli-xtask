@@ -2,7 +2,8 @@ use std::process::Command;
 
 use crate::{args::FeatureArgs, config::Config, process::CommandExt, Result, Run};
 
-/// `clippy` subcommand arguments.
+/// Arguments definition of the `clippy` subcommand.
+#[cfg_attr(doc, doc = include_str!("../../doc/cargo-xtask-clippy.md"))]
 #[derive(Debug, Clone, Default, clap::Args)]
 #[non_exhaustive]
 pub struct Clippy {
@@ -20,7 +21,7 @@ impl Run for Clippy {
 }
 
 impl Clippy {
-    /// Runs `clippy` subcommand workflow.
+    /// Runs the `clippy` subcommand.
     #[tracing::instrument(name = "clippy", parent = None, skip_all, err)]
     pub fn run(&self, _config: &Config) -> Result<()> {
         let Self {

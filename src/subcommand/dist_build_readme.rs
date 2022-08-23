@@ -1,6 +1,7 @@
 use crate::{config::Config, Result, Run};
 
-/// `dist-build-doc` subcommand arguments.
+/// Arguments definition of the `dist-build-readme` subcommand.
+#[cfg_attr(doc, doc = include_str!("../../doc/cargo-xtask-dist-build-readme.md"))]
 #[derive(Debug, Clone, Default, clap::Args)]
 #[non_exhaustive]
 pub struct DistBuildReadme {}
@@ -12,7 +13,7 @@ impl Run for DistBuildReadme {
 }
 
 impl DistBuildReadme {
-    /// Execute `dist-build-doc` subcommand workflow.
+    /// Runs the `dist-build-doc` subcommand.
     #[tracing::instrument(name = "dist-build-readme", parent = None, skip_all, err)]
     pub fn run(&self, config: &Config) -> Result<()> {
         tracing::info!("Building READMEs...");

@@ -128,6 +128,13 @@ mod test;
 #[cfg_attr(docsrs, doc(cfg(feature = "subcommand-test")))]
 pub use self::test::Test;
 
+#[cfg(feature = "subcommand-tidy")]
+#[cfg_attr(docsrs, doc(cfg(feature = "subcommand-tidy")))]
+mod tidy;
+#[cfg(feature = "subcommand-tidy")]
+#[cfg_attr(docsrs, doc(cfg(feature = "subcommand-tidy")))]
+pub use self::tidy::Tidy;
+
 #[cfg(feature = "subcommand-udeps")]
 #[cfg_attr(docsrs, doc(cfg(feature = "subcommand-udeps")))]
 mod udeps;
@@ -135,7 +142,8 @@ mod udeps;
 #[cfg_attr(docsrs, doc(cfg(feature = "subcommand-udeps")))]
 pub use self::udeps::Udeps;
 
-/// Subcommand definition.
+/// Subcommand definition for cargo xtask command.
+#[cfg_attr(doc, doc = include_str!("../doc/cargo-xtask.md"))]
 ///
 /// # Examples
 ///
@@ -180,106 +188,106 @@ pub use self::udeps::Udeps;
 #[clap(bin_name = "cargo xtask", about = "Rust project automation command", long_about = None)]
 #[non_exhaustive]
 pub enum Subcommand {
-    /// Run `cargo build` on all workspaces in the current directory and
-    /// subdirectories
+    /// `cargo build` with options useful for testing and continuous
+    /// integration.
     #[cfg(feature = "subcommand-build")]
     #[cfg_attr(docsrs, doc(cfg(feature = "subcommand-build")))]
     Build(Build),
 
-    /// Run `cargo clippy` on all workspaces in the current directory and
-    /// subdirectories
+    /// `cargo clippy` with options useful for tesing and continuous
+    /// integration.
     #[cfg(feature = "subcommand-clippy")]
     #[cfg_attr(docsrs, doc(cfg(feature = "subcommand-clippy")))]
     Clippy(Clippy),
 
-    /// Build the artifacs and create the archive file for distribution
+    /// Build the artifacs and create the archive file for distribution.
     #[cfg(feature = "subcommand-dist")]
     #[cfg_attr(docsrs, doc(cfg(feature = "subcommand-dist")))]
     Dist(Dist),
 
-    /// Create the archive file for distribution
+    /// Create the archive file for distribution.
     #[cfg(feature = "subcommand-dist-archive")]
     #[cfg_attr(docsrs, doc(cfg(feature = "subcommand-dist-archive")))]
     DistArchive(DistArchive),
 
-    /// Build all artifacts for distribution
+    /// Build all artifacts for distribution.
     #[cfg(subcommand_dist_build)]
     #[cfg_attr(docsrs, doc(cfg(feature = "subcommand-dist-build-*")))]
     DistBuild(DistBuild),
 
-    /// Build the release binaries dor distribution
+    /// Build the release binaries for distribution.
     #[cfg(feature = "subcommand-dist-build-bin")]
     #[cfg_attr(docsrs, doc(cfg(feature = "subcommand-dist-build-bin")))]
     DistBuildBin(DistBuildBin),
 
-    /// Build the shell completion files for distribution
+    /// Build the shell completion files for distribution.
     #[cfg(feature = "subcommand-dist-build-completion")]
     #[cfg_attr(docsrs, doc(cfg(feature = "subcommand-dist-build-completion")))]
     DistBuildCompletion(DistBuildCompletion),
 
-    /// Build the documentation for distribution
+    /// Build the documentation for distribution.
     #[cfg(feature = "subcommand-dist-build-doc")]
     #[cfg_attr(docsrs, doc(cfg(feature = "subcommand-dist-build-doc")))]
     DistBuildDoc(DistBuildDoc),
 
-    /// Build the license files for distribution
+    /// Build the license files for distribution.
     #[cfg(feature = "subcommand-dist-build-license")]
     #[cfg_attr(docsrs, doc(cfg(feature = "subcommand-dist-build-license")))]
     DistBuildLicense(DistBuildLicense),
 
-    /// Build the man pages for distribution
+    /// Build the man pages for distribution.
     #[cfg(feature = "subcommand-dist-build-man")]
     #[cfg_attr(docsrs, doc(cfg(feature = "subcommand-dist-build-man")))]
     DistBuildMan(DistBuildMan),
 
-    /// Build the readme files for distribution
+    /// Build the readme files for distribution.
     #[cfg(feature = "subcommand-dist-build-readme")]
     #[cfg_attr(docsrs, doc(cfg(feature = "subcommand-dist-build-readme")))]
     DistBuildReadme(DistBuildReadme),
 
-    /// Remove the artifacts and archives for distribution
+    /// Remove the artifacts and archives for distribution.
     #[cfg(feature = "subcommand-dist-clean")]
     #[cfg_attr(docsrs, doc(cfg(feature = "subcommand-dist-clean")))]
     DistClean(DistClean),
 
     /// Run commands on all workspaces in the current directory and
-    /// subdirectories
+    /// subdirectories.
     #[cfg(feature = "subcommand-exec")]
     #[cfg_attr(docsrs, doc(cfg(feature = "subcommand-exec")))]
     Exec(Exec),
 
-    /// Run `cargo fmt` on all workspaces in the current directory and
-    /// subdirectories
+    /// `cargo fmt` with options useful for testing and continuous integration.
     #[cfg(feature = "subcommand-fmt")]
     #[cfg_attr(docsrs, doc(cfg(feature = "subcommand-fmt")))]
     Fmt(Fmt),
 
-    /// Run all lint commands on all workspaces in the current directory and
-    /// subdirectories
+    /// Run lint commands at once.
     #[cfg(feature = "subcommand-lint")]
     #[cfg_attr(docsrs, doc(cfg(feature = "subcommand-lint")))]
     Lint(Lint),
 
-    /// Run pre-release checks on all workspaces in the current directory and
-    /// subdirectories
+    /// Run pre-release checks.
     #[cfg(feature = "subcommand-pre-release")]
     #[cfg_attr(docsrs, doc(cfg(feature = "subcommand-pre-release")))]
     PreRelease(PreRelease),
 
-    /// Run `cargo rdme` on all workspaces in the current directory and
-    /// subdirectories
+    /// `cargo rdme` with options useful for testing and continuous integration.
     #[cfg(feature = "subcommand-rdme")]
     #[cfg_attr(docsrs, doc(cfg(feature = "subcommand-rdme")))]
     Rdme(rdme::Rdme),
 
-    /// Run `cargo test` on all workspaces in the current directory and
-    /// subdirectories
+    /// `cargo test` with options useful for testing and continuous integration.
     #[cfg(feature = "subcommand-test")]
     #[cfg_attr(docsrs, doc(cfg(feature = "subcommand-test")))]
     Test(Test),
 
-    /// Run `cargo udeps` on all workspaces in the current directory and
-    /// subdirectories
+    /// Fix the package problems.
+    #[cfg(feature = "subcommand-tidy")]
+    #[cfg_attr(docsrs, doc(cfg(feature = "subcommand-tidy")))]
+    Tidy(Tidy),
+
+    /// `cargo udeps` with options useful for testing and continuous
+    /// integration.
     #[cfg(feature = "subcommand-udeps")]
     #[cfg_attr(docsrs, doc(cfg(feature = "subcommand-udeps")))]
     Udeps(Udeps),
@@ -292,7 +300,7 @@ impl Run for Subcommand {
 }
 
 impl Subcommand {
-    /// Runs subcommand workflow.
+    /// Runs the subcommand specified by the command line arguments.
     pub fn run(&self, config: &Config) -> Result<()> {
         match self {
             #[cfg(feature = "subcommand-build")]
@@ -348,6 +356,9 @@ impl Subcommand {
 
             #[cfg(feature = "subcommand-test")]
             Self::Test(args) => args.run(config),
+
+            #[cfg(feature = "subcommand-tidy")]
+            Self::Tidy(args) => args.run(config),
 
             #[cfg(feature = "subcommand-udeps")]
             Self::Udeps(args) => args.run(config),

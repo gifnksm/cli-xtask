@@ -6,7 +6,8 @@ use time::OffsetDateTime;
 
 use crate::{config::Config, Result, Run};
 
-/// `dist-build-man` subcommand arguments.
+/// Arguments definition of the `dist-build-man` subcommand.
+#[cfg_attr(doc, doc = include_str!("../../doc/cargo-xtask-dist-build-man.md"))]
 #[derive(Debug, Clone, Default, clap::Args)]
 #[non_exhaustive]
 pub struct DistBuildMan {}

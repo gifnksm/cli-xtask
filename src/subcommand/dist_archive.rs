@@ -1,6 +1,7 @@
 use crate::{archive, config::Config, Result, Run};
 
-/// `dist-archive` subcommand arguments.
+/// Arguments definition of the `dist-archive` subcommand.
+#[cfg_attr(doc, doc = include_str!("../../doc/cargo-xtask-dist-archive.md"))]
 #[derive(Debug, Clone, Default, clap::Args)]
 #[non_exhaustive]
 pub struct DistArchive {}
@@ -12,7 +13,7 @@ impl Run for DistArchive {
 }
 
 impl DistArchive {
-    /// Execute `dist-archive` subcommand workflow.
+    /// Runs the `dist-archive` subcommand.
     #[tracing::instrument(name = "dist-archive", parent = None, skip_all, err)]
     pub fn run(&self, config: &Config) -> Result<()> {
         let Self {} = self;

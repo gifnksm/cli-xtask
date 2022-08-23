@@ -2,7 +2,8 @@ use std::process::Command;
 
 use crate::{args::WorkspaceArgs, config::Config, process::CommandExt, Result, Run};
 
-/// `rdme` subcommand arguments.
+/// Arguments definition of the `rdme` subcommand.
+#[cfg_attr(doc, doc = include_str!("../../doc/cargo-xtask-rdme.md"))]
 #[derive(Debug, Clone, Default, clap::Args)]
 #[non_exhaustive]
 pub struct Rdme {
@@ -20,7 +21,7 @@ impl Run for Rdme {
 }
 
 impl Rdme {
-    /// Execute `rdme` subcommand workflow.
+    /// Runs the `rdme` subcommand.
     #[tracing::instrument(name = "rdme", parent = None, skip_all, err)]
     pub fn run(&self, _config: &Config) -> Result<()> {
         let Self {

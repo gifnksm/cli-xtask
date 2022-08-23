@@ -1,6 +1,7 @@
 use crate::{args::FeatureArgs, config::Config, Result, Run};
 
-/// `lint` subcommand arguments.
+/// Arguments definition of the `lint` subcommand.
+#[cfg_attr(doc, doc = include_str!("../../doc/cargo-xtask-lint.md"))]
 #[derive(Debug, Clone, Default, clap::Args)]
 #[non_exhaustive]
 pub struct Lint {
@@ -16,13 +17,13 @@ impl Run for Lint {
 }
 
 impl Lint {
-    /// Execute `lint` subcommand workflow.
+    /// Runs the `lint` subcommand.
     #[tracing::instrument(name = "lint", parent = None, skip_all, err)]
     pub fn run(&self, config: &Config) -> Result<()> {
         let Self { feature_args } = self;
 
         let _ = config; // supress unused-variables warning
-        let _feature_args = feature_args.clone(); // supress unused-variables warning
+        let _ = feature_args.clone(); // supress unused-variables warning
 
         // cargo fmt --check
         #[cfg(feature = "subcommand-fmt")]

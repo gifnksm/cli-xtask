@@ -3,7 +3,8 @@ use clap_complete::Shell;
 
 use crate::{config::Config, fs::ToRelative, Result, Run};
 
-/// `dist-build-completion` subcommand arguments.
+/// Arguments definition of the `dist-build-completion` subcommand.
+#[cfg_attr(doc, doc = include_str!("../../doc/cargo-xtask-dist-build-completion.md"))]
 #[derive(Debug, Clone, Default, clap::Args)]
 #[non_exhaustive]
 pub struct DistBuildCompletion {}
@@ -15,7 +16,7 @@ impl Run for DistBuildCompletion {
 }
 
 impl DistBuildCompletion {
-    /// Execute `dist-build-completion` subcommand workflow.
+    /// Runs the `dist-build-completion` subcommand.
     #[tracing::instrument(name = "dist-build-completion", parent = None, skip_all, err)]
     pub fn run(&self, config: &Config) -> Result<()> {
         tracing::info!("Building shell completion files...");

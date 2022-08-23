@@ -2,7 +2,8 @@ use std::process::Command;
 
 use crate::{args::FeatureArgs, config::Config, process::CommandExt, Result, Run};
 
-/// `build` subcommand arguments.
+/// Arguments definition of the `build` subcommand.
+#[cfg_attr(doc, doc = include_str!("../../doc/cargo-xtask-build.md"))]
 #[derive(Debug, Clone, Default, clap::Args)]
 #[non_exhaustive]
 pub struct Build {
@@ -20,7 +21,7 @@ impl Run for Build {
 }
 
 impl Build {
-    /// Runs `build` subcommand workflow.
+    /// Runs the `build` subcommand.
     #[tracing::instrument(name = "build", parent = None, skip_all, err)]
     pub fn run(&self, _config: &Config) -> Result<()> {
         let Self {

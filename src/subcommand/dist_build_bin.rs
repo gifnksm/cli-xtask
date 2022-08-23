@@ -1,6 +1,7 @@
 use crate::{cargo, config::Config, Result, Run};
 
-/// `dist-build-bin` subcommand arguments.
+/// Arguments definition of the `dist-build-bin` subcommand.
+#[cfg_attr(doc, doc = include_str!("../../doc/cargo-xtask-dist-build-bin.md"))]
 #[derive(Debug, Clone, Default, clap::Args)]
 #[non_exhaustive]
 pub struct DistBuildBin {
@@ -22,7 +23,7 @@ impl Run for DistBuildBin {
 }
 
 impl DistBuildBin {
-    /// Execute `dist-build-bin` subcommand workflow.
+    /// Runs the `dist-build-bin` subcommand.
     #[tracing::instrument(name = "dist-build-bin", parent = None, skip_all, err)]
     pub fn run(&self, config: &Config) -> Result<()> {
         tracing::info!("Building executables...");

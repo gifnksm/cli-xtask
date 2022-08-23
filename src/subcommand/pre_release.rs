@@ -1,6 +1,7 @@
 use crate::{config::Config, Result, Run};
 
-/// `pre-release` subcommand arguments.
+/// Arguments definition of the `pre-release` subcommand.
+#[cfg_attr(doc, doc = include_str!("../../doc/cargo-xtask-pre-release.md"))]
 #[derive(Debug, Clone, Default, clap::Args)]
 #[non_exhaustive]
 pub struct PreRelease {}
@@ -12,7 +13,7 @@ impl Run for PreRelease {
 }
 
 impl PreRelease {
-    /// Execute `pre-release` subcommand workflow.
+    /// Runs the `pre-release` subcommand.
     #[tracing::instrument(name = "pre-release", parent = None, skip_all, err)]
     pub fn run(&self, config: &Config) -> Result<()> {
         let Self {} = self;

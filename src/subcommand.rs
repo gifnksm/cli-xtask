@@ -107,6 +107,13 @@ mod lint;
 #[cfg_attr(docsrs, doc(cfg(feature = "subcommand-lint")))]
 pub use self::lint::Lint;
 
+#[cfg(feature = "subcommand-pre-release")]
+#[cfg_attr(docsrs, doc(cfg(feature = "subcommand-pre-release")))]
+mod pre_release;
+#[cfg(feature = "subcommand-pre-release")]
+#[cfg_attr(docsrs, doc(cfg(feature = "subcommand-pre-release")))]
+pub use self::pre_release::PreRelease;
+
 #[cfg(feature = "subcommand-rdme")]
 #[cfg_attr(docsrs, doc(cfg(feature = "subcommand-rdme")))]
 mod rdme;
@@ -253,6 +260,12 @@ pub enum Subcommand {
     #[cfg_attr(docsrs, doc(cfg(feature = "subcommand-lint")))]
     Lint(Lint),
 
+    /// Run pre-release checks on all workspaces in the current directory and
+    /// subdirectories
+    #[cfg(feature = "subcommand-pre-release")]
+    #[cfg_attr(docsrs, doc(cfg(feature = "subcommand-pre-release")))]
+    PreRelease(PreRelease),
+
     /// Run `cargo rdme` on all workspaces in the current directory and
     /// subdirectories
     #[cfg(feature = "subcommand-rdme")]
@@ -326,6 +339,9 @@ impl Subcommand {
 
             #[cfg(feature = "subcommand-lint")]
             Self::Lint(args) => args.run(config),
+
+            #[cfg(feature = "subcommand-pre-release")]
+            Self::PreRelease(args) => args.run(config),
 
             #[cfg(feature = "subcommand-rdme")]
             Self::Rdme(args) => args.run(config),

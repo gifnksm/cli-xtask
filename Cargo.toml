@@ -36,6 +36,7 @@ bin-crate = [
     "subcommand-dist",
     "subcommand-fmt",
     "subcommand-lint",
+    "subcommand-pre-release",
     "subcommand-test",
 ]
 bin-crate-extra = [
@@ -48,6 +49,7 @@ lib-crate = [
     "subcommand-clippy",
     "subcommand-fmt",
     "subcommand-lint",
+    "subcommand-pre-release",
     "subcommand-test",
 ]
 lib-crate-extra = [
@@ -76,6 +78,7 @@ subcommand-dist-clean = []
 subcommand-exec = []
 subcommand-fmt = []
 subcommand-lint = []
+subcommand-pre-release = []
 subcommand-rdme = []
 subcommand-test = []
 subcommand-udeps = []

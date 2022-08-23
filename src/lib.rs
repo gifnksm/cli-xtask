@@ -185,6 +185,8 @@
 //!   exec`](crate::subcommand::Exec).
 //! * **`subcommand-fmt`** - Enables [`cargo xtask
 //!   fmt`](crate::subcommand::Fmt).
+//! * **`subcommand-pre-release`** - Enables [`cargo xtask
+//!   pre-release`](crate::subcommand::PreRelease).
 //! * **`subcommand-lint`** - Enables [`cargo xtask
 //!   lint`](crate::subcommand::Lint).
 //! * **`subcommand-test`** - Enables [`cargo xtask

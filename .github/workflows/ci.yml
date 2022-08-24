@@ -215,26 +215,18 @@ jobs:
         shell: bash
 
   rustdoc:
-    name: Docs
-    strategy:
-      fail-fast: false
-      matrix:
-        job:
-          - rust: stable
-            flags: ""
-          - rust: nightly
-            flags: "--cfg docsrs"
+    name: Docs.rs
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
       - uses: dtolnay/rust-toolchain@v1
         with:
-          toolchain: ${{ matrix.job.rust }}
+          toolchain: nightly
       - uses: Swatinem/rust-cache@v2
       - name: cargo doc
         uses: actions-rs/cargo@v1
         env:
-          RUSTDOCFLAGS: -D warnings ${{ matrix.job.flags }}
+          RUSTDOCFLAGS: -D warnings --cfg docsrs
         with:
           command: doc
           args: --no-deps --document-private-items --workspace --all-features --examples

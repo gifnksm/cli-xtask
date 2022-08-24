@@ -46,6 +46,15 @@ impl Lint {
         }
         .run(config)?;
 
+        // RUSTDOCFLAGS="-D warnings" cargo doc
+        #[cfg(feature = "subcommand-doc")]
+        super::Doc {
+            env_args: crate::args::EnvArgs::new([("RUSTDOCFLAGS", "-D warnings")]),
+            package_args: feature_args.package_args.clone(),
+            extra_options: ["--no-deps"].into_iter().map(String::from).collect(),
+        }
+        .run(config)?;
+
         // cargo rdme --check
         #[cfg(feature = "subcommand-rdme")]
         super::Rdme {

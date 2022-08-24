@@ -106,13 +106,15 @@ impl EnvArgs {
 #[derive(Debug, Clone, Default, clap::Args)]
 #[non_exhaustive]
 pub struct WorkspaceArgs {
-    /// Run the subcommand on all option combinations (workspaces, packages,
-    /// features if available)
+    /// Same as `--all-workspaces --workspace --each-feature`.
     #[clap(long)]
     pub exhaustive: bool,
-    /// Run the subcommand on all workspaces
+    /// Run the subcommand on all workspaces.
     #[clap(long, conflicts_with = "exhaustive")]
     pub all_workspaces: bool,
+    /// Run the subcommand on each workspace other than the current workspace.
+    #[clap(long)]
+    pub exclude_current_workspace: bool,
 }
 
 impl WorkspaceArgs {
@@ -120,12 +122,19 @@ impl WorkspaceArgs {
     pub const EXHAUSTIVE: Self = Self {
         exhaustive: true,
         all_workspaces: false,
+        exclude_current_workspace: false,
     };
 
     /// Returns the workspaces to run the subcommand on.
     pub fn workspaces(&self) -> impl Iterator<Item = &'static Metadata> {
         let workspaces = if self.exhaustive || self.all_workspaces {
-            workspace::all()
+            if self.exclude_current_workspace {
+                &workspace::all()[1..]
+            } else {
+                workspace::all()
+            }
+        } else if self.exclude_current_workspace {
+            &workspace::all()[..0]
         } else {
             &workspace::all()[..1]
         };

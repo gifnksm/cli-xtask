@@ -15,15 +15,34 @@ A collection of utility functions and command line interfaces for
 
 This crate provides the following utilities:
 
-* **`cargo xtask dist`** and related subcommands - Builds a distributable
-  tar.gz package for your bin crate.
-* **`cargo xtask lint`** and related subcommands - Runs the lints for your
-  bin/lib crate.
-  * Integrated with  [`rustfmt`], [`clippy`], [`cargo-rdme`],
+* **`cargo xtask dist`** and related subcommands
+  * Builds a distributable tar.gz package for your bin crate.
+* **`cargo xtask lint`** and related subcommands
+  * Runs the lints for your bin/lib crate.
+  * Integrated with [`rustdoc`], [`rustfmt`], [`clippy`], [`cargo-rdme`],
     [`cargo-udeps`].
-* **`cargo xtask tidy`** and related subcommands - Fix the problems on your
-  bin/lib crate.
+* **`cargo xtask tidy`** and related subcommands
+  * Fixes the problems on your bin/lib crate.
   * Integrated with  [`rustfmt`], [`clippy`], [`cargo-rdme`].
+* **`cargo xtask pre-release`**
+  * Checks if your bin/lib crate is ready for a release.
+* **`cargo xtask build`,
+  `clippy`, `doc`,
+  `fmt`, `test`**
+  * Runs the cargo commands with options useful for testing and continuous
+    integration.
+    * **`--all-workspaces`** - Runs the cargo commands for all workspaces.
+    * **`--workspace`** - Runs the cargo commands for all packages in the
+      workspace.
+    * **`--each-features`** - Repeats to runs the cargo commands for each
+      feature enabled.
+    * **`--exhaustive`** - Same as `--all-workspaces --workspace
+      --each-features`.
+* **`cargo xtask docsrs`**
+  * - Builds the documentation for your lib crate with configuration for
+    [docs.rs].
+* **`cargo xtask exec`**
+  * Runs a command in the gicontext of all workspaces.
 
 ## Usage
 
@@ -148,14 +167,18 @@ The following features require only the standard Rust tools:
   dist-build-readme`.
 * **`subcommand-dist-clean`** - Enables `cargo xtask
   dist-clean`.
+* **`subcommand-doc`** - Enables `cargo xtask
+  doc`.
+* **`subcommand-docsrs`** - Enables `cargo xtask
+  docsrs`.
 * **`subcommand-exec`** - Enables `cargo xtask
   exec`.
 * **`subcommand-fmt`** - Enables `cargo xtask
   fmt`.
-* **`subcommand-pre-release`** - Enables `cargo xtask
-  pre-release`.
 * **`subcommand-lint`** - Enables `cargo xtask
   lint`.
+* **`subcommand-pre-release`** - Enables `cargo xtask
+  pre-release`.
 * **`subcommand-test`** - Enables `cargo xtask
   test`.
 * **`subcommand-tidy`** - Enables `cargo xtask
@@ -201,10 +224,12 @@ conditions.
 See [CONTRIBUTING.md].
 
 [cargo-xtask]: https://github.com/matklad/cargo-xtask
+[`rustdoc`]: https://doc.rust-lang.org/rustdoc/what-is-rustdoc.html
 [`rustfmt`]: https://github.com/rust-lang/rustfmt
 [`clippy`]: https://github.com/rust-lang/rust-clippy
 [`cargo-rdme`]: https://github.com/orium/cargo-rdme
 [`cargo-udeps`]: https://github.com/est31/cargo-udeps
+[docs.rs]: https://docs.rs/
 [LICENSE-APACHE]: https://github.com/gifnksm/cli-xtask/blob/main/LICENSE-APACHE
 [LICENSE-MIT]: https://github.com/gifnksm/cli-xtask/blob/main/LICENSE-MIT
 [CONTRIBUTING.md]: https://github.com/gifnksm/cli-xtask/blob/main/CONTRIBUTING.md

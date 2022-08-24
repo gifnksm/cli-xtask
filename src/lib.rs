@@ -7,15 +7,34 @@
 //!
 //! This crate provides the following utilities:
 //!
-//! * **`cargo xtask dist`** and related subcommands - Builds a distributable
-//!   tar.gz package for your bin crate.
-//! * **`cargo xtask lint`** and related subcommands - Runs the lints for your
-//!   bin/lib crate.
-//!   * Integrated with  [`rustfmt`], [`clippy`], [`cargo-rdme`],
+//! * **[`cargo xtask dist`](crate::subcommand::Dist)** and related subcommands
+//!   * Builds a distributable tar.gz package for your bin crate.
+//! * **[`cargo xtask lint`](crate::subcommand::Lint)** and related subcommands
+//!   * Runs the lints for your bin/lib crate.
+//!   * Integrated with [`rustdoc`], [`rustfmt`], [`clippy`], [`cargo-rdme`],
 //!     [`cargo-udeps`].
-//! * **`cargo xtask tidy`** and related subcommands - Fix the problems on your
-//!   bin/lib crate.
+//! * **[`cargo xtask tidy`](crate::subcommand::Tidy)** and related subcommands
+//!   * Fixes the problems on your bin/lib crate.
 //!   * Integrated with  [`rustfmt`], [`clippy`], [`cargo-rdme`].
+//! * **[`cargo xtask pre-release`](crate::subcommand::PreRelease)**
+//!   * Checks if your bin/lib crate is ready for a release.
+//! * **[`cargo xtask build`](crate::subcommand::Build),
+//!   [`clippy`](crate::subcommand::Clippy), [`doc`](crate::subcommand::Doc),
+//!   [`fmt`](crate::subcommand::Fmt), [`test`](crate::subcommand::Test)**
+//!   * Runs the cargo commands with options useful for testing and continuous
+//!     integration.
+//!     * **`--all-workspaces`** - Runs the cargo commands for all workspaces.
+//!     * **`--workspace`** - Runs the cargo commands for all packages in the
+//!       workspace.
+//!     * **`--each-features`** - Repeats to runs the cargo commands for each
+//!       feature enabled.
+//!     * **`--exhaustive`** - Same as `--all-workspaces --workspace
+//!       --each-features`.
+//! * **[`cargo xtask docsrs`](crate::subcommand::Docsrs)**
+//!   * - Builds the documentation for your lib crate with configuration for
+//!     [docs.rs].
+//! * **[`cargo xtask exec`](crate::subcommand::Exec)**
+//!   * Runs a command in the gicontext of all workspaces.
 //!
 //! # Usage
 //!
@@ -143,14 +162,18 @@
 //!   dist-build-readme`](crate::subcommand::DistBuildReadme).
 //! * **`subcommand-dist-clean`** - Enables [`cargo xtask
 //!   dist-clean`](crate::subcommand::DistClean).
+//! * **`subcommand-doc`** - Enables [`cargo xtask
+//!   doc`](crate::subcommand::Doc).
+//! * **`subcommand-docsrs`** - Enables [`cargo xtask
+//!   docsrs`](crate::subcommand::Docsrs).
 //! * **`subcommand-exec`** - Enables [`cargo xtask
 //!   exec`](crate::subcommand::Exec).
 //! * **`subcommand-fmt`** - Enables [`cargo xtask
 //!   fmt`](crate::subcommand::Fmt).
-//! * **`subcommand-pre-release`** - Enables [`cargo xtask
-//!   pre-release`](crate::subcommand::PreRelease).
 //! * **`subcommand-lint`** - Enables [`cargo xtask
 //!   lint`](crate::subcommand::Lint).
+//! * **`subcommand-pre-release`** - Enables [`cargo xtask
+//!   pre-release`](crate::subcommand::PreRelease).
 //! * **`subcommand-test`** - Enables [`cargo xtask
 //!   test`](crate::subcommand::Test).
 //! * **`subcommand-tidy`** - Enables [`cargo xtask
@@ -196,10 +219,12 @@
 //! See [CONTRIBUTING.md].
 //!
 //! [cargo-xtask]: https://github.com/matklad/cargo-xtask
+//! [`rustdoc`]: https://doc.rust-lang.org/rustdoc/what-is-rustdoc.html
 //! [`rustfmt`]: https://github.com/rust-lang/rustfmt
 //! [`clippy`]: https://github.com/rust-lang/rust-clippy
 //! [`cargo-rdme`]: https://github.com/orium/cargo-rdme
 //! [`cargo-udeps`]: https://github.com/est31/cargo-udeps
+//! [docs.rs]: https://docs.rs/
 //! [LICENSE-APACHE]: https://github.com/gifnksm/cli-xtask/blob/main/LICENSE-APACHE
 //! [LICENSE-MIT]: https://github.com/gifnksm/cli-xtask/blob/main/LICENSE-MIT
 //! [CONTRIBUTING.md]: https://github.com/gifnksm/cli-xtask/blob/main/CONTRIBUTING.md

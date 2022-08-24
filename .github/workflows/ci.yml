@@ -47,7 +47,7 @@ jobs:
       - name: Set workspace paths
         id: set-workspace
         run: |
-          value="$(cargo xtask exec -- pwd | sed "s@^$(pwd)@.@" | sed 's/$/ -> target/')"
+          value="$(cargo xtask exec --all-workspaces -- pwd | sed "s@^$(pwd)@.@" | sed 's/$/ -> target/')"
           echo "${value}"
           value="${value//$'\n'/'%0A'}"
           echo "::set-output name=workspaces::${value}"
@@ -126,7 +126,7 @@ jobs:
         run: |
           cargo llvm-cov --workspace --all-targets --all-features --lcov --output-path lcov-test.info
           cargo +nightly llvm-cov --doctests --workspace --all-features --lcov --output-path lcov-doctest.info
-          cargo llvm-cov run -p xtask --lcov --output-path lcov-exec.info -- exec --exclude-current -- cargo llvm-cov --workspace --lcov --output-path lcov-test.info
+          cargo llvm-cov run -p xtask --lcov --output-path lcov-exec.info -- exec --all-workspaces --exclude-current-workspace -- cargo llvm-cov --workspace --lcov --output-path lcov-test.info
         shell: bash
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v3

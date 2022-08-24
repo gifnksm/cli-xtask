@@ -29,6 +29,7 @@ SUBCOMMANDS:
     dist-clean               Remove the artifacts and archives for distribution
     doc                      `cargo doc` with options useful for testing and continuous
                                  integration
+    docsrs                   `cargo doc` with docs.rs specific options
     exec                     Run commands on all workspaces in the current directory and
                                  subdirectories
     fmt                      `cargo fmt` with options useful for testing and continuous

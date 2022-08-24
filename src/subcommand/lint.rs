@@ -55,6 +55,16 @@ impl Lint {
         }
         .run(config)?;
 
+        #[cfg(feature = "subcommand-docsrs")]
+        super::Docsrs {
+            env_args: crate::args::EnvArgs::new([("RUSTDOCFLAGS", "-D warnings")]),
+            package_args: feature_args.package_args.clone(),
+            default_target: false,
+            all_targets: false,
+            extra_options: vec![],
+        }
+        .run(config)?;
+
         // cargo rdme --check
         #[cfg(feature = "subcommand-rdme")]
         super::Rdme {

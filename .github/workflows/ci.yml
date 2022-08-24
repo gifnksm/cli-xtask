@@ -214,23 +214,6 @@ jobs:
       - run: cargo xtask lint --exhaustive
         shell: bash
 
-  rustdoc:
-    name: Docs.rs
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      - uses: dtolnay/rust-toolchain@v1
-        with:
-          toolchain: nightly
-      - uses: Swatinem/rust-cache@v2
-      - name: cargo doc
-        uses: actions-rs/cargo@v1
-        env:
-          RUSTDOCFLAGS: -D warnings --cfg docsrs
-        with:
-          command: doc
-          args: --no-deps --document-private-items --workspace --all-features --examples
-
   release-dry-run:
     name: Release dry run
     runs-on: ubuntu-latest

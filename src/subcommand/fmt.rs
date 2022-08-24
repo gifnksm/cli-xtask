@@ -42,11 +42,8 @@ impl Fmt {
             let (workspace, package) = res?;
             // cargo fmt --package <pkg> <extra_options>
             Command::new("cargo")
-                .args(
-                    ["fmt", "--package", &package.name]
-                        .into_iter()
-                        .chain(extra_options.iter().map(String::as_str)),
-                )
+                .args(["fmt", "--package", &package.name])
+                .args(extra_options)
                 .envs(env_args.env.clone())
                 .workspace_spawn(workspace)?;
         }

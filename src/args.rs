@@ -68,7 +68,8 @@ impl Verbosity {
     }
 }
 
-/// Command line arguments to specify the environment variables to set for the subcommand.
+/// Command line arguments to specify the environment variables to set for the
+/// subcommand.
 #[derive(Debug, Clone, Default, clap::Args)]
 pub struct EnvArgs {
     /// Environment variables to set for the subcommand.

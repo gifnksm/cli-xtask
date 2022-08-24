@@ -1,17 +1,19 @@
-# `cargo-xtask-doc(1)`
+# `cargo-xtask-docsrs(1)`
 
 ```test
-cargo-xtask-doc 
-`cargo doc` with options useful for testing and continuous integration
+cargo-xtask-docsrs 
+`cargo doc` with docs.rs specific options
 
 USAGE:
-    cargo xtask doc [OPTIONS] [EXTRA_OPTIONS]...
+    cargo xtask docsrs [OPTIONS] [EXTRA_OPTIONS]...
 
 ARGS:
     <EXTRA_OPTIONS>...    Options to pass to the `cargo doc`
 
 OPTIONS:
+        --all-targets          Build documents for all supported targets
         --all-workspaces       Run the subcommand on all workspaces
+        --default-target       Build documents for docs.rs's default target
     -e, --env <KEY>=<VALUE>    Environment variables to set for the subcommand
         --exhaustive           Run the subcommand on all option combinations (workspaces, packages,
                                features if available)

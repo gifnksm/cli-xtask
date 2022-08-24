@@ -45,6 +45,7 @@ impl Tidy {
         // cargo fmt
         #[cfg(feature = "subcommand-fmt")]
         super::Fmt {
+            env_args: Default::default(),
             package_args: feature_args.package_args.clone(),
             extra_options: vec![],
         }
@@ -65,6 +66,7 @@ impl Tidy {
 
             // cargo clippy --fix
             super::Clippy {
+                env_args: Default::default(),
                 feature_args: feature_args.clone(),
                 extra_options: ["--fix", "--all-targets"]
                     .into_iter()
@@ -83,6 +85,7 @@ impl Tidy {
             }
             // cargo rdme
             super::Rdme {
+                env_args: Default::default(),
                 workspace_args: feature_args.package_args.workspace_args.clone(),
                 extra_options: rdme_options.into_iter().map(String::from).collect(),
             }

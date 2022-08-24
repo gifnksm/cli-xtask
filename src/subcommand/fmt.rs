@@ -1,12 +1,20 @@
 use std::process::Command;
 
-use crate::{args::PackageArgs, config::Config, process::CommandExt, Result, Run};
+use crate::{
+    args::{EnvArgs, PackageArgs},
+    config::Config,
+    process::CommandExt,
+    Result, Run,
+};
 
 /// Arguments definition of the `fmt` subcommand.
 #[cfg_attr(doc, doc = include_str!("../../doc/cargo-xtask-fmt.md"))]
 #[derive(Debug, Clone, Default, clap::Args)]
 #[non_exhaustive]
 pub struct Fmt {
+    /// Environment variables to set for `cargo fmt`.
+    #[clap(flatten)]
+    pub env_args: EnvArgs,
     /// Packages to run the `cargo fmt` for
     #[clap(flatten)]
     pub package_args: PackageArgs,
@@ -25,6 +33,7 @@ impl Fmt {
     #[tracing::instrument(name = "fmt", parent = None, skip_all, err)]
     pub fn run(&self, _config: &Config) -> Result<()> {
         let Self {
+            env_args,
             package_args,
             extra_options,
         } = self;
@@ -38,6 +47,7 @@ impl Fmt {
                         .into_iter()
                         .chain(extra_options.iter().map(String::as_str)),
                 )
+                .envs(env_args.env.clone())
                 .workspace_spawn(workspace)?;
         }
 

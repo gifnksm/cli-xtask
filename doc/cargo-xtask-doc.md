@@ -12,6 +12,7 @@ ARGS:
 
 OPTIONS:
         --all-workspaces       Run the subcommand on all workspaces
+    -e, --env <KEY>=<VALUE>    Environment variables to set for the subcommand
         --exhaustive           Run the subcommand on all option combinations (workspaces, packages,
                                features if available)
     -h, --help                 Print help information

@@ -68,6 +68,38 @@ impl Verbosity {
     }
 }
 
+/// Command line arguments to specify the environment variables to set for the subcommand.
+#[derive(Debug, Clone, Default, clap::Args)]
+pub struct EnvArgs {
+    /// Environment variables to set for the subcommand.
+    #[clap(
+        long,
+        short = 'e',
+        value_name = "KEY>=<VALUE", // hack
+        parse(from_str = EnvArgs::parse_parts),
+    )]
+    pub env: Vec<(String, String)>,
+}
+
+impl EnvArgs {
+    /// Creates a new `EnvArgs` from an iterator of `(key, value)` pairs.
+    pub fn new(iter: impl IntoIterator<Item = (impl Into<String>, impl Into<String>)>) -> Self {
+        Self {
+            env: iter
+                .into_iter()
+                .map(|(k, v)| (k.into(), v.into()))
+                .collect(),
+        }
+    }
+
+    fn parse_parts(s: &str) -> (String, String) {
+        match s.split_once('=') {
+            Some((key, value)) => (key.into(), value.into()),
+            None => (s.into(), "".into()),
+        }
+    }
+}
+
 /// Command line arguments to specify the workspaces where the subcommand runs
 /// on.
 #[derive(Debug, Clone, Default, clap::Args)]

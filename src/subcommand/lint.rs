@@ -28,6 +28,7 @@ impl Lint {
         // cargo fmt --check
         #[cfg(feature = "subcommand-fmt")]
         super::Fmt {
+            env_args: Default::default(),
             package_args: feature_args.package_args.clone(),
             extra_options: ["--check"].into_iter().map(String::from).collect(),
         }
@@ -36,6 +37,7 @@ impl Lint {
         // cargo clippy -- -D warnings
         #[cfg(feature = "subcommand-clippy")]
         super::Clippy {
+            env_args: Default::default(),
             feature_args: feature_args.clone(),
             extra_options: ["--all-targets", "--", "-D", "warnings"]
                 .into_iter()
@@ -47,6 +49,7 @@ impl Lint {
         // cargo rdme --check
         #[cfg(feature = "subcommand-rdme")]
         super::Rdme {
+            env_args: Default::default(),
             workspace_args: feature_args.package_args.workspace_args.clone(),
             extra_options: ["--check"].into_iter().map(String::from).collect(),
         }
@@ -55,6 +58,7 @@ impl Lint {
         // cargo udeps
         #[cfg(feature = "subcommand-udeps")]
         super::Udeps {
+            env_args: Default::default(),
             feature_args: feature_args.clone(),
             extra_options: vec![],
         }

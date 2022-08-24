@@ -12,6 +12,7 @@ ARGS:
 
 OPTIONS:
         --all-workspaces       Run the subcommand on all workspaces
+    -e, --env <KEY>=<VALUE>    Environment variables to set for the subcommand
         --each-feature         Run the subcommand with each feature enabled
         --exhaustive           Run the subcommand on all option combinations (workspaces, packages,
                                features if available)

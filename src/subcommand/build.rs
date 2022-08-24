@@ -1,12 +1,20 @@
 use std::process::Command;
 
-use crate::{args::FeatureArgs, config::Config, process::CommandExt, Result, Run};
+use crate::{
+    args::{EnvArgs, FeatureArgs},
+    config::Config,
+    process::CommandExt,
+    Result, Run,
+};
 
 /// Arguments definition of the `build` subcommand.
 #[cfg_attr(doc, doc = include_str!("../../doc/cargo-xtask-build.md"))]
 #[derive(Debug, Clone, Default, clap::Args)]
 #[non_exhaustive]
 pub struct Build {
+    /// Environment variables to set for `cargo build`.
+    #[clap(flatten)]
+    pub env_args: EnvArgs,
     /// Features to run the `cargo build` with
     #[clap(flatten)]
     pub feature_args: FeatureArgs,
@@ -25,6 +33,7 @@ impl Build {
     #[tracing::instrument(name = "build", parent = None, skip_all, err)]
     pub fn run(&self, _config: &Config) -> Result<()> {
         let Self {
+            env_args,
             feature_args,
             extra_options,
         } = self;
@@ -39,6 +48,7 @@ impl Build {
                         .chain(features.map(|f| f.to_args()).unwrap_or_default())
                         .chain(extra_options.iter().map(String::as_str)),
                 )
+                .envs(env_args.env.clone())
                 .workspace_spawn(workspace)?;
         }
 

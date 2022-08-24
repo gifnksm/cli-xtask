@@ -1,12 +1,20 @@
 use std::process::Command;
 
-use crate::{args::PackageArgs, config::Config, process::CommandExt, Result, Run};
+use crate::{
+    args::{EnvArgs, PackageArgs},
+    config::Config,
+    process::CommandExt,
+    Result, Run,
+};
 
 /// Arguments definition of the `doc` subcommand.
 #[cfg_attr(doc, doc = include_str!("../../doc/cargo-xtask-doc.md"))]
 #[derive(Debug, Clone, Default, clap::Args)]
 #[non_exhaustive]
 pub struct Doc {
+    /// Environment variables to set for `cargo doc`.
+    #[clap(flatten)]
+    pub env_args: EnvArgs,
     /// Packages to run the `cargo doc` with
     #[clap(flatten)]
     pub package_args: PackageArgs,
@@ -25,6 +33,7 @@ impl Doc {
     #[tracing::instrument(name = "doc", parent = None, skip_all, err)]
     pub fn run(&self, _config: &Config) -> Result<()> {
         let Self {
+            env_args,
             package_args,
             extra_options,
         } = self;
@@ -38,6 +47,7 @@ impl Doc {
                         .into_iter()
                         .chain(extra_options.iter().map(String::as_str)),
                 )
+                .envs(env_args.env.clone())
                 .workspace_spawn(workspace)?;
         }
 

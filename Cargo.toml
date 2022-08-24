@@ -33,6 +33,7 @@ bin-crate = [
     "subcommand-dist-build-readme",
     "subcommand-dist-clean",
     "subcommand-dist",
+    "subcommand-doc",
     "subcommand-fmt",
     "subcommand-lint",
     "subcommand-pre-release",
@@ -47,6 +48,7 @@ bin-crate-extra = [
 lib-crate = [
     "subcommand-build",
     "subcommand-clippy",
+    "subcommand-doc",
     "subcommand-fmt",
     "subcommand-lint",
     "subcommand-pre-release",
@@ -77,6 +79,7 @@ subcommand-dist-build-man = ["dep:clap_mangen", "dep:time"]
 subcommand-dist-build-readme = []
 subcommand-dist-clean = []
 subcommand-exec = []
+subcommand-doc = []
 subcommand-fmt = []
 subcommand-lint = []
 subcommand-pre-release = []

@@ -1,12 +1,20 @@
 use std::process::Command;
 
-use crate::{args::WorkspaceArgs, config::Config, process::CommandExt, Result, Run};
+use crate::{
+    args::{EnvArgs, WorkspaceArgs},
+    config::Config,
+    process::CommandExt,
+    Result, Run,
+};
 
 /// Arguments definition of the `rdme` subcommand.
 #[cfg_attr(doc, doc = include_str!("../../doc/cargo-xtask-rdme.md"))]
 #[derive(Debug, Clone, Default, clap::Args)]
 #[non_exhaustive]
 pub struct Rdme {
+    /// Environment variables to set for `cargo rdme`.
+    #[clap(flatten)]
+    pub env_args: EnvArgs,
     /// Workspaces where the `cargo rdme` runs on
     #[clap(flatten)]
     pub workspace_args: WorkspaceArgs,
@@ -25,6 +33,7 @@ impl Rdme {
     #[tracing::instrument(name = "rdme", parent = None, skip_all, err)]
     pub fn run(&self, _config: &Config) -> Result<()> {
         let Self {
+            env_args,
             workspace_args,
             extra_options,
         } = self;
@@ -37,6 +46,7 @@ impl Rdme {
                         .into_iter()
                         .chain(extra_options.iter().map(String::as_str)),
                 )
+                .envs(env_args.env.clone())
                 .workspace_spawn(workspace)?;
         }
 

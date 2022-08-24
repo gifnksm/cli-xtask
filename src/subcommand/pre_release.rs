@@ -28,6 +28,7 @@ impl PreRelease {
 
         #[cfg(feature = "subcommand-test")]
         super::Test {
+            env_args: Default::default(),
             feature_args: crate::args::FeatureArgs::EXHAUSTIVE,
             extra_options: vec![],
         }

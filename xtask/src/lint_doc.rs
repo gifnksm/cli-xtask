@@ -1,4 +1,4 @@
-use tempdir::TempDir;
+use tempfile::TempDir;
 
 use cli_xtask::{
     camino::Utf8Path, clap, config::Config, eyre::eyre, tracing, workspace, Error, Result,
@@ -18,7 +18,7 @@ impl LintDoc {
         let workspace = workspace::current();
         let doc_dir = workspace.workspace_root.join("doc");
 
-        let reference_dir = TempDir::new("reference")?;
+        let reference_dir = TempDir::new()?;
         super::tidy_doc::emit_doc(workspace, <&Utf8Path>::try_from(reference_dir.path())?)?;
 
         if dir_diff::is_different(&doc_dir, &reference_dir).map_err(|e| -> Error {

@@ -41,12 +41,9 @@ impl Clippy {
         for res in feature_args.features() {
             let (workspace, package, features) = res?;
             Command::new("cargo")
-                .args(
-                    ["clippy", "--package", &package.name]
-                        .into_iter()
-                        .chain(features.map(|f| f.to_args()).unwrap_or_default())
-                        .chain(extra_options.iter().map(String::as_str)),
-                )
+                .args(["clippy", "--package", &package.name])
+                .args(features.map(|f| f.to_args()).unwrap_or_default())
+                .args(extra_options)
                 .envs(env_args.env.clone())
                 .workspace_spawn(workspace)?;
         }

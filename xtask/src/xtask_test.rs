@@ -81,6 +81,7 @@ fn test_workspace(workspace: &Metadata, cargo_llvm_cov: bool) -> Result<()> {
             "dist-build-readme" => cargo.spawn(["xtask", "dist-build-readme"])?,
             "dist-clean" => cargo.spawn(["xtask", "dist-clean"])?,
             "doc" => cargo.spawn(["xtask", "doc"])?,
+            "docsrs" => cargo.spawn(["xtask", "docsrs"])?,
             "fmt" => cargo.spawn(["xtask", "fmt"])?,
             "help" => {}
             "lint" => cargo.spawn(["xtask", "lint"])?,

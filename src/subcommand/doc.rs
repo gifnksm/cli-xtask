@@ -15,10 +15,10 @@ pub struct Doc {
     /// Environment variables to set for `cargo doc`.
     #[clap(flatten)]
     pub env_args: EnvArgs,
-    /// Packages to run the `cargo doc` with
+    /// Packages to run the `cargo doc` with.
     #[clap(flatten)]
     pub package_args: PackageArgs,
-    /// Options to pass to the `cargo build`
+    /// Options to pass to the `cargo doc`.
     pub extra_options: Vec<String>,
 }
 
@@ -42,11 +42,8 @@ impl Doc {
             let (workspace, package) = res?;
             // cargo doc --package <pkg> <features> <extra_options>
             Command::new("cargo")
-                .args(
-                    ["doc", "--package", &package.name, "--all-features"]
-                        .into_iter()
-                        .chain(extra_options.iter().map(String::as_str)),
-                )
+                .args(["doc", "--package", &package.name, "--all-features"])
+                .args(extra_options)
                 .envs(env_args.env.clone())
                 .workspace_spawn(workspace)?;
         }

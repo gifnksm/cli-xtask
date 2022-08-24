@@ -14,6 +14,7 @@
 * [`cargo-xtask-dist-build-readme(1)`](cargo-xtask-dist-build-readme.md)
 * [`cargo-xtask-dist-clean(1)`](cargo-xtask-dist-clean.md)
 * [`cargo-xtask-doc(1)`](cargo-xtask-doc.md)
+* [`cargo-xtask-docsrs(1)`](cargo-xtask-docsrs.md)
 * [`cargo-xtask-exec(1)`](cargo-xtask-exec.md)
 * [`cargo-xtask-fmt(1)`](cargo-xtask-fmt.md)
 * [`cargo-xtask-help(1)`](cargo-xtask-help.md)

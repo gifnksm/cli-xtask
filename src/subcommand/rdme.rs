@@ -41,11 +41,8 @@ impl Rdme {
         for workspace in workspace_args.workspaces() {
             // cargo rdme <extra_options>
             Command::new("cargo")
-                .args(
-                    ["rdme"]
-                        .into_iter()
-                        .chain(extra_options.iter().map(String::as_str)),
-                )
+                .args(["rdme"])
+                .args(extra_options)
                 .envs(env_args.env.clone())
                 .workspace_spawn(workspace)?;
         }

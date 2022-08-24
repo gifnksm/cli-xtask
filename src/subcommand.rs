@@ -100,6 +100,13 @@ mod doc;
 #[cfg_attr(docsrs, doc(cfg(feature = "subcommand-doc")))]
 pub use self::doc::Doc;
 
+#[cfg(feature = "subcommand-docsrs")]
+#[cfg_attr(docsrs, doc(cfg(feature = "subcommand-docsrs")))]
+mod docsrs;
+#[cfg(feature = "subcommand-docsrs")]
+#[cfg_attr(docsrs, doc(cfg(feature = "subcommand-docsrs")))]
+pub use self::docsrs::Docsrs;
+
 #[cfg(feature = "subcommand-fmt")]
 #[cfg_attr(docsrs, doc(cfg(feature = "subcommand-fmt")))]
 mod fmt;
@@ -262,6 +269,11 @@ pub enum Subcommand {
     #[cfg_attr(docsrs, doc(cfg(feature = "subcommand-doc")))]
     Doc(Doc),
 
+    /// `cargo doc` with docs.rs specific options.
+    #[cfg(feature = "subcommand-docsrs")]
+    #[cfg_attr(docsrs, doc(cfg(feature = "subcommand-docsrs")))]
+    Docsrs(Docsrs),
+
     /// Run commands on all workspaces in the current directory and
     /// subdirectories.
     #[cfg(feature = "subcommand-exec")]
@@ -353,6 +365,9 @@ impl Subcommand {
 
             #[cfg(feature = "subcommand-doc")]
             Self::Doc(args) => args.run(config),
+
+            #[cfg(feature = "subcommand-docsrs")]
+            Self::Docsrs(args) => args.run(config),
 
             #[cfg(feature = "subcommand-exec")]
             Self::Exec(args) => args.run(config),

@@ -27,6 +27,8 @@ SUBCOMMANDS:
     dist-build-man           Build the man pages for distribution
     dist-build-readme        Build the readme files for distribution
     dist-clean               Remove the artifacts and archives for distribution
+    doc                      `cargo doc` with options useful for testing and continuous
+                                 integration
     exec                     Run commands on all workspaces in the current directory and
                                  subdirectories
     fmt                      `cargo fmt` with options useful for testing and continuous

@@ -93,6 +93,13 @@ mod exec;
 #[cfg_attr(docsrs, doc(cfg(feature = "subcommand-exec")))]
 pub use self::exec::Exec;
 
+#[cfg(feature = "subcommand-doc")]
+#[cfg_attr(docsrs, doc(cfg(feature = "subcommand-doc")))]
+mod doc;
+#[cfg(feature = "subcommand-doc")]
+#[cfg_attr(docsrs, doc(cfg(feature = "subcommand-doc")))]
+pub use self::doc::Doc;
+
 #[cfg(feature = "subcommand-fmt")]
 #[cfg_attr(docsrs, doc(cfg(feature = "subcommand-fmt")))]
 mod fmt;
@@ -250,6 +257,11 @@ pub enum Subcommand {
     #[cfg_attr(docsrs, doc(cfg(feature = "subcommand-dist-clean")))]
     DistClean(DistClean),
 
+    /// `cargo doc` with options useful for testing and continuous integration.
+    #[cfg(feature = "subcommand-doc")]
+    #[cfg_attr(docsrs, doc(cfg(feature = "subcommand-doc")))]
+    Doc(Doc),
+
     /// Run commands on all workspaces in the current directory and
     /// subdirectories.
     #[cfg(feature = "subcommand-exec")]
@@ -338,6 +350,9 @@ impl Subcommand {
 
             #[cfg(feature = "subcommand-dist-clean")]
             Self::DistClean(args) => args.run(config),
+
+            #[cfg(feature = "subcommand-doc")]
+            Self::Doc(args) => args.run(config),
 
             #[cfg(feature = "subcommand-exec")]
             Self::Exec(args) => args.run(config),

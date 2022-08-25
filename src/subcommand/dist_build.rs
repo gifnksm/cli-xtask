@@ -50,7 +50,7 @@ impl Run for DistBuild {
 
 impl DistBuild {
     /// Runs the `dist-build` subcommand.
-    #[tracing::instrument(name = "dist-build", parent = None, skip_all, err)]
+    #[tracing::instrument(name = "dist-build", skip_all, err)]
     pub fn run(&self, config: &Config) -> Result<()> {
         let Self {
             #[cfg(feature = "subcommand-dist-build-bin")]

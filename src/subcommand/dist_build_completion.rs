@@ -17,7 +17,7 @@ impl Run for DistBuildCompletion {
 
 impl DistBuildCompletion {
     /// Runs the `dist-build-completion` subcommand.
-    #[tracing::instrument(name = "dist-build-completion", parent = None, skip_all, err)]
+    #[tracing::instrument(name = "dist-build-completion", skip_all, err)]
     pub fn run(&self, config: &Config) -> Result<()> {
         tracing::info!("Building shell completion files...");
 

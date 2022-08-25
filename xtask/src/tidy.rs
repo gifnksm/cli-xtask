@@ -1,10 +1,13 @@
 use cli_xtask::{config::Config, subcommand::Tidy, tracing, Result};
 
-#[tracing::instrument(name = "tidy", parent = None, skip_all, err)]
+#[tracing::instrument(name = "tidy", skip_all, err)]
 pub fn run(args: &Tidy, config: &Config) -> Result<()> {
-    args.run(config)?;
+    let mut subcommands = args.subcommands();
+    subcommands.push(Box::new(crate::tidy_doc::TidyDoc {}));
 
-    crate::tidy_doc::TidyDoc {}.run(config)?;
+    for subcommand in subcommands {
+        subcommand.run(config)?;
+    }
 
     Ok(())
 }

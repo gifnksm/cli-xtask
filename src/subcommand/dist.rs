@@ -23,7 +23,7 @@ impl Run for Dist {
 
 impl Dist {
     /// Runs the `dist` subcommand.
-    #[tracing::instrument(name = "dist", parent = None, skip_all, err)]
+    #[tracing::instrument(name = "dist", skip_all, err)]
     pub(crate) fn run(&self, config: &Config) -> Result<()> {
         let Self {
             #[cfg(subcommand_dist_build)]

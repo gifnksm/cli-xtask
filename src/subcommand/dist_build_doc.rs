@@ -16,7 +16,7 @@ impl Run for DistBuildDoc {
 
 impl DistBuildDoc {
     /// Runs the `dist-build-doc` subcommand.
-    #[tracing::instrument(name = "dist-build-doc", parent = None, skip_all, err)]
+    #[tracing::instrument(name = "dist-build-doc", skip_all, err)]
     pub fn run(&self, config: &Config) -> Result<()> {
         tracing::info!("Building documents...");
 

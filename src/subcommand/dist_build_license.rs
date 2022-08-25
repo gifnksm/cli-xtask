@@ -16,7 +16,7 @@ impl Run for DistBuildLicense {
 
 impl DistBuildLicense {
     /// Execute `dist-build-license` subcommand workflow
-    #[tracing::instrument(name = "dist-build-license", parent = None, skip_all, err)]
+    #[tracing::instrument(name = "dist-build-license", skip_all, err)]
     pub fn run(&self, config: &Config) -> Result<()> {
         tracing::info!("Building license files...");
 

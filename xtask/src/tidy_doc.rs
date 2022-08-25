@@ -6,7 +6,7 @@ use std::{
 
 use cli_xtask::{
     camino::Utf8Path, cargo_metadata::Metadata, clap, config::Config, eyre, process::CommandExt,
-    tracing, workspace, Result,
+    tracing, workspace, Result, Run,
 };
 
 use crate::util;
@@ -18,7 +18,7 @@ pub struct TidyDoc {}
 
 impl TidyDoc {
     /// Runs the `tidy-doc` subcommand.
-    #[tracing::instrument(name = "tidy-doc", parent = None, skip_all, err)]
+    #[tracing::instrument(name = "tidy-doc", skip_all, err)]
     pub fn run(&self, _config: &Config) -> Result<()> {
         let Self {} = self;
 
@@ -27,6 +27,12 @@ impl TidyDoc {
         emit_doc(workspace, &doc_dir)?;
 
         Ok(())
+    }
+}
+
+impl Run for TidyDoc {
+    fn run(&self, config: &Config) -> Result<()> {
+        self.run(config)
     }
 }
 

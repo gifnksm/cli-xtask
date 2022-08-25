@@ -1,6 +1,11 @@
 use std::process::Command;
 
-use crate::{args::EnvArgs, config::Config, process::CommandExt, workspace, Result, Run};
+use crate::{
+    args::{EnvArgs, WorkspaceArgs},
+    config::Config,
+    process::CommandExt,
+    Result, Run,
+};
 
 /// Arguments definition of the `exec` subcommand.
 #[cfg_attr(doc, doc = include_str!("../../doc/cargo-xtask-exec.md"))]
@@ -10,9 +15,9 @@ pub struct Exec {
     /// Environment variables to set for the command.
     #[clap(flatten)]
     pub env_args: EnvArgs,
-    /// Do not execute command on the current workspace.
-    #[clap(long)]
-    pub exclude_current: bool,
+    /// Workspaces where the the command runs on.
+    #[clap(flatten)]
+    pub workspace_args: WorkspaceArgs,
     /// Command to execute
     pub command: String,
     /// Arguments to pass to the command
@@ -31,16 +36,12 @@ impl Exec {
     pub fn run(&self, _config: &Config) -> Result<()> {
         let Self {
             env_args,
-            exclude_current,
+            workspace_args,
             command,
             command_options,
         } = self;
 
-        let workspaces = workspace::all().iter().filter(|ws| {
-            !*exclude_current || ws.workspace_root != workspace::current().workspace_root
-        });
-
-        for workspace in workspaces {
+        for workspace in workspace_args.workspaces() {
             Command::new(command)
                 .args(command_options)
                 .envs(env_args.env.clone())

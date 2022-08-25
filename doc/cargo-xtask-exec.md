@@ -12,9 +12,12 @@ ARGS:
     <COMMAND_OPTIONS>...    Arguments to pass to the command
 
 OPTIONS:
-    -e, --env <KEY>=<VALUE>    Environment variables to set for the subcommand
-        --exclude-current      Do not execute command on the current workspace
-    -h, --help                 Print help information
-    -q, --quiet                Less output per occurrence
-    -v, --verbose              More output per occurrence
+        --all-workspaces               Run the subcommand on all workspaces
+    -e, --env <KEY>=<VALUE>            Environment variables to set for the subcommand
+        --exclude-current-workspace    Run the subcommand on each workspace other than the current
+                                       workspace
+        --exhaustive                   Same as `--all-workspaces --workspace --each-feature`
+    -h, --help                         Print help information
+    -q, --quiet                        Less output per occurrence
+    -v, --verbose                      More output per occurrence
 ```

@@ -24,7 +24,7 @@ impl Run for DistBuildBin {
 
 impl DistBuildBin {
     /// Runs the `dist-build-bin` subcommand.
-    #[tracing::instrument(name = "dist-build-bin", parent = None, skip_all, err)]
+    #[tracing::instrument(name = "dist-build-bin", skip_all, err)]
     pub fn run(&self, config: &Config) -> Result<()> {
         tracing::info!("Building executables...");
 

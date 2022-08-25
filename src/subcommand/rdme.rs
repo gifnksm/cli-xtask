@@ -30,7 +30,7 @@ impl Run for Rdme {
 
 impl Rdme {
     /// Runs the `rdme` subcommand.
-    #[tracing::instrument(name = "rdme", parent = None, skip_all, err)]
+    #[tracing::instrument(name = "rdme", skip_all, err)]
     pub fn run(&self, _config: &Config) -> Result<()> {
         let Self {
             env_args,

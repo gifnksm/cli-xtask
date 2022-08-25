@@ -14,7 +14,7 @@ impl Run for PreRelease {
 
 impl PreRelease {
     /// Runs the `pre-release` subcommand.
-    #[tracing::instrument(name = "pre-release", parent = None, skip_all, err)]
+    #[tracing::instrument(name = "pre-release", skip_all, err)]
     pub fn run(&self, config: &Config) -> Result<()> {
         let Self {} = self;
 

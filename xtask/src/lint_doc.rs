@@ -1,7 +1,7 @@
 use tempfile::TempDir;
 
 use cli_xtask::{
-    camino::Utf8Path, clap, config::Config, eyre::eyre, tracing, workspace, Error, Result,
+    camino::Utf8Path, clap, config::Config, eyre::eyre, tracing, workspace, Error, Result, Run,
 };
 
 /// `lint-doc` subcommand arguments.
@@ -11,7 +11,7 @@ pub struct LintDoc {}
 
 impl LintDoc {
     /// Runs the `lint-doc` subcommand.
-    #[tracing::instrument(name = "lint-doc", parent = None, skip_all, err)]
+    #[tracing::instrument(name = "lint-doc", skip_all, err)]
     pub fn run(&self, _config: &Config) -> Result<()> {
         let Self {} = self;
 
@@ -32,5 +32,11 @@ impl LintDoc {
         }
 
         Ok(())
+    }
+}
+
+impl Run for LintDoc {
+    fn run(&self, config: &Config) -> Result<()> {
+        self.run(config)
     }
 }

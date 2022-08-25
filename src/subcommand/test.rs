@@ -30,7 +30,7 @@ impl Run for Test {
 
 impl Test {
     /// Runs the `test` subcommand.
-    #[tracing::instrument(name = "test", parent = None, skip_all, err)]
+    #[tracing::instrument(name = "test", skip_all, err)]
     pub fn run(&self, _config: &Config) -> Result<()> {
         let Self {
             env_args,

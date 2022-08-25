@@ -30,7 +30,7 @@ impl Run for Build {
 
 impl Build {
     /// Runs the `build` subcommand.
-    #[tracing::instrument(name = "build", parent = None, skip_all, err)]
+    #[tracing::instrument(name = "build", skip_all, err)]
     pub fn run(&self, _config: &Config) -> Result<()> {
         let Self {
             env_args,

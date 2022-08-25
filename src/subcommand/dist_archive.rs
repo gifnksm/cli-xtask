@@ -14,7 +14,7 @@ impl Run for DistArchive {
 
 impl DistArchive {
     /// Runs the `dist-archive` subcommand.
-    #[tracing::instrument(name = "dist-archive", parent = None, skip_all, err)]
+    #[tracing::instrument(name = "dist-archive", skip_all, err)]
     pub fn run(&self, config: &Config) -> Result<()> {
         let Self {} = self;
         let config = config.dist()?;

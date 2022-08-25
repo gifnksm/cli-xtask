@@ -14,7 +14,7 @@ impl Run for DistBuildReadme {
 
 impl DistBuildReadme {
     /// Runs the `dist-build-doc` subcommand.
-    #[tracing::instrument(name = "dist-build-readme", parent = None, skip_all, err)]
+    #[tracing::instrument(name = "dist-build-readme", skip_all, err)]
     pub fn run(&self, config: &Config) -> Result<()> {
         tracing::info!("Building READMEs...");
 

@@ -30,7 +30,7 @@ impl Run for Udeps {
 
 impl Udeps {
     /// Runs the `udeps` subcommand.
-    #[tracing::instrument(name = "udeps", parent = None, skip_all, err)]
+    #[tracing::instrument(name = "udeps", skip_all, err)]
     pub fn run(&self, _config: &Config) -> Result<()> {
         let Self {
             env_args,

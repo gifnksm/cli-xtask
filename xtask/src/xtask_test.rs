@@ -31,7 +31,7 @@ pub struct XtaskTest {
 
 impl XtaskTest {
     /// Runs the `xtask-test` subcommand.
-    #[tracing::instrument(name = "xtask-test", parent = None, skip_all, err)]
+    #[tracing::instrument(name = "xtask-test", skip_all, err)]
     pub fn run(&self, _config: &Config) -> Result<()> {
         let Self { cargo_llvm_cov } = self;
 

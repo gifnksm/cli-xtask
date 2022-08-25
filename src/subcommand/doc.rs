@@ -30,7 +30,7 @@ impl Run for Doc {
 
 impl Doc {
     /// Runs the `doc` subcommand.
-    #[tracing::instrument(name = "doc", parent = None, skip_all, err)]
+    #[tracing::instrument(name = "doc", skip_all, err)]
     pub fn run(&self, _config: &Config) -> Result<()> {
         let Self {
             env_args,

@@ -14,7 +14,7 @@ impl Run for DistClean {
 
 impl DistClean {
     /// Runs the `dist-clean` subcommand.
-    #[tracing::instrument(name = "dist-clean", parent = None, skip_all, err)]
+    #[tracing::instrument(name = "dist-clean", skip_all, err)]
     pub fn run(&self, config: &Config) -> Result<()> {
         let Self {} = self;
         let config = config.dist()?;

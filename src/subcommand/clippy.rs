@@ -30,7 +30,7 @@ impl Run for Clippy {
 
 impl Clippy {
     /// Runs the `clippy` subcommand.
-    #[tracing::instrument(name = "clippy", parent = None, skip_all, err)]
+    #[tracing::instrument(name = "clippy", skip_all, err)]
     pub fn run(&self, _config: &Config) -> Result<()> {
         let Self {
             env_args,

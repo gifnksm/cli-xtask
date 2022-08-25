@@ -39,7 +39,7 @@ impl Run for Docsrs {
 
 impl Docsrs {
     /// Runs the `docsrs` subcommand.
-    #[tracing::instrument(name = "docsrs", parent = None, skip_all, err)]
+    #[tracing::instrument(name = "docsrs", skip_all, err)]
     pub fn run(&self, _config: &Config) -> Result<()> {
         let Self {
             env_args,

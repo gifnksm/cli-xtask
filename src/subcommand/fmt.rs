@@ -30,7 +30,7 @@ impl Run for Fmt {
 
 impl Fmt {
     /// Runs the `fmt` subcommand.
-    #[tracing::instrument(name = "fmt", parent = None, skip_all, err)]
+    #[tracing::instrument(name = "fmt", skip_all, err)]
     pub fn run(&self, _config: &Config) -> Result<()> {
         let Self {
             env_args,

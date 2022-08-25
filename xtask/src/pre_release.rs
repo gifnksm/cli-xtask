@@ -1,6 +1,6 @@
 use cli_xtask::{config::Config, subcommand::PreRelease, tracing, Result};
 
-#[tracing::instrument(name = "pre-release", parent = None, skip_all, err)]
+#[tracing::instrument(name = "pre-release", skip_all, err)]
 pub fn run(args: &PreRelease, config: &Config) -> Result<()> {
     args.run(config)?;
 

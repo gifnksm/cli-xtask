@@ -32,7 +32,7 @@ impl Run for Exec {
 
 impl Exec {
     /// Runs the `exec` subcommand.
-    #[tracing::instrument(name = "exec", parent = None, skip_all, err)]
+    #[tracing::instrument(name = "exec", skip_all, err)]
     pub fn run(&self, _config: &Config) -> Result<()> {
         let Self {
             env_args,

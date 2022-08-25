@@ -2,7 +2,6 @@ use cli_xtask::{clap, config::Config, subcommand::Subcommand as Predefined, Resu
 
 mod lint;
 mod lint_doc;
-mod pre_release;
 mod tidy;
 mod tidy_doc;
 mod util;
@@ -21,7 +20,6 @@ enum Subcommand {
 impl Run for Subcommand {
     fn run(&self, config: &Config) -> Result<()> {
         match self {
-            Self::Predefined(Predefined::PreRelease(args)) => pre_release::run(args, config)?,
             Self::Predefined(Predefined::Lint(args)) => lint::run(args, config)?,
             Self::Predefined(Predefined::Tidy(args)) => tidy::run(args, config)?,
             Self::Predefined(args) => args.run(config)?,

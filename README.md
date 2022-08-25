@@ -1,6 +1,6 @@
 # cli-xtask
 
-[![maintenance status: actively-developed](https://img.shields.io/badge/maintenance-actively--developed-yellowgreen.svg)](https://doc.rust-lang.org/cargo/reference/manifest.html#the-badges-section)
+[![maintenance status: actively-developed](https://img.shields.io/badge/maintenance-passively--maintained-yellowgreen.svg)](https://doc.rust-lang.org/cargo/reference/manifest.html#the-badges-section)
 [![license: MIT OR APACHE-2.0](https://img.shields.io/crates/l/cli-xtask.svg)](#license)
 [![crates.io](https://img.shields.io/crates/v/cli-xtask.svg)](https://crates.io/crates/cli-xtask)
 [![docs.rs](https://docs.rs/cli-xtask/badge.svg)](https://docs.rs/cli-xtask/)

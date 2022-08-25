@@ -13,27 +13,29 @@ impl Run for PreRelease {
 }
 
 impl PreRelease {
+    /// Returns a list of all subcommands to run.
+    pub fn subcommands(&self) -> Vec<Box<dyn Run>> {
+        let Self {} = self;
+        vec![
+            #[cfg(feature = "subcommand-lint")]
+            Box::new(super::Lint {
+                feature_args: crate::args::FeatureArgs::EXHAUSTIVE,
+            }),
+            #[cfg(feature = "subcommand-test")]
+            Box::new(super::Test {
+                env_args: Default::default(),
+                feature_args: crate::args::FeatureArgs::EXHAUSTIVE,
+                extra_options: vec![],
+            }),
+        ]
+    }
+
     /// Runs the `pre-release` subcommand.
     #[tracing::instrument(name = "pre-release", skip_all, err)]
     pub fn run(&self, config: &Config) -> Result<()> {
-        let Self {} = self;
-
-        let _ = config; // supress unused-variables warning
-
-        #[cfg(feature = "subcommand-lint")]
-        super::Lint {
-            feature_args: crate::args::FeatureArgs::EXHAUSTIVE,
+        for subcommand in self.subcommands() {
+            subcommand.run(config)?;
         }
-        .run(config)?;
-
-        #[cfg(feature = "subcommand-test")]
-        super::Test {
-            env_args: Default::default(),
-            feature_args: crate::args::FeatureArgs::EXHAUSTIVE,
-            extra_options: vec![],
-        }
-        .run(config)?;
-
         Ok(())
     }
 }

@@ -75,7 +75,7 @@ fn dist_build_man_pages<'a>(
     );
     let source = format!(
         "{} {}",
-        cmd.get_name(),
+        cmd.get_name().replace(' ', "-"),
         cmd.get_version()
             .or_else(|| cmd.get_long_version())
             .unwrap_or_default()
@@ -83,7 +83,7 @@ fn dist_build_man_pages<'a>(
 
     let man_dir = man_dir.to_owned();
     let it = iterate_commands(cmd).map(move |cmd| {
-        let command_name = cmd.get_name().to_string();
+        let command_name = cmd.get_name().replace(' ', "-");
         let filename = format!("{command_name}.{}", section);
         let path = man_dir.join(&filename);
         let man = Man::new(cmd.clone())
@@ -112,7 +112,7 @@ fn iterate_commands<'a>(
         subcommands
             .into_iter()
             .map(move |mut subcommand| {
-                let name = format!("{command_name}-{}", subcommand.get_name());
+                let name = format!("{command_name} {}", subcommand.get_name());
                 subcommand = subcommand.name(name);
                 if subcommand.get_version().is_none() {
                     if let Some(version) = command_version {

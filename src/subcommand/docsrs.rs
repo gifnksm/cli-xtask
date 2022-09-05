@@ -1,4 +1,4 @@
-use std::{collections::HashMap, process::Command};
+use std::{collections::HashMap, fs, process::Command};
 
 use cargo_metadata::Package;
 use serde::Deserialize;
@@ -85,6 +85,17 @@ impl Docsrs {
                     .args(extra_options)
                     .envs(metadata.envs(&env_args.env))
                     .workspace_spawn(workspace)?;
+            }
+
+            if let Some(package) = workspace.root_package() {
+                let index = workspace.target_directory.join("doc/index.html");
+                fs::write(
+                    index,
+                    format!(
+                        r#"<meta http-equiv="refresh" content="0; url=./{}/">"#,
+                        package.name.replace('-', "_")
+                    ),
+                )?;
             }
         }
 

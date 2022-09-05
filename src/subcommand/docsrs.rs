@@ -77,10 +77,8 @@ impl Docsrs {
                 if let Some(target) = target {
                     cmd.args(["--target", target]);
                 }
-                let default_target = target.unwrap_or_else(|| metadata.default_target());
                 cmd.arg("-Zunstable-options")
-                .arg("-Zrustdoc-map")
-                    .arg(format!(r#"--config=doc.extern-map.registries.crates-io="https://docs.rs/{{pkg_name}}/{{version}}/{default_target}""#))
+                    .arg("-Zrustdoc-map")
                     .args(metadata.args())
                     .args(extra_options)
                     .envs(metadata.envs(&env_args.env))

@@ -1,4 +1,4 @@
-use std::{collections::HashMap, process::Command};
+use std::{collections::HashMap, fs, process::Command};
 
 use cargo_metadata::Package;
 use serde::Deserialize;
@@ -77,14 +77,23 @@ impl Docsrs {
                 if let Some(target) = target {
                     cmd.args(["--target", target]);
                 }
-                let default_target = target.unwrap_or_else(|| metadata.default_target());
                 cmd.arg("-Zunstable-options")
-                .arg("-Zrustdoc-map")
-                    .arg(format!(r#"--config=doc.extern-map.registries.crates-io="https://docs.rs/{{pkg_name}}/{{version}}/{default_target}""#))
+                    .arg("-Zrustdoc-map")
                     .args(metadata.args())
                     .args(extra_options)
                     .envs(metadata.envs(&env_args.env))
                     .workspace_spawn(workspace)?;
+            }
+
+            if let Some(package) = workspace.root_package() {
+                let index = workspace.target_directory.join("doc/index.html");
+                fs::write(
+                    index,
+                    format!(
+                        r#"<meta http-equiv="refresh" content="0; url=./{}/">"#,
+                        package.name.replace('-', "_")
+                    ),
+                )?;
             }
         }
 

@@ -227,10 +227,14 @@ impl DocsrsMetadata {
             s.push_str(&self.rustc_args.join(" "));
         }
 
+        // copied from https://github.com/rust-lang/docs.rs/blob/a074c8a3ad66857bae654454e1eee507bb76422d/src/docbuilder/rustwide_builder.rs#L708
         let mut rustdoc_args = vec![
             "-Zunstable-options",
-            "--static-root-path",
-            "/",
+            // Coment out so that static resouces are loaded when the document is published on GitHub Pages
+            // "--static-root-path",
+            // "/",
+
+            // Comment out to accept `-D warnings` for CI
             // "--cap-lints",
             // "warn",
             "--disable-per-crate-search",

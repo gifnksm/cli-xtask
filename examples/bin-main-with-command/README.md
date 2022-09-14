@@ -1,7 +1,5 @@
 # with_command
 
-<!-- cargo-rdme start -->
-
+<!-- cargo-sync-rdme rustdoc [[ -->
 Example CLI application.
-
-<!-- cargo-rdme end -->
+<!-- cargo-sync-rdme ]] -->

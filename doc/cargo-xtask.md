@@ -37,7 +37,7 @@ SUBCOMMANDS:
     help                     Print this message or the help of the given subcommand(s)
     lint                     Run lint commands at once
     pre-release              Run pre-release checks
-    rdme                     `cargo rdme` with options useful for testing and continuous
+    sync-rdme                `cargo sync-rdme` with options useful for testing and continuous
                                  integration
     test                     `cargo test` with options useful for testing and continuous
                                  integration

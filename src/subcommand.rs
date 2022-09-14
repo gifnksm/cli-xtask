@@ -128,12 +128,12 @@ mod pre_release;
 #[cfg_attr(docsrs, doc(cfg(feature = "subcommand-pre-release")))]
 pub use self::pre_release::PreRelease;
 
-#[cfg(feature = "subcommand-rdme")]
-#[cfg_attr(docsrs, doc(cfg(feature = "subcommand-rdme")))]
-mod rdme;
-#[cfg(feature = "subcommand-rdme")]
-#[cfg_attr(docsrs, doc(cfg(feature = "subcommand-rdme")))]
-pub use self::rdme::Rdme;
+#[cfg(feature = "subcommand-sync-rdme")]
+#[cfg_attr(docsrs, doc(cfg(feature = "subcommand-sync-rdme")))]
+mod sync_rdme;
+#[cfg(feature = "subcommand-sync-rdme")]
+#[cfg_attr(docsrs, doc(cfg(feature = "subcommand-sync-rdme")))]
+pub use self::sync_rdme::SyncRdme;
 
 #[cfg(feature = "subcommand-test")]
 #[cfg_attr(docsrs, doc(cfg(feature = "subcommand-test")))]
@@ -295,10 +295,10 @@ pub enum Subcommand {
     #[cfg_attr(docsrs, doc(cfg(feature = "subcommand-pre-release")))]
     PreRelease(PreRelease),
 
-    /// `cargo rdme` with options useful for testing and continuous integration.
-    #[cfg(feature = "subcommand-rdme")]
-    #[cfg_attr(docsrs, doc(cfg(feature = "subcommand-rdme")))]
-    Rdme(rdme::Rdme),
+    /// `cargo sync-rdme` with options useful for testing and continuous integration.
+    #[cfg(feature = "subcommand-sync-rdme")]
+    #[cfg_attr(docsrs, doc(cfg(feature = "subcommand-syncrdme")))]
+    SyncRdme(sync_rdme::SyncRdme),
 
     /// `cargo test` with options useful for testing and continuous integration.
     #[cfg(feature = "subcommand-test")]
@@ -381,8 +381,8 @@ impl Subcommand {
             #[cfg(feature = "subcommand-pre-release")]
             Self::PreRelease(args) => args.run(config),
 
-            #[cfg(feature = "subcommand-rdme")]
-            Self::Rdme(args) => args.run(config),
+            #[cfg(feature = "subcommand-sync-rdme")]
+            Self::SyncRdme(args) => args.run(config),
 
             #[cfg(feature = "subcommand-test")]
             Self::Test(args) => args.run(config),

@@ -72,17 +72,23 @@ impl Tidy {
                         .collect(),
                 }
             }),
-            // cargo rdme
-            #[cfg(feature = "subcommand-rdme")]
+            // cargo sync-rdme
+            #[cfg(feature = "subcommand-sync-rdme")]
             Box::new({
-                let mut rdme_options = vec![];
-                if *allow_dirty || *allow_staged {
-                    rdme_options.push("--force");
+                let mut sync_rdme_options = vec![];
+                if *allow_no_vcs {
+                    sync_rdme_options.push("--allow-no-vcs");
                 }
-                super::Rdme {
+                if *allow_dirty {
+                    sync_rdme_options.push("--allow-dirty");
+                }
+                if *allow_staged {
+                    sync_rdme_options.push("--allow-staged");
+                }
+                super::SyncRdme {
                     env_args: Default::default(),
-                    workspace_args: feature_args.package_args.workspace_args.clone(),
-                    extra_options: rdme_options.into_iter().map(String::from).collect(),
+                    package_args: feature_args.package_args.clone(),
+                    extra_options: sync_rdme_options.into_iter().map(String::from).collect(),
                 }
             }),
         ]

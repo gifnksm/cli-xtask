@@ -20,7 +20,7 @@
 * [`cargo-xtask-help(1)`](cargo-xtask-help.md)
 * [`cargo-xtask-lint(1)`](cargo-xtask-lint.md)
 * [`cargo-xtask-pre-release(1)`](cargo-xtask-pre-release.md)
-* [`cargo-xtask-rdme(1)`](cargo-xtask-rdme.md)
+* [`cargo-xtask-sync-rdme(1)`](cargo-xtask-sync-rdme.md)
 * [`cargo-xtask-test(1)`](cargo-xtask-test.md)
 * [`cargo-xtask-tidy(1)`](cargo-xtask-tidy.md)
 * [`cargo-xtask-udeps(1)`](cargo-xtask-udeps.md)

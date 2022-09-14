@@ -103,7 +103,7 @@ impl Docsrs {
 
 /// Package metadata for docs.rs
 ///
-/// https://docs.rs/about/metadata
+/// <https://docs.rs/about/metadata>
 #[derive(Debug, Clone, Default, Deserialize)]
 #[serde(rename_all = "kebab-case")]
 struct DocsrsMetadata {
@@ -230,8 +230,8 @@ impl DocsrsMetadata {
         // copied from https://github.com/rust-lang/docs.rs/blob/a074c8a3ad66857bae654454e1eee507bb76422d/src/docbuilder/rustwide_builder.rs#L708
         let mut rustdoc_args = vec![
             "-Zunstable-options",
-            // Coment out so that static resouces are loaded when the document is published on GitHub Pages
-            // "--static-root-path",
+            // Coment out so that static resouces are loaded when the document is published on
+            // GitHub Pages "--static-root-path",
             // "/",
 
             // Comment out to accept `-D warnings` for CI

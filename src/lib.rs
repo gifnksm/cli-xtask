@@ -232,7 +232,7 @@
 //! [LICENSE-MIT]: https://github.com/gifnksm/cli-xtask/blob/main/LICENSE-MIT
 //! [CONTRIBUTING.md]: https://github.com/gifnksm/cli-xtask/blob/main/CONTRIBUTING.md
 
-#![doc(html_root_url = "https://docs.rs/cli-xtask/0.1.4")]
+#![doc(html_root_url = "https://docs.rs/cli-xtask/0.2.0")]
 
 pub use cargo_metadata::{self, camino};
 pub use clap;

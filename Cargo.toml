@@ -17,6 +17,21 @@ categories = []
 all-features = true
 rustdoc-args = ["--cfg", "docsrs"]
 
+[package.metadata.cargo-sync-rdme.badge]
+style = "flat-square"
+
+[package.metadata.cargo-sync-rdme.badge.badges]
+maintenance = true
+license = { link = "#license" }
+crates-io = true
+docs-rs = true
+rust-version = true
+github-actions = { workflows = "ci.yml" }
+codecov = true
+
+[package.metadata.cargo-sync-rdme.rustdoc]
+html-root-url = "https://docs.rs/cli-xtask/latest"
+
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [features]
@@ -41,7 +56,7 @@ bin-crate = [
 ]
 bin-crate-extra = [
     "bin-crate",
-    "subcommand-rdme",
+    "subcommand-sync-rdme",
     "subcommand-udeps",
 ]
 lib-crate = [
@@ -57,7 +72,7 @@ lib-crate = [
 ]
 lib-crate-extra = [
     "lib-crate",
-    "subcommand-rdme",
+    "subcommand-sync-rdme",
     "subcommand-udeps",
 ]
 
@@ -84,7 +99,7 @@ subcommand-exec = []
 subcommand-fmt = []
 subcommand-lint = []
 subcommand-pre-release = []
-subcommand-rdme = []
+subcommand-sync-rdme = []
 subcommand-test = []
 subcommand-tidy = []
 subcommand-udeps = []

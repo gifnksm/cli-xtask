@@ -9,6 +9,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased] - ReleaseDate
 
+### Removed
+
+* (breaking change) `xtask rdme` is removed. Please use `xtask sync-rdme` instead.
+
+### Added
+
+* `xtask sync-rdme` is added
+
 ## [0.1.4] - 2022-09-14
 
 ### Fixed

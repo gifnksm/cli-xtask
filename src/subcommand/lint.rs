@@ -55,11 +55,11 @@ impl Lint {
                 all_targets: false,
                 extra_options: vec![],
             }),
-            // cargo rdme --check
-            #[cfg(feature = "subcommand-rdme")]
-            Box::new(super::Rdme {
+            // cargo sync-rdme --check
+            #[cfg(feature = "subcommand-sync-rdme")]
+            Box::new(super::SyncRdme {
                 env_args: Default::default(),
-                workspace_args: feature_args.package_args.workspace_args.clone(),
+                package_args: feature_args.package_args.clone(),
                 extra_options: ["--check"].into_iter().map(String::from).collect(),
             }),
             // cargo udeps

@@ -7,20 +7,19 @@
 //!
 //! This crate provides the following utilities:
 //!
-//! * **[`cargo xtask dist`](crate::subcommand::Dist)** and related subcommands
+//! * **[`cargo xtask dist`]** and related subcommands
 //!   * Builds a distributable tar.gz package for your bin crate.
-//! * **[`cargo xtask lint`](crate::subcommand::Lint)** and related subcommands
+//! * **[`cargo xtask lint`]** and related subcommands
 //!   * Runs the lints for your bin/lib crate.
-//!   * Integrated with [`rustdoc`], [`rustfmt`], [`clippy`], [`cargo-rdme`],
-//!     [`cargo-udeps`].
-//! * **[`cargo xtask tidy`](crate::subcommand::Tidy)** and related subcommands
+//!   * Integrated with [`rustdoc`], [`rustfmt`], [`clippy`],
+//!     [`cargo-sync-rdme`], [`cargo-udeps`].
+//! * **[`cargo xtask tidy`]** and related subcommands
 //!   * Fixes the problems on your bin/lib crate.
-//!   * Integrated with  [`rustfmt`], [`clippy`], [`cargo-rdme`].
-//! * **[`cargo xtask pre-release`](crate::subcommand::PreRelease)**
+//!   * Integrated with  [`rustfmt`], [`clippy`], [`cargo-sync-rdme`].
+//! * **[`cargo xtask pre-release`]**
 //!   * Checks if your bin/lib crate is ready for a release.
-//! * **[`cargo xtask build`](crate::subcommand::Build),
-//!   [`clippy`](crate::subcommand::Clippy), [`doc`](crate::subcommand::Doc),
-//!   [`fmt`](crate::subcommand::Fmt), [`test`](crate::subcommand::Test)**
+//! * **[`cargo xtask build`], [`clippy`][`cargo xtask clippy`], [`doc`][`cargo
+//!   xtask doc`], [`fmt`][`cargo xtask fmt`], [`test`][`cargo xtask test`]**
 //!   * Runs the cargo commands with options useful for testing and continuous
 //!     integration.
 //!     * **`--all-workspaces`** - Runs the cargo commands for all workspaces.
@@ -30,10 +29,10 @@
 //!       feature enabled.
 //!     * **`--exhaustive`** - Same as `--all-workspaces --workspace
 //!       --each-features`.
-//! * **[`cargo xtask docsrs`](crate::subcommand::Docsrs)**
-//!   * - Builds the documentation for your lib crate with configuration for
+//! * **[`cargo xtask docsrs`]**
+//!   * Builds the documentation for your lib crate with configuration for
 //!     [docs.rs].
-//! * **[`cargo xtask exec`](crate::subcommand::Exec)**
+//! * **[`cargo xtask exec`]**
 //!   * Runs a command in the gicontext of all workspaces.
 //!
 //! # Usage
@@ -49,8 +48,8 @@
 //!     cargo add -p xtask cli-xtask --features main,bin-crate
 //!     ```
 //!
-//!     If you want to use extra tools such as `cargo-rdme` and `cargo-udeps`,
-//!     add the `bin-crate-extra` feature.
+//!     If you want to use extra tools such as `cargo-sync-rdme` and
+//! `cargo-udeps`,     add the `bin-crate-extra` feature.
 //!
 //!     ```console
 //!     cargo add -p xtask cli-xtask --features main,bin-crate,bin-crate-extra
@@ -62,8 +61,8 @@
 //!     cargo add -p xtask cli-xtask --features main,lib-crate
 //!     ```
 //!
-//!     If you want to use extra tools such as `cargo-rdme` and `cargo-udeps`,
-//!     add the `lib-crate-extra` feature.
+//!     If you want to use extra tools such as `cargo-sync-rdme` and
+//! `cargo-udeps`,     add the `lib-crate-extra` feature.
 //!
 //!     ```console
 //!     cargo add -p xtask cli-xtask --features main,lib-crate,lib-crate-extra
@@ -94,8 +93,8 @@
 //!
 //! If you want to add the subcommands that are not included in this crate,
 //! you can add them by creating a new data structure that implements the
-//! [`clap::Subcommand`](crate::clap::Subcommand) and [`Run`](crate::Run).
-//! See [the documentation of `Xtask`](crate::Xtask) for more
+//! [`clap::Subcommand`] and [`Run`].
+//! See [the documentation of `Xtask`](Xtask) for more
 //! information.
 //!
 //! # Feature flags
@@ -107,13 +106,12 @@
 //!
 //! ## CLI features
 //!
-//! * **`main`** - Enables [`main`](crate::Xtask::main) function and
-//!   [`main_with_config`](crate::Xtask::main_with_config) function that are the
-//!   premade entry point for the CLI.
+//! * **`main`** - Enables [`Xtask::main`] function and
+//!   [`Xtask::main_with_config`] function that are the premade entry point for
+//!   the CLI.
 //! * **`error-handler`** - Enables functions for error handling in
-//!   [`error_handler`](crate::error_handler) module.
-//! * **`logger`** - Enables functions for logging in [`logger`](crate::logger)
-//!   module.
+//!   [`error_handler`] module.
+//! * **`logger`** - Enables functions for logging in [`logger`] module.
 //!
 //! ## Subcommand features
 //!
@@ -140,56 +138,40 @@
 //!
 //! The following features require only the standard Rust tools:
 //!
-//! * **`subcommand-build`** - Enables [`cargo xtask
-//!   build`](crate::subcommand::Build).
-//! * **`subcommand-clippy`** - Enables [`cargo xtask
-//!   clippy`](crate::subcommand::Clippy).
-//! * **`subcommand-dist`** - Enables [`cargo xtask
-//!   dist`](crate::subcommand::Dist).
-//! * **`subcommand-dist-archive`** - Enables [`cargo xtask
-//!   dist-archive`](crate::subcommand::DistArchive).
-//! * **`subcommand-dist-build-bin`** - Enables [`cargo xtask
-//!   dist-build-bin`](crate::subcommand::DistBuildBin).
+//! * **`subcommand-build`** - Enables [`cargo xtask build`].
+//! * **`subcommand-clippy`** - Enables [`cargo xtask clippy`].
+//! * **`subcommand-dist`** - Enables [`cargo xtask dist`].
+//! * **`subcommand-dist-archive`** - Enables [`cargo xtask dist-archive`].
+//! * **`subcommand-dist-build-bin`** - Enables [`cargo xtask dist-build-bin`].
 //! * **`subcommand-dist-build-completion`** - Enables [`cargo xtask
-//!   dist-build-completion`](crate::subcommand::DistBuildCompletion).
-//! * **`subcommand-dist-build-doc`** - Enables [`cargo xtask
-//!   dist-build-doc`](crate::subcommand::DistBuildDoc).
+//!   dist-build-completion`].
+//! * **`subcommand-dist-build-doc`** - Enables [`cargo xtask dist-build-doc`].
 //! * **`subcommand-dist-build-license`** - Enables [`cargo xtask
-//!   dist-build-license`](crate::subcommand::DistBuildLicense).
-//! * **`subcommand-dist-build-man`** - Enables [`cargo xtask
-//!   dist-build-man`](crate::subcommand::DistBuildMan).
+//!   dist-build-license`].
+//! * **`subcommand-dist-build-man`** - Enables [`cargo xtask dist-build-man`].
 //! * **`subcommand-dist-build-readme`** - Enables [`cargo xtask
-//!   dist-build-readme`](crate::subcommand::DistBuildReadme).
-//! * **`subcommand-dist-clean`** - Enables [`cargo xtask
-//!   dist-clean`](crate::subcommand::DistClean).
-//! * **`subcommand-doc`** - Enables [`cargo xtask
-//!   doc`](crate::subcommand::Doc).
-//! * **`subcommand-docsrs`** - Enables [`cargo xtask
-//!   docsrs`](crate::subcommand::Docsrs).
-//! * **`subcommand-exec`** - Enables [`cargo xtask
-//!   exec`](crate::subcommand::Exec).
-//! * **`subcommand-fmt`** - Enables [`cargo xtask
-//!   fmt`](crate::subcommand::Fmt).
-//! * **`subcommand-lint`** - Enables [`cargo xtask
-//!   lint`](crate::subcommand::Lint).
-//! * **`subcommand-pre-release`** - Enables [`cargo xtask
-//!   pre-release`](crate::subcommand::PreRelease).
-//! * **`subcommand-test`** - Enables [`cargo xtask
-//!   test`](crate::subcommand::Test).
-//! * **`subcommand-tidy`** - Enables [`cargo xtask
-//!   tidy`](crate::subcommand::Tidy).
+//!   dist-build-readme`].
+//! * **`subcommand-dist-clean`** - Enables [`cargo xtask dist-clean`].
+//! * **`subcommand-doc`** - Enables [`cargo xtask doc`].
+//! * **`subcommand-docsrs`** - Enables [`cargo xtask docsrs`].
+//! * **`subcommand-exec`** - Enables [`cargo xtask exec`].
+//! * **`subcommand-fmt`** - Enables [`cargo xtask fmt`].
+//! * **`subcommand-lint`** - Enables [`cargo xtask lint`].
+//! * **`subcommand-pre-release`** - Enables [`cargo xtask pre-release`].
+//! * **`subcommand-test`** - Enables [`cargo xtask test`].
+//! * **`subcommand-tidy`** - Enables [`cargo xtask tidy`].
 //!
 //! The following features require third-party tools:
 //!
-//! * **`subcommand-rdme`** - Enables [`cargo xtask
-//!   rdme`](crate::subcommand::Rdme). Requires [`cargo-rdme`] installed.
-//! * **`subcommand-udeps`** - Enables [`cargo xtask
-//!   udeps`](crate::subcommand::Udeps). Requires [`cargo-udeps`] installed.
+//! * **`subcommand-sync-rdme`** - Enables [`cargo xtask sync-rdme`]. Requires
+//!   [`cargo-sync-rdme`] installed.
+//! * **`subcommand-udeps`** - Enables [`cargo xtask udeps`]. Requires
+//!   [`cargo-udeps`] installed.
 //!
 //! ## Other features
 //!
-//! * **`archive`** - Enables [`archive`](crate::archive) module which provides
-//!   the functionality to create the archive file for distribution.
+//! * **`archive`** - Enables [`archive`] module which provides the
+//!   functionality to create the archive file for distribution.
 //!
 //! # Minimum supported Rust version (MSRV)
 //!
@@ -219,10 +201,31 @@
 //! See [CONTRIBUTING.md].
 //!
 //! [cargo-xtask]: https://github.com/matklad/cargo-xtask
+//! [`cargo xtask build`]: subcommand::Build
+//! [`cargo xtask clippy`]: subcommand::Clippy
+//! [`cargo xtask dist`]: subcommand::Dist
+//! [`cargo xtask dist-archive`]: subcommand::DistArchive
+//! [`cargo xtask dist-build-bin`]: subcommand::DistBuildBin
+//! [`cargo xtask dist-build-completion`]: subcommand::DistBuildCompletion
+//! [`cargo xtask dist-build-doc`]: subcommand::DistBuildDoc
+//! [`cargo xtask dist-build-license`]: subcommand::DistBuildLicense
+//! [`cargo xtask dist-build-man`]: subcommand::DistBuildMan
+//! [`cargo xtask dist-build-readme`]: subcommand::DistBuildReadme
+//! [`cargo xtask dist-clean`]: subcommand::DistClean
+//! [`cargo xtask doc`]: subcommand::Doc
+//! [`cargo xtask docsrs`]: subcommand::Docsrs
+//! [`cargo xtask exec`]: subcommand::Exec
+//! [`cargo xtask fmt`]: subcommand::Fmt
+//! [`cargo xtask lint`]: subcommand::Lint
+//! [`cargo xtask pre-release`]: subcommand::PreRelease
+//! [`cargo xtask sync-rdme`]: subcommand::SyncRdme
+//! [`cargo xtask test`]: subcommand::Test
+//! [`cargo xtask tidy`]: subcommand::Tidy
+//! [`cargo xtask udeps`]: subcommand::Udeps
 //! [`rustdoc`]: https://doc.rust-lang.org/rustdoc/what-is-rustdoc.html
 //! [`rustfmt`]: https://github.com/rust-lang/rustfmt
 //! [`clippy`]: https://github.com/rust-lang/rust-clippy
-//! [`cargo-rdme`]: https://github.com/orium/cargo-rdme
+//! [`cargo-sync-rdme`]: https://github.com/gifnksm/cargo-sync-rdme
 //! [`cargo-udeps`]: https://github.com/est31/cargo-udeps
 //! [docs.rs]: https://docs.rs/
 //! [LICENSE-APACHE]: https://github.com/gifnksm/cli-xtask/blob/main/LICENSE-APACHE

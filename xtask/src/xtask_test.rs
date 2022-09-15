@@ -86,7 +86,7 @@ fn test_workspace(workspace: &Metadata, cargo_llvm_cov: bool) -> Result<()> {
             "help" => {}
             "lint" => cargo.spawn(["xtask", "lint"])?,
             "pre-release" => cargo.spawn(["xtask", "pre-release"])?,
-            "rdme" => cargo.spawn(["xtask", "rdme"])?,
+            "sync-rdme" => cargo.spawn(["xtask", "sync-rdme"])?,
             "tidy" => cargo.spawn(["xtask", "tidy"])?,
             "test" => cargo.spawn(["xtask", "test"])?,
             "udeps" => cargo.spawn(["xtask", "udeps"])?,

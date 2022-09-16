@@ -1,3 +1,5 @@
+use std::any::Any;
+
 use cli_xtask::{clap, config::Config, subcommand::Subcommand as Predefined, Result, Run, Xtask};
 
 mod lint;
@@ -29,6 +31,18 @@ impl Run for Subcommand {
             Self::XtaskTest(args) => args.run(config)?,
         }
         Ok(())
+    }
+
+    fn into_any(self: Box<Self>) -> Box<dyn Any> {
+        self
+    }
+
+    fn as_any(&self) -> &dyn Any {
+        self
+    }
+
+    fn as_any_mut(&mut self) -> &mut dyn Any {
+        self
     }
 }
 

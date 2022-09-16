@@ -1,3 +1,5 @@
+use std::any::Any;
+
 use crate::{cargo, config::Config, Result, Run};
 
 /// Arguments definition of the `dist-build-bin` subcommand.
@@ -19,6 +21,18 @@ pub struct DistBuildBin {
 impl Run for DistBuildBin {
     fn run(&self, config: &Config) -> Result<()> {
         self.run(config)
+    }
+
+    fn into_any(self: Box<Self>) -> Box<dyn Any> {
+        self
+    }
+
+    fn as_any(&self) -> &dyn Any {
+        self
+    }
+
+    fn as_any_mut(&mut self) -> &mut dyn Any {
+        self
     }
 }
 

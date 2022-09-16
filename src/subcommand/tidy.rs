@@ -1,4 +1,6 @@
-use crate::{args::FeatureArgs, config::Config, Result, Run};
+use std::any::Any;
+
+use crate::{args::FeatureArgs, config::Config, Result, Run, SubcommandRun};
 
 /// Arguments definition of the `tidy` subcommand.
 #[cfg_attr(doc, doc = include_str!("../../doc/cargo-xtask-tidy.md"))]
@@ -22,6 +24,22 @@ pub struct Tidy {
 impl Run for Tidy {
     fn run(&self, config: &Config) -> Result<()> {
         self.run(config)
+    }
+
+    fn to_subcommands(&self) -> Option<SubcommandRun> {
+        Some(self.to_subcommands())
+    }
+
+    fn into_any(self: Box<Self>) -> Box<dyn Any> {
+        self
+    }
+
+    fn as_any(&self) -> &dyn Any {
+        self
+    }
+
+    fn as_any_mut(&mut self) -> &mut dyn Any {
+        self
     }
 }
 
@@ -94,12 +112,14 @@ impl Tidy {
         ]
     }
 
+    /// Returns the subcommands that this command will run.
+    pub fn to_subcommands(&self) -> SubcommandRun {
+        SubcommandRun::new(self.subcommands())
+    }
+
     /// Runs the `tidy` subcommand.
     #[tracing::instrument(name = "tidy", skip_all, err)]
     pub fn run(&self, config: &Config) -> Result<()> {
-        for subcommand in self.subcommands() {
-            subcommand.run(config)?;
-        }
-        Ok(())
+        self.to_subcommands().run(config)
     }
 }

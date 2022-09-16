@@ -4,7 +4,7 @@ use cargo_metadata::camino::{Utf8Path, Utf8PathBuf};
 use clap_mangen::Man;
 use time::OffsetDateTime;
 
-use crate::{config::Config, Result, Run};
+use crate::{config::Config, Result, Run, SubcommandRun};
 
 /// Arguments definition of the `dist-build-man` subcommand.
 #[cfg_attr(doc, doc = include_str!("../../doc/cargo-xtask-dist-build-man.md"))]
@@ -15,6 +15,10 @@ pub struct DistBuildMan {}
 impl Run for DistBuildMan {
     fn run(&self, config: &Config) -> Result<()> {
         self.run(config)
+    }
+
+    fn to_subcommands(&self) -> Option<SubcommandRun> {
+        None
     }
 
     fn into_any(self: Box<Self>) -> Box<dyn Any> {

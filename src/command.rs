@@ -71,7 +71,7 @@ mod main;
 /// use cli_xtask::{
 ///     clap::{self, Parser},
 ///     config::Config,
-///     subcommand, Result, Run, Xtask,
+///     subcommand, Result, Run, SubcommandRun, Xtask,
 /// };
 ///
 /// // Define your own subcommand arguments
@@ -93,6 +93,10 @@ mod main;
 ///             Self::Bar => println!("bar!"),
 ///         }
 ///         Ok(())
+///     }
+///
+///     fn to_subcommands(&self) -> Option<SubcommandRun> {
+///         None
 ///     }
 ///
 ///     fn into_any(self: Box<Self>) -> Box<dyn std::any::Any> {

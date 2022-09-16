@@ -4,6 +4,7 @@ use tempfile::TempDir;
 
 use cli_xtask::{
     camino::Utf8Path, clap, config::Config, eyre::eyre, tracing, workspace, Error, Result, Run,
+    SubcommandRun,
 };
 
 /// `lint-doc` subcommand arguments.
@@ -40,6 +41,10 @@ impl LintDoc {
 impl Run for LintDoc {
     fn run(&self, config: &Config) -> Result<()> {
         self.run(config)
+    }
+
+    fn to_subcommands(&self) -> Option<SubcommandRun> {
+        None
     }
 
     fn into_any(self: Box<Self>) -> Box<dyn Any> {

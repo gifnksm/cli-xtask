@@ -2,7 +2,7 @@
 
 use std::any::Any;
 
-use crate::{config::Config, Result, Run};
+use crate::{config::Config, Result, Run, SubcommandRun};
 
 #[cfg(feature = "subcommand-build")]
 #[cfg_attr(docsrs, doc(cfg(feature = "subcommand-build")))]
@@ -323,6 +323,10 @@ pub enum Subcommand {
 impl Run for Subcommand {
     fn run(&self, config: &Config) -> Result<()> {
         self.run(config)
+    }
+
+    fn to_subcommands(&self) -> Option<SubcommandRun> {
+        None
     }
 
     fn into_any(self: Box<Self>) -> Box<dyn Any> {

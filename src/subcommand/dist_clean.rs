@@ -1,6 +1,6 @@
 use std::any::Any;
 
-use crate::{config::Config, Result, Run};
+use crate::{config::Config, Result, Run, SubcommandRun};
 
 /// Arguments definition of the `dist-clean` subcommand.
 #[cfg_attr(doc, doc = include_str!("../../doc/cargo-xtask-dist-clean.md"))]
@@ -11,6 +11,10 @@ pub struct DistClean {}
 impl Run for DistClean {
     fn run(&self, config: &Config) -> Result<()> {
         self.run(config)
+    }
+
+    fn to_subcommands(&self) -> Option<SubcommandRun> {
+        None
     }
 
     fn into_any(self: Box<Self>) -> Box<dyn Any> {

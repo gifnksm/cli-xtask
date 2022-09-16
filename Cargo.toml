@@ -106,8 +106,8 @@ subcommand-udeps = []
 
 [dependencies]
 cargo_metadata = "0.15.0"
-clap = { version = "3.2.20", features = ["derive"] }
-clap_complete = { version = "3.2.4", optional = true }
+clap = { version = "3.2.22", features = ["derive"] }
+clap_complete = { version = "3.2.5", optional = true }
 clap_mangen = { version = "0.1.11", optional = true }
 color-eyre = { version = "0.6.2", optional = true }
 eyre = "0.6.8"

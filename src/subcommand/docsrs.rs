@@ -7,7 +7,7 @@ use crate::{
     args::{EnvArgs, PackageArgs},
     config::Config,
     process::CommandExt,
-    Error, Result, Run, SubcommandRun,
+    Error, Result, Run,
 };
 
 /// Arguments definition of the `docsrs` subcommand.
@@ -34,10 +34,6 @@ pub struct Docsrs {
 impl Run for Docsrs {
     fn run(&self, config: &Config) -> Result<()> {
         self.run(config)
-    }
-
-    fn to_subcommands(&self) -> Option<SubcommandRun> {
-        None
     }
 
     fn into_any(self: Box<Self>) -> Box<dyn Any> {

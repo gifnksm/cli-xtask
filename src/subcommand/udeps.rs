@@ -4,7 +4,7 @@ use crate::{
     args::{EnvArgs, FeatureArgs},
     config::Config,
     process::CommandExt,
-    Result, Run,
+    Result, Run, SubcommandRun,
 };
 
 /// Arguments definition of the `udeps` subcommand.
@@ -25,6 +25,10 @@ pub struct Udeps {
 impl Run for Udeps {
     fn run(&self, config: &Config) -> Result<()> {
         self.run(config)
+    }
+
+    fn to_subcommands(&self) -> Option<SubcommandRun> {
+        None
     }
 
     fn into_any(self: Box<Self>) -> Box<dyn Any> {

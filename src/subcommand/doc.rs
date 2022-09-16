@@ -4,7 +4,7 @@ use crate::{
     args::{EnvArgs, PackageArgs},
     config::Config,
     process::CommandExt,
-    Result, Run,
+    Result, Run, SubcommandRun,
 };
 
 /// Arguments definition of the `doc` subcommand.
@@ -25,6 +25,10 @@ pub struct Doc {
 impl Run for Doc {
     fn run(&self, config: &Config) -> Result<()> {
         self.run(config)
+    }
+
+    fn to_subcommands(&self) -> Option<SubcommandRun> {
+        None
     }
 
     fn into_any(self: Box<Self>) -> Box<dyn Any> {

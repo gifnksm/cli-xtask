@@ -282,9 +282,7 @@ pub trait Run: Any {
     fn run(&self, config: &config::Config) -> Result<()>;
 
     /// Returns the subcommands that this command will run.
-    fn to_subcommands(&self) -> Option<SubcommandRun> {
-        None
-    }
+    fn to_subcommands(&self) -> Option<SubcommandRun>;
 
     /// Converts the `Box<dyn Run>` to `Box<dyn Any>`.
     fn into_any(self: Box<Self>) -> Box<dyn Any>;
@@ -342,6 +340,10 @@ mod tests {
     impl Run for S {
         fn run(&self, _config: &config::Config) -> Result<()> {
             Ok(())
+        }
+
+        fn to_subcommands(&self) -> Option<SubcommandRun> {
+            None
         }
 
         fn into_any(self: Box<Self>) -> Box<dyn Any> {

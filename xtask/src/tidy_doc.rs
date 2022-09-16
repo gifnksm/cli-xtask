@@ -7,7 +7,7 @@ use std::{
 
 use cli_xtask::{
     camino::Utf8Path, cargo_metadata::Metadata, clap, config::Config, eyre, process::CommandExt,
-    tracing, workspace, Result, Run,
+    tracing, workspace, Result, Run, SubcommandRun,
 };
 
 use crate::util;
@@ -34,6 +34,10 @@ impl TidyDoc {
 impl Run for TidyDoc {
     fn run(&self, config: &Config) -> Result<()> {
         self.run(config)
+    }
+
+    fn to_subcommands(&self) -> Option<SubcommandRun> {
+        None
     }
 
     fn into_any(self: Box<Self>) -> Box<dyn Any> {

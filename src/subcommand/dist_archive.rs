@@ -1,6 +1,6 @@
 use std::any::Any;
 
-use crate::{archive, config::Config, Result, Run};
+use crate::{archive, config::Config, Result, Run, SubcommandRun};
 
 /// Arguments definition of the `dist-archive` subcommand.
 #[cfg_attr(doc, doc = include_str!("../../doc/cargo-xtask-dist-archive.md"))]
@@ -11,6 +11,10 @@ pub struct DistArchive {}
 impl Run for DistArchive {
     fn run(&self, config: &Config) -> Result<()> {
         self.run(config)
+    }
+
+    fn to_subcommands(&self) -> Option<SubcommandRun> {
+        None
     }
 
     fn into_any(self: Box<Self>) -> Box<dyn Any> {

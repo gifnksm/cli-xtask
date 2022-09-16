@@ -9,6 +9,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased] - ReleaseDate
 
+### Added
+
+* Add `Subcommand::selected()` method
+
 ### Fixed
 
 * Revert "Removed a wrong default implementation of `Run::to_subcommands()`"

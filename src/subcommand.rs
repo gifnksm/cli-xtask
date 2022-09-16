@@ -339,77 +339,82 @@ impl Run for Subcommand {
 }
 
 impl Subcommand {
-    /// Runs the subcommand specified by the command line arguments.
-    pub fn run(&self, config: &Config) -> Result<()> {
+    /// Returns the selected subcommand.
+    pub fn selected(&self) -> &dyn Run {
         match self {
             #[cfg(feature = "subcommand-build")]
-            Self::Build(args) => args.run(config),
+            Self::Build(args) => args,
 
             #[cfg(feature = "subcommand-clippy")]
-            Self::Clippy(args) => args.run(config),
+            Self::Clippy(args) => args,
 
             #[cfg(feature = "subcommand-dist")]
-            Self::Dist(args) => args.run(config),
+            Self::Dist(args) => args,
 
             #[cfg(feature = "subcommand-dist-archive")]
-            Self::DistArchive(args) => args.run(config),
+            Self::DistArchive(args) => args,
 
             #[cfg(subcommand_dist_build)]
-            Self::DistBuild(args) => args.run(config),
+            Self::DistBuild(args) => args,
 
             #[cfg(feature = "subcommand-dist-build-bin")]
-            Self::DistBuildBin(args) => args.run(config),
+            Self::DistBuildBin(args) => args,
 
             #[cfg(feature = "subcommand-dist-build-completion")]
-            Self::DistBuildCompletion(args) => args.run(config),
+            Self::DistBuildCompletion(args) => args,
 
             #[cfg(feature = "subcommand-dist-build-doc")]
-            Self::DistBuildDoc(args) => args.run(config),
+            Self::DistBuildDoc(args) => args,
 
             #[cfg(feature = "subcommand-dist-build-license")]
-            Self::DistBuildLicense(args) => args.run(config),
+            Self::DistBuildLicense(args) => args,
 
             #[cfg(feature = "subcommand-dist-build-man")]
-            Self::DistBuildMan(args) => args.run(config),
+            Self::DistBuildMan(args) => args,
 
             #[cfg(feature = "subcommand-dist-build-readme")]
-            Self::DistBuildReadme(args) => args.run(config),
+            Self::DistBuildReadme(args) => args,
 
             #[cfg(feature = "subcommand-dist-clean")]
-            Self::DistClean(args) => args.run(config),
+            Self::DistClean(args) => args,
 
             #[cfg(feature = "subcommand-doc")]
-            Self::Doc(args) => args.run(config),
+            Self::Doc(args) => args,
 
             #[cfg(feature = "subcommand-docsrs")]
-            Self::Docsrs(args) => args.run(config),
+            Self::Docsrs(args) => args,
 
             #[cfg(feature = "subcommand-exec")]
-            Self::Exec(args) => args.run(config),
+            Self::Exec(args) => args,
 
             #[cfg(feature = "subcommand-fmt")]
-            Self::Fmt(args) => args.run(config),
+            Self::Fmt(args) => args,
 
             #[cfg(feature = "subcommand-lint")]
-            Self::Lint(args) => args.run(config),
+            Self::Lint(args) => args,
 
             #[cfg(feature = "subcommand-pre-release")]
-            Self::PreRelease(args) => args.run(config),
+            Self::PreRelease(args) => args,
 
             #[cfg(feature = "subcommand-sync-rdme")]
-            Self::SyncRdme(args) => args.run(config),
+            Self::SyncRdme(args) => args,
 
             #[cfg(feature = "subcommand-test")]
-            Self::Test(args) => args.run(config),
+            Self::Test(args) => args,
 
             #[cfg(feature = "subcommand-tidy")]
-            Self::Tidy(args) => args.run(config),
+            Self::Tidy(args) => args,
 
             #[cfg(feature = "subcommand-udeps")]
-            Self::Udeps(args) => args.run(config),
+            Self::Udeps(args) => args,
 
             #[cfg(not(subcommand))]
-            _ => unreachable!("no commands defined: {config:?}"),
+            _ => unreachable!("no commands defined: {self:?}"),
         }
+    }
+
+    /// Runs the subcommand specified by the command line arguments.
+    pub fn run(&self, config: &Config) -> Result<()> {
+        self.selected().run(config)
     }
 }

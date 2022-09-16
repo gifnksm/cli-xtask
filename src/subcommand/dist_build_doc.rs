@@ -2,7 +2,7 @@ use std::any::Any;
 
 use eyre::eyre;
 
-use crate::{config::Config, fs::ToRelative, Result, Run, SubcommandRun};
+use crate::{config::Config, fs::ToRelative, Result, Run};
 
 /// Arguments definition of the `dist-build-doc` subcommand.
 #[cfg_attr(doc, doc = include_str!("../../doc/cargo-xtask-dist-build-doc.md"))]
@@ -13,10 +13,6 @@ pub struct DistBuildDoc {}
 impl Run for DistBuildDoc {
     fn run(&self, config: &Config) -> Result<()> {
         self.run(config)
-    }
-
-    fn to_subcommands(&self) -> Option<SubcommandRun> {
-        None
     }
 
     fn into_any(self: Box<Self>) -> Box<dyn Any> {

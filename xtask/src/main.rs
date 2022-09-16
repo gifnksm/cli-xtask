@@ -1,8 +1,6 @@
 use std::any::Any;
 
-use cli_xtask::{
-    clap, config::Config, subcommand::Subcommand as Predefined, Result, Run, SubcommandRun, Xtask,
-};
+use cli_xtask::{clap, config::Config, subcommand::Subcommand as Predefined, Result, Run, Xtask};
 
 mod lint;
 mod lint_doc;
@@ -33,10 +31,6 @@ impl Run for Subcommand {
             Self::XtaskTest(args) => args.run(config)?,
         }
         Ok(())
-    }
-
-    fn to_subcommands(&self) -> Option<SubcommandRun> {
-        None
     }
 
     fn into_any(self: Box<Self>) -> Box<dyn Any> {

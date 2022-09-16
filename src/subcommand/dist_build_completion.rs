@@ -3,7 +3,7 @@ use std::any::Any;
 use cargo_metadata::camino::{Utf8Path, Utf8PathBuf};
 use clap_complete::Shell;
 
-use crate::{config::Config, fs::ToRelative, Result, Run, SubcommandRun};
+use crate::{config::Config, fs::ToRelative, Result, Run};
 
 /// Arguments definition of the `dist-build-completion` subcommand.
 #[cfg_attr(doc, doc = include_str!("../../doc/cargo-xtask-dist-build-completion.md"))]
@@ -14,10 +14,6 @@ pub struct DistBuildCompletion {}
 impl Run for DistBuildCompletion {
     fn run(&self, config: &Config) -> Result<()> {
         self.run(config)
-    }
-
-    fn to_subcommands(&self) -> Option<SubcommandRun> {
-        None
     }
 
     fn into_any(self: Box<Self>) -> Box<dyn Any> {

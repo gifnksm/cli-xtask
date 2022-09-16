@@ -4,7 +4,7 @@ use crate::{
     args::{EnvArgs, FeatureArgs},
     config::Config,
     process::CommandExt,
-    Result, Run, SubcommandRun,
+    Result, Run,
 };
 
 /// Arguments definition of the `build` subcommand.
@@ -25,10 +25,6 @@ pub struct Build {
 impl Run for Build {
     fn run(&self, config: &Config) -> Result<()> {
         self.run(config)
-    }
-
-    fn to_subcommands(&self) -> Option<SubcommandRun> {
-        None
     }
 
     fn into_any(self: Box<Self>) -> Box<dyn Any> {

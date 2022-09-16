@@ -1,5 +1,7 @@
 //! Command line interfaces for xtask workflows.
 
+use std::any::Any;
+
 use crate::{config::Config, Result, Run};
 
 #[cfg(feature = "subcommand-build")]
@@ -295,7 +297,8 @@ pub enum Subcommand {
     #[cfg_attr(docsrs, doc(cfg(feature = "subcommand-pre-release")))]
     PreRelease(PreRelease),
 
-    /// `cargo sync-rdme` with options useful for testing and continuous integration.
+    /// `cargo sync-rdme` with options useful for testing and continuous
+    /// integration.
     #[cfg(feature = "subcommand-sync-rdme")]
     #[cfg_attr(docsrs, doc(cfg(feature = "subcommand-syncrdme")))]
     SyncRdme(sync_rdme::SyncRdme),
@@ -320,6 +323,18 @@ pub enum Subcommand {
 impl Run for Subcommand {
     fn run(&self, config: &Config) -> Result<()> {
         self.run(config)
+    }
+
+    fn into_any(self: Box<Self>) -> Box<dyn Any> {
+        self
+    }
+
+    fn as_any(&self) -> &dyn Any {
+        self
+    }
+
+    fn as_any_mut(&mut self) -> &mut dyn Any {
+        self
     }
 }
 

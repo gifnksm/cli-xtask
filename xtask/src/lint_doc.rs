@@ -1,3 +1,5 @@
+use std::any::Any;
+
 use tempfile::TempDir;
 
 use cli_xtask::{
@@ -38,5 +40,17 @@ impl LintDoc {
 impl Run for LintDoc {
     fn run(&self, config: &Config) -> Result<()> {
         self.run(config)
+    }
+
+    fn into_any(self: Box<Self>) -> Box<dyn Any> {
+        self
+    }
+
+    fn as_any(&self) -> &dyn Any {
+        self
+    }
+
+    fn as_any_mut(&mut self) -> &mut dyn Any {
+        self
     }
 }

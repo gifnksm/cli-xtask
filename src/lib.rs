@@ -234,6 +234,8 @@
 
 #![doc(html_root_url = "https://docs.rs/cli-xtask/0.2.0")]
 
+use std::{any::Any, fmt};
+
 pub use cargo_metadata::{self, camino};
 pub use clap;
 #[cfg(feature = "error-handler")]
@@ -275,7 +277,101 @@ pub type Error = eyre::Error;
 pub type Result<T> = eyre::Result<T>;
 
 /// Runs the command or subcommand.
-pub trait Run {
+pub trait Run: Any {
     /// Runs the command or subcommand.
     fn run(&self, config: &config::Config) -> Result<()>;
+
+    /// Returns the subcommands that this command will run.
+    fn to_subcommands(&self) -> Option<SubcommandRun> {
+        None
+    }
+
+    /// Converts the `Box<dyn Run>` to `Box<dyn Any>`.
+    fn into_any(self: Box<Self>) -> Box<dyn Any>;
+
+    /// Converts the `&dyn Run` trait object to a concrete type.
+    fn as_any(&self) -> &dyn Any;
+
+    /// Converts the `&dyn Run` trait object to a mutable concrete type.
+    fn as_any_mut(&mut self) -> &mut dyn Any;
+}
+
+/// Subcommands that this command will run.
+pub struct SubcommandRun {
+    subcommands: Vec<Box<dyn Run>>,
+}
+
+impl fmt::Debug for SubcommandRun {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        f.debug_struct("Subcommand")
+            //.field("subcommands", &self.subcommands)
+            .finish()
+    }
+}
+
+impl SubcommandRun {
+    /// Creates a new `SubcommandRun`.
+    pub fn new(subcommands: Vec<Box<dyn Run>>) -> Self {
+        Self { subcommands }
+    }
+
+    /// Returns the subcommands that this command will run.
+    pub fn subcommands(&self) -> &[Box<dyn Run>] {
+        &self.subcommands
+    }
+
+    /// Returns the subcommands that this command will run.
+    pub fn subcommands_mut(&mut self) -> &mut Vec<Box<dyn Run>> {
+        &mut self.subcommands
+    }
+
+    /// Runs the subcommands.
+    pub fn run(&self, config: &config::Config) -> Result<()> {
+        for subcommand in &self.subcommands {
+            subcommand.run(config)?;
+        }
+        Ok(())
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    struct S(i32);
+    impl Run for S {
+        fn run(&self, _config: &config::Config) -> Result<()> {
+            Ok(())
+        }
+
+        fn into_any(self: Box<Self>) -> Box<dyn Any> {
+            self
+        }
+
+        fn as_any(&self) -> &dyn Any {
+            self
+        }
+
+        fn as_any_mut(&mut self) -> &mut dyn Any {
+            self
+        }
+    }
+
+    #[test]
+    fn run_downcast() {
+        let s = S(42);
+        let s = &s as &(dyn Run);
+        let s = s.as_any().downcast_ref::<S>().unwrap();
+        assert_eq!(s.0, 42);
+
+        let mut s = S(42);
+        let s = &mut s as &mut (dyn Run);
+        let s = s.as_any_mut().downcast_mut::<S>().unwrap();
+        assert_eq!(s.0, 42);
+
+        let s = S(42);
+        let s = Box::new(s) as Box<dyn Run>;
+        let s = s.into_any().downcast::<S>().unwrap();
+        assert_eq!(s.0, 42);
+    }
 }

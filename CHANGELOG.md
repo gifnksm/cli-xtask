@@ -9,6 +9,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased] - ReleaseDate
 
+### Added
+
+* (breaking change) `Run` trait now supports downcasting.
+
 ## [0.2.0] - 2022-09-15
 
 ### Removed

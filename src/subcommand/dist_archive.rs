@@ -1,3 +1,5 @@
+use std::any::Any;
+
 use crate::{archive, config::Config, Result, Run};
 
 /// Arguments definition of the `dist-archive` subcommand.
@@ -9,6 +11,18 @@ pub struct DistArchive {}
 impl Run for DistArchive {
     fn run(&self, config: &Config) -> Result<()> {
         self.run(config)
+    }
+
+    fn into_any(self: Box<Self>) -> Box<dyn Any> {
+        self
+    }
+
+    fn as_any(&self) -> &dyn Any {
+        self
+    }
+
+    fn as_any_mut(&mut self) -> &mut dyn Any {
+        self
     }
 }
 

@@ -3,7 +3,7 @@ members = ["xtask"]
 
 [package]
 name = "cli-xtask"
-version = "0.5.0"
+version = "0.5.1-alpha.0"
 edition = "2021"
 rust-version = "1.60.0"
 description = "A collection of utility functions and command line interfaces for cargo-xtask"

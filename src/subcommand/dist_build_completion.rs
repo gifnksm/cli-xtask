@@ -66,7 +66,7 @@ impl DistBuildCompletion {
 
 fn generate(
     shell: Shell,
-    cmd: &clap::Command<'_>,
+    cmd: &clap::Command,
     bin_name: &str,
     out_dir: &Utf8Path,
 ) -> Result<Utf8PathBuf> {

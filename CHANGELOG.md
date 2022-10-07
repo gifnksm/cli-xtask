@@ -9,6 +9,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased] - ReleaseDate
 
+### Changed
+
+* (breaking change) Update clap requirement from 3.2.22 to 4.0.10
+
 ## [0.5.0] - 2022-09-16
 
 ### Added

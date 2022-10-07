@@ -41,7 +41,7 @@ impl DistArchive {
         let dist_dir = config.dist_target_directory();
 
         let noarch_path = config.dist_base_working_directory().join("noarch");
-        let noarch_path = noarch_path.is_dir().then(|| noarch_path);
+        let noarch_path = noarch_path.is_dir().then_some(noarch_path);
 
         let mut created = false;
         for dir in config.dist_base_working_directory().read_dir_utf8()? {

@@ -3,6 +3,7 @@
 use std::{env, iter};
 
 use cargo_metadata::{camino::Utf8PathBuf, Metadata, Package};
+use clap::ArgAction;
 use eyre::eyre;
 use tracing::Level;
 
@@ -40,23 +41,24 @@ use crate::{
 #[derive(Debug, Clone, Default, clap::Args)]
 pub struct Verbosity {
     /// More output per occurrence
-    #[clap(long, short = 'v', parse(from_occurrences), global = true)]
-    verbose: i8,
+    #[clap(long, short = 'v', action = ArgAction::Count, global = true)]
+    verbose: u8,
     /// Less output per occurrence
     #[clap(
         long,
         short = 'q',
-        parse(from_occurrences),
+        action = ArgAction::Count,
         global = true,
         conflicts_with = "verbose"
     )]
-    quiet: i8,
+    quiet: u8,
 }
 
 impl Verbosity {
     /// Returns the log verbosity level.
     pub fn get(&self) -> Option<Level> {
-        let level = self.verbose - self.quiet;
+        let level = i8::try_from(self.verbose).unwrap_or(i8::MAX)
+            - i8::try_from(self.quiet).unwrap_or(i8::MAX);
         match level {
             i8::MIN..=-3 => None,
             -2 => Some(Level::ERROR),
@@ -77,7 +79,7 @@ pub struct EnvArgs {
         long,
         short = 'e',
         value_name = "KEY>=<VALUE", // hack
-        parse(from_str = EnvArgs::parse_parts),
+        value_parser = EnvArgs::parse_parts,
     )]
     pub env: Vec<(String, String)>,
 }
@@ -93,10 +95,10 @@ impl EnvArgs {
         }
     }
 
-    fn parse_parts(s: &str) -> (String, String) {
+    fn parse_parts(s: &str) -> Result<(String, String)> {
         match s.split_once('=') {
-            Some((key, value)) => (key.into(), value.into()),
-            None => (s.into(), "".into()),
+            Some((key, value)) => Ok((key.into(), value.into())),
+            None => Ok((s.into(), "".into())),
         }
     }
 }

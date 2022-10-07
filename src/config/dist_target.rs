@@ -11,7 +11,7 @@ use crate::Result;
 pub struct DistTargetConfigBuilder<'a> {
     name: String,
     metadata: &'a Target,
-    command: Option<clap::Command<'static>>,
+    command: Option<clap::Command>,
 }
 
 impl<'a> DistTargetConfigBuilder<'a> {
@@ -37,7 +37,7 @@ impl<'a> DistTargetConfigBuilder<'a> {
     }
 
     /// Set the command line interface definition for the target.
-    pub fn command(mut self, command: clap::Command<'static>) -> Self {
+    pub fn command(mut self, command: clap::Command) -> Self {
         self.command = Some(command);
         self
     }
@@ -61,7 +61,7 @@ impl<'a> DistTargetConfigBuilder<'a> {
 pub struct DistTargetConfig<'a> {
     name: String,
     metadata: &'a Target,
-    command: Option<clap::Command<'static>>,
+    command: Option<clap::Command>,
 }
 
 impl<'a> DistTargetConfig<'a> {
@@ -76,7 +76,7 @@ impl<'a> DistTargetConfig<'a> {
     }
 
     /// Returns the command line interface definition for the target.
-    pub fn command(&self) -> Option<&clap::Command<'static>> {
+    pub fn command(&self) -> Option<&clap::Command> {
         self.command.as_ref()
     }
 }

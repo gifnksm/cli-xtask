@@ -62,7 +62,6 @@ pub fn emit_doc(workspace: &Metadata, doc_dir: &Utf8Path) -> Result<()> {
     let help = Command::new("cargo")
         .args(&["run", "--all-features", "--", "--help"])
         .workspace_stdout(workspace)?;
-    assert_eq!(help.lines().next(), Some("cargo-xtask "));
 
     let subcommands = util::subcommands_from_help(&help);
     for subcommand in iter::once(None).chain(subcommands.into_iter().map(Some)) {

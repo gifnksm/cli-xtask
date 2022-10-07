@@ -55,7 +55,6 @@ fn test_workspace(workspace: &Metadata, cargo_llvm_cov: bool) -> Result<()> {
 
     // show help
     let help = cargo.stdout(["xtask", "--help"])?;
-    assert_eq!(help.lines().next(), Some("cargo-xtask "));
 
     // extract subcommands from help message
     let subcommands = util::subcommands_from_help(&help);

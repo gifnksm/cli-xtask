@@ -28,7 +28,7 @@ impl CommandExt for Command {
     fn workspace_spawn(&mut self, workspace: &Metadata) -> Result<()> {
         let workspace_root = &workspace.workspace_root;
 
-        self.current_dir(&workspace_root);
+        self.current_dir(workspace_root);
 
         let program = self.get_program();
         let args = self.get_args();
@@ -62,7 +62,7 @@ impl CommandExt for Command {
     fn workspace_stdout_raw(&mut self, workspace: &Metadata) -> Result<Vec<u8>> {
         let workspace_root = &workspace.workspace_root;
 
-        self.current_dir(&workspace_root).stdout(Stdio::piped());
+        self.current_dir(workspace_root).stdout(Stdio::piped());
 
         let program = self.get_program();
         let args = self.get_args();

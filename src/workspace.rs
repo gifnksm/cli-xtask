@@ -42,7 +42,7 @@ fn collect_workspaces(base_dir: &Utf8Path) -> Result<Vec<Metadata>> {
     let current_workspace = MetadataCommand::new().current_dir(base_dir).exec()?;
     let current_workspace_root = &current_workspace.workspace_root;
 
-    let mut it = WalkDir::new(&current_workspace_root)
+    let mut it = WalkDir::new(current_workspace_root)
         .sort_by(
             // Sort files before directories.
             // This is to make sure that `target_dirs` is updated before files in it are iterated.

@@ -34,10 +34,10 @@ impl DistClean {
         let config = config.dist()?;
 
         let dist_dir = config.dist_target_directory();
-        crate::fs::remove_dir(&dist_dir)?;
+        crate::fs::remove_dir(dist_dir)?;
 
         let working_dir = config.dist_base_working_directory();
-        crate::fs::remove_dir(&working_dir)?;
+        crate::fs::remove_dir(working_dir)?;
 
         Ok(())
     }

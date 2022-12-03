@@ -479,7 +479,7 @@ fn collect_license_files(
     }
 
     if let Some(license_file) = &package.license_file {
-        return Ok(vec![src_dir.join(&license_file)]);
+        return Ok(vec![src_dir.join(license_file)]);
     }
 
     let mut files = vec![];

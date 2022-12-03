@@ -58,7 +58,7 @@ impl DistBuildDoc {
                     eyre!("document file has no name: {}", src_file.to_relative())
                 })?;
                 let dest_file = dest_dir.join(file_name);
-                crate::fs::copy(&src_file, &dest_file)?;
+                crate::fs::copy(src_file, &dest_file)?;
             }
         }
 

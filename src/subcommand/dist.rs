@@ -47,7 +47,7 @@ impl Dist {
         let dist_config = config.dist()?;
 
         let working_dir = dist_config.dist_base_working_directory();
-        crate::fs::create_or_cleanup_dir(&working_dir)?;
+        crate::fs::create_or_cleanup_dir(working_dir)?;
 
         #[cfg(subcommand_dist_build)]
         dist_build_args.run(config)?;

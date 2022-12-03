@@ -62,6 +62,10 @@ impl Udeps {
                     "udeps",
                     "--package",
                     &package.name,
+                    // workaround: on windows, `cargo udeps` fails for some packages with following error:
+                    // error[E0514]: found crate `<crate>` compiled by an incompatible version of rustc
+                    "--target-dir",
+                    workspace.target_directory.join("nightly").as_str(),
                 ])
                 .args(features.map(|f| f.to_args()).unwrap_or_default())
                 .args(extra_options)

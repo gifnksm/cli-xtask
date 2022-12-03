@@ -50,7 +50,7 @@ impl Run for TidyDoc {
 }
 
 pub fn emit_doc(workspace: &Metadata, doc_dir: &Utf8Path) -> Result<()> {
-    cli_xtask::fs::create_or_cleanup_dir(&doc_dir)?;
+    cli_xtask::fs::create_or_cleanup_dir(doc_dir)?;
 
     let readme_path = doc_dir.join("README.md");
     let readme = cli_xtask::fs::create_file(&readme_path)?;
@@ -60,7 +60,7 @@ pub fn emit_doc(workspace: &Metadata, doc_dir: &Utf8Path) -> Result<()> {
     writeln!(&mut readme)?;
 
     let help = Command::new("cargo")
-        .args(&["run", "--all-features", "--", "--help"])
+        .args(["run", "--all-features", "--", "--help"])
         .workspace_stdout(workspace)?;
 
     let subcommands = util::subcommands_from_help(&help);

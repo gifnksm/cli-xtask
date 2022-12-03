@@ -70,8 +70,8 @@ fn generate(
     bin_name: &str,
     out_dir: &Utf8Path,
 ) -> Result<Utf8PathBuf> {
-    crate::fs::create_dir(&out_dir)?;
-    let path = clap_complete::generate_to(shell, &mut cmd.clone(), bin_name, &out_dir)?;
+    crate::fs::create_dir(out_dir)?;
+    let path = clap_complete::generate_to(shell, &mut cmd.clone(), bin_name, out_dir)?;
     let path = Utf8PathBuf::try_from(path)?;
     tracing::info!("Generated {shell} completion file: {}", path.to_relative());
     Ok(path)

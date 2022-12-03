@@ -95,7 +95,7 @@ See the [Feature flags section](#feature-flags) for more information.
 
 If you want to add the subcommands that are not included in this crate,
 you can add them by creating a new data structure that implements the
-[`clap::Subcommand`](https://docs.rs/clap/4.0.18/clap/derive/trait.Subcommand.html) and [`Run`](https://docs.rs/cli-xtask/latest/cli_xtask/trait.Run.html).
+[`clap::Subcommand`](https://docs.rs/clap/4.0.29/clap/derive/trait.Subcommand.html) and [`Run`](https://docs.rs/cli-xtask/latest/cli_xtask/trait.Run.html).
 See [the documentation of `Xtask`](https://docs.rs/cli-xtask/latest/cli_xtask/command/struct.Xtask.html) for more
 information.
 

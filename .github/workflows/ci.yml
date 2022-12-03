@@ -28,10 +28,10 @@ jobs:
 
           msrv="$(echo "${root_package}" | jq '.rust_version')"
           rust="$(echo "[\"stable\", ${msrv}]" | jq -c)"
-          echo "::set-output name=rust::${rust}"
+          echo "rust=${rust}" >> "${GITHUB_OUTPUT}"
 
           os="$(echo '["ubuntu-latest", "macos-latest", "windows-latest"]' | jq -c)"
-          echo "::set-output name=os::${os}"
+          echo "os=${os}" >> "${GITHUB_OUTPUT}"
 
           jq -n --argjson rust "${rust}" --argjson os "${os}" '{ rust: $rust, os: $os }'
         shell: bash
@@ -50,7 +50,7 @@ jobs:
           value="$(cargo xtask exec --all-workspaces -- pwd | sed "s@^$(pwd)@.@" | sed 's/$/ -> target/')"
           echo "${value}"
           value="${value//$'\n'/'%0A'}"
-          echo "::set-output name=workspaces::${value}"
+          echo "workspaces=${value}" >> "${GITHUB_OUTPUT}"
         shell: bash
 
   test:

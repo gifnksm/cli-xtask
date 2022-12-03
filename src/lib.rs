@@ -232,7 +232,7 @@
 //! [LICENSE-MIT]: https://github.com/gifnksm/cli-xtask/blob/main/LICENSE-MIT
 //! [CONTRIBUTING.md]: https://github.com/gifnksm/cli-xtask/blob/main/CONTRIBUTING.md
 
-#![doc(html_root_url = "https://docs.rs/cli-xtask/0.6.0")]
+#![doc(html_root_url = "https://docs.rs/cli-xtask/0.6.1")]
 
 use std::{any::Any, fmt};
 

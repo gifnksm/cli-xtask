@@ -60,7 +60,7 @@ impl DistBuildReadme {
                     readme_dir.clone()
                 };
                 let dest_file = dest_dir.join(readme);
-                crate::fs::copy(&src_file, &dest_file)?;
+                crate::fs::copy(src_file, dest_file)?;
             }
         }
 

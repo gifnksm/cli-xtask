@@ -55,7 +55,7 @@ impl DistArchive {
             }
             let target_triple = dir.file_name().unwrap();
             let archive_name = format!("{}-{}.tar.gz", config.name(), target_triple);
-            let archive_path = dist_dir.join(&archive_name);
+            let archive_path = dist_dir.join(archive_name);
 
             let mut targets = vec![];
             for dir in [dir].into_iter().chain(noarch_path.as_deref()) {
@@ -71,7 +71,7 @@ impl DistArchive {
 
         if !created && noarch_path.is_some() {
             let archive_name = format!("{}-noarch.tar.gz", config.name());
-            let archive_path = dist_dir.join(&archive_name);
+            let archive_path = dist_dir.join(archive_name);
 
             archive::create(&archive_path, [noarch_path.unwrap()].into_iter())?;
 

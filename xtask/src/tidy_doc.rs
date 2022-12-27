@@ -53,7 +53,7 @@ pub fn emit_doc(workspace: &Metadata, doc_dir: &Utf8Path) -> Result<()> {
     cli_xtask::fs::create_or_cleanup_dir(doc_dir)?;
 
     let readme_path = doc_dir.join("README.md");
-    let readme = cli_xtask::fs::create_file(&readme_path)?;
+    let readme = cli_xtask::fs::create_file(readme_path)?;
     let mut readme = BufWriter::new(readme);
 
     writeln!(&mut readme, "# `cargo-xtask` command reference")?;
@@ -92,7 +92,7 @@ fn emit_markdown(
         .unwrap_or_else(|| "cargo-xtask".into());
 
     let output_path = doc_dir.join(format!("{fullname}.md"));
-    let file = cli_xtask::fs::create_file(&output_path)?;
+    let file = cli_xtask::fs::create_file(output_path)?;
     let mut file = BufWriter::new(file);
 
     writeln!(

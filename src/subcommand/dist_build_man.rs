@@ -49,7 +49,7 @@ impl DistBuildMan {
                     let it = dist_build_man_pages(&man_dir, package.name(), cmd.clone(), section)?;
                     for res in it {
                         let (path, man) = res?;
-                        let mut file = crate::fs::create_file(&path)?;
+                        let mut file = crate::fs::create_file(path)?;
                         man.render(&mut file)?;
                     }
                 }
@@ -95,7 +95,7 @@ fn dist_build_man_pages(
     let it = iterate_commands(cmd).map(move |cmd| {
         let command_name = cmd.get_name().replace(' ', "-");
         let filename = format!("{command_name}.{}", section);
-        let path = man_dir.join(&filename);
+        let path = man_dir.join(filename);
         let man = Man::new(cmd)
             .title(command_name.to_uppercase())
             .section(&section)

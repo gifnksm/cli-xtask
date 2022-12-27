@@ -71,7 +71,7 @@ impl DistBuildBin {
                 for src in artifacts {
                     let src = src?;
                     let dest = bin_dir.join(src.file_name().unwrap());
-                    crate::fs::copy(&src, &dest)?;
+                    crate::fs::copy(&src, dest)?;
                 }
             }
         }

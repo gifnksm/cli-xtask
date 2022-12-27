@@ -98,10 +98,7 @@ fn collect_workspaces(base_dir: &Utf8Path) -> Result<Vec<Metadata>> {
 
     // Sort workspaces by their root directory.
     // The shallowest workspace should come first.
-    let mut workspaces = workspaces
-        .into_iter()
-        .map(|(_path, ws)| ws)
-        .collect::<Vec<_>>();
+    let mut workspaces = workspaces.into_values().collect::<Vec<_>>();
     workspaces.sort_by(|a, b| a.workspace_root.cmp(&b.workspace_root));
 
     Ok(workspaces)

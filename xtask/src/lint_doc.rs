@@ -23,7 +23,7 @@ impl LintDoc {
         let reference_dir = TempDir::new()?;
         super::tidy_doc::emit_doc(workspace, <&Utf8Path>::try_from(reference_dir.path())?)?;
 
-        if dir_diff::is_different(&doc_dir, &reference_dir).map_err(|e| -> Error {
+        if dir_diff::is_different(doc_dir, &reference_dir).map_err(|e| -> Error {
             match e {
                 dir_diff::Error::Io(e) => e.into(),
                 dir_diff::Error::StripPrefix(e) => e.into(),

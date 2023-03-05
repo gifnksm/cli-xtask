@@ -18,5 +18,5 @@ Options:
       --workspace                  Run the subcommand for all packages in the workspace
   -p, --package <PACKAGE>          Package name to run the subcommand for
       --each-feature               Run the subcommand with each feature enabled
-  -h, --help                       Print help information
+  -h, --help                       Print help
 ```

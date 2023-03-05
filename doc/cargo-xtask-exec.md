@@ -16,5 +16,5 @@ Options:
   -q, --quiet...                   Less output per occurrence
       --all-workspaces             Run the subcommand on all workspaces
       --exclude-current-workspace  Run the subcommand on each workspace other than the current workspace
-  -h, --help                       Print help information
+  -h, --help                       Print help
 ```

@@ -33,5 +33,5 @@ Commands:
 Options:
   -v, --verbose...  More output per occurrence
   -q, --quiet...    Less output per occurrence
-  -h, --help        Print help information
+  -h, --help        Print help
 ```

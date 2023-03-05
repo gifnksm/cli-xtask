@@ -8,5 +8,5 @@ Usage: cargo xtask dist-build-readme [OPTIONS]
 Options:
   -v, --verbose...  More output per occurrence
   -q, --quiet...    Less output per occurrence
-  -h, --help        Print help information
+  -h, --help        Print help
 ```

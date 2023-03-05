@@ -19,5 +19,5 @@ Options:
   -p, --package <PACKAGE>          Package name to run the subcommand for
       --default-target             Build documents for docs.rs's default target
       --all-targets                Build documents for all supported targets
-  -h, --help                       Print help information
+  -h, --help                       Print help
 ```

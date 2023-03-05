@@ -11,5 +11,5 @@ Options:
   -q, --quiet...                Less output per occurrence
       --use-cross               Use cross tool to build
       --use-cross-if-needed     Use cross if target is different from default target
-  -h, --help                    Print help information
+  -h, --help                    Print help
 ```

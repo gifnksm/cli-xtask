@@ -17,5 +17,5 @@ Options:
       --exclude-current-workspace  Run the subcommand on each workspace other than the current workspace
       --workspace                  Run the subcommand for all packages in the workspace
   -p, --package <PACKAGE>          Package name to run the subcommand for
-  -h, --help                       Print help information
+  -h, --help                       Print help
 ```

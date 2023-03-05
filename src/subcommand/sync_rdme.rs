@@ -67,6 +67,12 @@ impl SyncRdme {
                 ])
                 .args(extra_options)
                 .envs(env_args.env.clone())
+                // workaround: on windows, `cargo sync-rdme` fails for some packages with following error:
+                // error[E0514]: found crate `<crate>` compiled by an incompatible version of rustc
+                .env(
+                    "CARGO_TARGET_DIR",
+                    workspace.target_directory.join("nightly").as_str(),
+                )
                 .workspace_spawn(workspace)?;
         }
 

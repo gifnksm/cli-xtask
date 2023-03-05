@@ -9,7 +9,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased] - ReleaseDate
 
+* Update dependencies
+
 ## [0.6.1] - 2022-12-03
+
+### Fixed
+
+* Add workaround for `cargo udeps` failure on windows
 
 ## [0.6.0] - 2022-10-07
 

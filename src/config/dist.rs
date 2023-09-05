@@ -274,7 +274,7 @@ impl<'a> DistConfig<'a> {
         &self.name
     }
 
-    /// Returns the cargo workspace [`Metadata`](cargo_metadata::Metadata).
+    /// Returns the cargo workspace [`Metadata`].
     pub fn metadata(&self) -> &'a Metadata {
         self.metadata
     }

@@ -105,7 +105,7 @@ subcommand-tidy = []
 subcommand-udeps = []
 
 [dependencies]
-cargo_metadata = "0.17.0"
+cargo_metadata = "0.18.0"
 chrono = { version = "0.4.31", features = ["clock"], optional = true }
 clap = { version = "4.1.8", features = ["derive"] }
 clap_complete = { version = "4.1.4", optional = true }

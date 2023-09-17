@@ -1,8 +1,8 @@
 use std::{any::Any, iter};
 
 use cargo_metadata::camino::{Utf8Path, Utf8PathBuf};
+use chrono::{Datelike, Utc};
 use clap_mangen::Man;
-use time::OffsetDateTime;
 
 use crate::{config::Config, Result, Run};
 
@@ -75,14 +75,9 @@ fn dist_build_man_pages(
     };
     let section = section.into();
 
-    let now = OffsetDateTime::now_utc();
+    let now = Utc::now();
     let manual_name = format!("{capitalized_name} Command Manual");
-    let date = format!(
-        "{:04}-{:02}-{:02}",
-        now.year(),
-        u8::from(now.month()),
-        now.day()
-    );
+    let date = format!("{:04}-{:02}-{:02}", now.year(), now.month(), now.day());
     let source = format!(
         "{} {}",
         cmd.get_name().replace(' ', "-"),

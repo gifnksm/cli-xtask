@@ -11,11 +11,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
-* Update dependencies
+* `cargo xtask dist-build-bin` now fails when `cargo build` fails
 
 ### Changed
 
 * (breaking change) dist: Add cargo build option support
+* Update dependencies
 
 ## [0.6.1] - 2022-12-03
 

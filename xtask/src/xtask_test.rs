@@ -210,7 +210,7 @@ fn cargo_llvm_cov_init(workspace: &Metadata) -> Result<Vec<(String, String)>> {
         let (k, v) = line
             .split_once('=')
             .ok_or_else(|| eyre!("invalid line: {}", line))?;
-        let v = v.trim_matches('"');
+        let v = v.trim_matches(&['"', '\''][..]);
         envs.push((k.to_string(), v.to_string()));
     }
 

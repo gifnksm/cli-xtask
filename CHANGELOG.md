@@ -17,6 +17,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 * (breaking change) dist: Add cargo build option support
 * Update dependencies
+* Migrate to `chrono`
 
 ## [0.6.1] - 2022-12-03
 

@@ -27,6 +27,8 @@ pub struct DistConfigBuilder<'a> {
     dist_target_directory: Utf8PathBuf,
     dist_base_working_directory: Utf8PathBuf,
     packages: Vec<DistPackageConfig<'a>>,
+    #[cfg(feature = "subcommand-dist-build-bin")]
+    cargo_build_options: Vec<String>,
 }
 
 impl<'a> DistConfigBuilder<'a> {
@@ -56,6 +58,8 @@ impl<'a> DistConfigBuilder<'a> {
             dist_target_directory,
             dist_base_working_directory,
             packages: vec![],
+            #[cfg(feature = "subcommand-dist-build-bin")]
+            cargo_build_options: vec![],
         }
     }
 
@@ -204,6 +208,7 @@ impl<'a> DistConfigBuilder<'a> {
     }
 
     /// Adds the given packages to the `DistConfig`.
+    ///
     /// # Examples
     ///
     /// ```rust
@@ -226,6 +231,32 @@ impl<'a> DistConfigBuilder<'a> {
         self
     }
 
+    /// Adds the given cargo build options to the `DistConfig`.
+    ///
+    /// # Examples
+    ///
+    /// ```rust
+    /// # fn main() -> cli_xtask::Result<()> {
+    /// use cli_xtask::{config::{DistConfigBuilder, DistPackageConfig}, workspace, Result};
+    ///
+    /// let workspace = workspace::current();
+    /// let packages = workspace.workspace_packages();
+    ///
+    /// let dist_config = DistConfigBuilder::new("app-dist", workspace);
+    /// dist_config.cargo_build_options(["--features", "feature-a"]).build()?;
+    /// # Ok(())
+    /// # }
+    #[cfg(feature = "subcommand-dist-build-bin")]
+    #[cfg_attr(docsrs, doc(cfg(feature = "subcommand-dist-build-bin")))]
+    pub fn cargo_build_options(
+        mut self,
+        options: impl IntoIterator<Item = impl Into<String>>,
+    ) -> Self {
+        self.cargo_build_options
+            .extend(options.into_iter().map(Into::into));
+        self
+    }
+
     /// Builds a [`DistConfig`] from the current configuration.
     ///
     /// # Errors
@@ -238,6 +269,8 @@ impl<'a> DistConfigBuilder<'a> {
             dist_target_directory: self.dist_target_directory,
             dist_base_working_directory: self.dist_base_working_directory,
             packages: self.packages,
+            #[cfg(feature = "subcommand-dist-build-bin")]
+            cargo_build_options: self.cargo_build_options,
         })
     }
 }
@@ -264,6 +297,8 @@ pub struct DistConfig<'a> {
     dist_target_directory: Utf8PathBuf,
     dist_base_working_directory: Utf8PathBuf,
     packages: Vec<DistPackageConfig<'a>>,
+    #[cfg(feature = "subcommand-dist-build-bin")]
+    cargo_build_options: Vec<String>,
 }
 
 impl<'a> DistConfig<'a> {
@@ -301,5 +336,12 @@ impl<'a> DistConfig<'a> {
     /// Returns the configurations of the packages that will be distributed.
     pub fn packages(&self) -> &[DistPackageConfig] {
         &self.packages
+    }
+
+    /// Returns the cargo build options that will be used to build the
+    #[cfg(feature = "subcommand-dist-build-bin")]
+    #[cfg_attr(docsrs, doc(cfg(feature = "subcommand-dist-build-bin")))]
+    pub fn cargo_build_options(&self) -> &[String] {
+        &self.cargo_build_options
     }
 }

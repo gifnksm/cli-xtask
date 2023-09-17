@@ -12,6 +12,8 @@ pub struct DistTargetConfigBuilder<'a> {
     name: String,
     metadata: &'a Target,
     command: Option<clap::Command>,
+    #[cfg(feature = "subcommand-dist-build-bin")]
+    cargo_build_options: Vec<String>,
 }
 
 impl<'a> DistTargetConfigBuilder<'a> {
@@ -20,6 +22,8 @@ impl<'a> DistTargetConfigBuilder<'a> {
             name: target.name.clone(),
             metadata: target,
             command: None,
+            #[cfg(feature = "subcommand-dist-build-bin")]
+            cargo_build_options: vec![],
         }
     }
 
@@ -33,12 +37,26 @@ impl<'a> DistTargetConfigBuilder<'a> {
             name: name.to_string(),
             metadata: target,
             command: None,
+            #[cfg(feature = "subcommand-dist-build-bin")]
+            cargo_build_options: vec![],
         })
     }
 
     /// Set the command line interface definition for the target.
     pub fn command(mut self, command: clap::Command) -> Self {
         self.command = Some(command);
+        self
+    }
+
+    /// Adds cargo build options to be used when building the target.
+    #[cfg(feature = "subcommand-dist-build-bin")]
+    #[cfg_attr(docsrs, doc(cfg(feature = "subcommand-dist-build-bin")))]
+    pub fn cargo_build_options(
+        mut self,
+        options: impl IntoIterator<Item = impl Into<String>>,
+    ) -> Self {
+        self.cargo_build_options
+            .extend(options.into_iter().map(Into::into));
         self
     }
 
@@ -52,6 +70,8 @@ impl<'a> DistTargetConfigBuilder<'a> {
             name: self.name,
             metadata: self.metadata,
             command: self.command,
+            #[cfg(feature = "subcommand-dist-build-bin")]
+            cargo_build_options: self.cargo_build_options,
         })
     }
 }
@@ -62,6 +82,8 @@ pub struct DistTargetConfig<'a> {
     name: String,
     metadata: &'a Target,
     command: Option<clap::Command>,
+    #[cfg(feature = "subcommand-dist-build-bin")]
+    cargo_build_options: Vec<String>,
 }
 
 impl<'a> DistTargetConfig<'a> {
@@ -78,5 +100,12 @@ impl<'a> DistTargetConfig<'a> {
     /// Returns the command line interface definition for the target.
     pub fn command(&self) -> Option<&clap::Command> {
         self.command.as_ref()
+    }
+
+    /// Returns the cargo build options to be used when building the target.
+    #[cfg(feature = "subcommand-dist-build-bin")]
+    #[cfg_attr(docsrs, doc(cfg(feature = "subcommand-dist-build-bin")))]
+    pub fn cargo_build_options(&self) -> &[String] {
+        &self.cargo_build_options
     }
 }

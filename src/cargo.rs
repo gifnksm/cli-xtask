@@ -2,13 +2,14 @@
 
 use std::{
     io::BufReader,
+    iter,
     process::{Command, Stdio},
 };
 
 use cargo_metadata::{
     camino::Utf8PathBuf, Artifact, Message, Metadata, MetadataCommand, Package, Target,
 };
-use eyre::{bail, ensure};
+use eyre::{bail, ensure, eyre};
 
 use crate::{Error, Result};
 
@@ -121,6 +122,13 @@ pub fn build<'a>(
                 ensure!(exe.is_file(), "Artifact is not a file: {exe}");
                 Ok(exe)
             })
-        });
+        })
+        .chain(
+            iter::once_with(move || cmd.wait()).filter_map(|res| match res {
+                Ok(status) if status.success() => None,
+                Ok(status) => Some(Err(eyre!("cargo build failed: {status}"))),
+                Err(e) => Some(Err(e.into())),
+            }),
+        );
     Ok(it)
 }

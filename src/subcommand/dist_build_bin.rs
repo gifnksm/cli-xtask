@@ -58,13 +58,22 @@ impl DistBuildBin {
         let bin_dir = config.dist_working_directory(Some(target_triple.unwrap_or(default_target)));
         crate::fs::create_or_cleanup_dir(&bin_dir)?;
 
+        let common_build_options = config.cargo_build_options();
         for package in config.packages() {
+            let package_build_options = package.cargo_build_options();
             for target in package.targets() {
+                let target_build_options = target.cargo_build_options();
+                let build_options = common_build_options
+                    .iter()
+                    .chain(package_build_options.iter())
+                    .chain(target_build_options.iter())
+                    .map(|s| s.as_str());
                 let artifacts = cargo::build(
                     config.metadata(),
                     Some(package.metadata()),
                     Some(target.metadata()),
                     Some("release"),
+                    build_options,
                     use_cross,
                     target_triple,
                 )?;

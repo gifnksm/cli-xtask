@@ -20,7 +20,7 @@ use crate::{Error, Result};
 /// # fn main() -> cli_xtask::Result<()> {
 /// // executes cargo build
 /// let workspace = cli_xtask::workspace::current();
-/// for bin in cli_xtask::cargo::build(workspace, None, None, None, false, None)? {
+/// for bin in cli_xtask::cargo::build(workspace, None, None, None, None, false, None)? {
 ///     let bin = bin?;
 ///     println!("{bin}");
 /// }
@@ -34,6 +34,7 @@ use crate::{Error, Result};
 ///     Some(&package),
 ///     Some(target),
 ///     Some("release"),
+///     vec!["--features", "feature-a"],
 ///     true,
 ///     Some("aarch64-unknown-linux-gnu"),
 /// )? {
@@ -46,12 +47,13 @@ use crate::{Error, Result};
 #[tracing::instrument(name = "cargo::build", skip_all, err)]
 pub fn build<'a>(
     metadata: &'a Metadata,
-    package: Option<&Package>,
-    target: Option<&Target>,
-    profile: Option<&str>,
+    package: Option<&'a Package>,
+    target: Option<&'a Target>,
+    profile: Option<&'a str>,
+    build_options: impl IntoIterator<Item = &'a str>,
     use_cross: bool,
-    target_triple: Option<&str>,
-) -> Result<impl Iterator<Item = Result<Utf8PathBuf>> + 'a> {
+    target_triple: Option<&'a str>,
+) -> Result<impl IntoIterator<Item = Result<Utf8PathBuf>> + 'a> {
     let cmd_name = if use_cross { "cross" } else { "cargo" };
     let mut args = vec!["build"];
 
@@ -79,6 +81,8 @@ pub fn build<'a>(
     if let Some(target_triple) = target_triple {
         args.extend(["--target", target_triple]);
     }
+
+    args.extend(build_options);
 
     let cross_target_dir = if use_cross {
         let mut cmd = MetadataCommand::new();

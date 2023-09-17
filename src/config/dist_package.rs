@@ -63,6 +63,8 @@ pub struct DistPackageConfigBuilder<'a> {
     name: String,
     metadata: &'a Package,
     targets: Option<Vec<DistTargetConfig<'a>>>,
+    #[cfg(feature = "subcommand-dist-build-bin")]
+    cargo_build_options: Vec<String>,
     #[cfg(feature = "subcommand-dist-build-license")]
     license_files: Option<Vec<Utf8PathBuf>>,
     #[cfg(feature = "subcommand-dist-build-doc")]
@@ -75,6 +77,8 @@ impl<'a> DistPackageConfigBuilder<'a> {
             name: package.name.clone(),
             metadata: package,
             targets: None,
+            #[cfg(feature = "subcommand-dist-build-bin")]
+            cargo_build_options: vec![],
             #[cfg(feature = "subcommand-dist-build-license")]
             license_files: None,
             #[cfg(feature = "subcommand-dist-build-doc")]
@@ -285,6 +289,32 @@ impl<'a> DistPackageConfigBuilder<'a> {
         self
     }
 
+    /// Adds cargo build options to be used when building the package.
+    ///
+    /// # Examples
+    ///
+    /// ```rust
+    /// # fn main() -> cli_xtask::Result<()> {
+    /// use cli_xtask::{config::DistConfigBuilder, workspace};
+    ///
+    /// let workspace = workspace::current();
+    ///
+    /// let (dist_config, pkg_config) = DistConfigBuilder::from_root_package(workspace)?;
+    /// let pkg_config = pkg_config.cargo_build_options(["--features", "feature-a"]);
+    /// # Ok(())
+    /// # }
+    /// ```
+    #[cfg(feature = "subcommand-dist-build-bin")]
+    #[cfg_attr(docsrs, doc(cfg(feature = "subcommand-dist-build-bin")))]
+    pub fn cargo_build_options(
+        mut self,
+        options: impl IntoIterator<Item = impl Into<String>>,
+    ) -> Self {
+        self.cargo_build_options
+            .extend(options.into_iter().map(Into::into));
+        self
+    }
+
     /// Adds a package license files to the list of files to be distributed.
     ///
     /// If the given path is a relative path, it is resolved against the package
@@ -379,6 +409,8 @@ impl<'a> DistPackageConfigBuilder<'a> {
             name: self.name,
             metadata: self.metadata,
             targets,
+            #[cfg(feature = "subcommand-dist-build-bin")]
+            cargo_build_options: self.cargo_build_options,
             #[cfg(feature = "subcommand-dist-build-license")]
             license_files: collect_license_files(self.metadata, self.license_files)?,
             #[cfg(feature = "subcommand-dist-build-doc")]
@@ -393,6 +425,8 @@ pub struct DistPackageConfig<'a> {
     name: String,
     metadata: &'a Package,
     targets: Vec<DistTargetConfig<'a>>,
+    #[cfg(feature = "subcommand-dist-build-bin")]
+    cargo_build_options: Vec<String>,
     #[cfg(feature = "subcommand-dist-build-license")]
     license_files: Vec<Utf8PathBuf>,
     #[cfg(feature = "subcommand-dist-build-doc")]
@@ -424,6 +458,13 @@ impl<'a> DistPackageConfig<'a> {
     /// Returns the path to the package's root directory.
     pub fn root_directory(&self) -> &Utf8Path {
         self.metadata.root_directory()
+    }
+
+    /// Returns the list of cargo build options to be used when building the
+    #[cfg(feature = "subcommand-dist-build-bin")]
+    #[cfg_attr(docsrs, doc(cfg(feature = "subcommand-dist-build-bin")))]
+    pub fn cargo_build_options(&self) -> &[String] {
+        &self.cargo_build_options
     }
 
     /// Returns the list of license files to be distributed.

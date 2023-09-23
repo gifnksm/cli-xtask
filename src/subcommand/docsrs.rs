@@ -239,17 +239,15 @@ impl DocsrsMetadata {
             s.push_str(&self.rustc_args.join(" "));
         }
 
-        // copied from https://github.com/rust-lang/docs.rs/blob/a074c8a3ad66857bae654454e1eee507bb76422d/src/docbuilder/rustwide_builder.rs#L708
+        // copied from https://github.com/rust-lang/docs.rs/blob/4635eb745e77c6de9c055cb7334f48375c0cda5d/src/docbuilder/rustwide_builder.rs#L776
         let mut rustdoc_args = vec![
             "-Zunstable-options",
             // Coment out so that static resouces are loaded when the document is published on
-            // GitHub Pages "--static-root-path",
-            // "/",
+            // GitHub Pages
+            // "--static-root-path", "/-/rustdoc.static/",
 
             // Comment out to accept `-D warnings` for CI
-            // "--cap-lints",
-            // "warn",
-            "--disable-per-crate-search",
+            // "--cap-lints", "warn",
             "--extern-html-root-takes-precedence",
         ];
         rustdoc_args.extend(self.rustdoc_args.iter().map(|s| s.as_str()));

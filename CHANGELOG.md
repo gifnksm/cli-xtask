@@ -9,6 +9,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased] - ReleaseDate
 
+### Changed
+
+* (breaking change) return type of `cargo::build` is now `Result<impl Iteraotr, Error>`
+
 ## [0.7.1] - 2023-09-23
 
 ## [0.7.0] - 2023-09-17

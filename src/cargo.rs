@@ -54,7 +54,7 @@ pub fn build<'a>(
     build_options: impl IntoIterator<Item = &'a str>,
     use_cross: bool,
     target_triple: Option<&'a str>,
-) -> Result<impl IntoIterator<Item = Result<Utf8PathBuf>> + 'a> {
+) -> Result<impl Iterator<Item = Result<Utf8PathBuf>> + 'a> {
     let cmd_name = if use_cross { "cross" } else { "cargo" };
     let mut args = vec!["build"];
 

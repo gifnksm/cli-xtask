@@ -1,4 +1,4 @@
-use std::{any::Any, collections::HashMap, fs, process::Command};
+use std::{collections::HashMap, fs, process::Command};
 
 use cargo_metadata::Package;
 use serde::Deserialize;
@@ -34,18 +34,6 @@ pub struct Docsrs {
 impl Run for Docsrs {
     fn run(&self, config: &Config) -> Result<()> {
         self.run(config)
-    }
-
-    fn into_any(self: Box<Self>) -> Box<dyn Any> {
-        self
-    }
-
-    fn as_any(&self) -> &dyn Any {
-        self
-    }
-
-    fn as_any_mut(&mut self) -> &mut dyn Any {
-        self
     }
 }
 

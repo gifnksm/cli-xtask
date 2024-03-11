@@ -112,7 +112,7 @@ clap_complete = { version = "4.4.1", optional = true }
 clap_mangen = { version = "0.2.13", optional = true }
 color-eyre = { version = "0.6.2", optional = true }
 eyre = "0.6.8"
-flate2 = { version = "1.0.27", optional = true }
+flate2 = { version = "1.0.28", optional = true }
 once_cell = "1.18.0"
 regex = { version = "1.9.5", optional = true }
 serde = { version = "1.0.188", optional = true, features = ["derive"] }

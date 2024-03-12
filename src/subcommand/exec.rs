@@ -1,4 +1,4 @@
-use std::{any::Any, process::Command};
+use std::process::Command;
 
 use crate::{
     args::{EnvArgs, WorkspaceArgs},
@@ -27,18 +27,6 @@ pub struct Exec {
 impl Run for Exec {
     fn run(&self, config: &Config) -> Result<()> {
         self.run(config)
-    }
-
-    fn into_any(self: Box<Self>) -> Box<dyn Any> {
-        self
-    }
-
-    fn as_any(&self) -> &dyn Any {
-        self
-    }
-
-    fn as_any_mut(&mut self) -> &mut dyn Any {
-        self
     }
 }
 

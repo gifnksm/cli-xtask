@@ -1,4 +1,4 @@
-use std::{any::Any, iter};
+use std::iter;
 
 use cargo_metadata::camino::{Utf8Path, Utf8PathBuf};
 use chrono::{Datelike, Utc};
@@ -15,18 +15,6 @@ pub struct DistBuildMan {}
 impl Run for DistBuildMan {
     fn run(&self, config: &Config) -> Result<()> {
         self.run(config)
-    }
-
-    fn into_any(self: Box<Self>) -> Box<dyn Any> {
-        self
-    }
-
-    fn as_any(&self) -> &dyn Any {
-        self
-    }
-
-    fn as_any_mut(&mut self) -> &mut dyn Any {
-        self
     }
 }
 

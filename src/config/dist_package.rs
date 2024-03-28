@@ -141,7 +141,7 @@ impl<'a> DistPackageConfigBuilder<'a> {
     /// let workspace = workspace::current();
     ///
     /// let (dist_config, pkg_config) = DistConfigBuilder::from_package_name(workspace, "cli-xtask")?;
-    /// let target_builders = pkg_config.all_targets("lib");
+    /// let target_builders = pkg_config.all_targets("bin");
     /// let targets = target_builders
     ///     .into_iter()
     ///     .map(DistTargetConfigBuilder::build)
@@ -213,7 +213,7 @@ impl<'a> DistPackageConfigBuilder<'a> {
     /// let workspace = workspace::current();
     ///
     /// let (dist_config, pkg_config) = DistConfigBuilder::from_package_name(workspace, "cli-xtask")?;
-    /// let target_builder = pkg_config.target_by_name("cli-xtask", "lib")?;
+    /// let target_builder = pkg_config.target_by_name("cli-xtask", "bin")?;
     /// let target = target_builder.build()?;
     /// let pkg_config = pkg_config.target(target).build()?;
     /// let dist_config = dist_config.package(pkg_config).build()?;
@@ -242,7 +242,7 @@ impl<'a> DistPackageConfigBuilder<'a> {
     /// let workspace = workspace::current();
     ///
     /// let (dist_config, pkg_config) = DistConfigBuilder::from_package_name(workspace, "cli-xtask")?;
-    /// let target_builder = pkg_config.target_by_name("cli-xtask", "lib")?;
+    /// let target_builder = pkg_config.target_by_name("cli-xtask", "bin")?;
     /// let target = target_builder.build()?;
     /// let pkg_config = pkg_config.target(target).build()?;
     /// let dist_config = dist_config.package(pkg_config).build()?;
@@ -271,7 +271,7 @@ impl<'a> DistPackageConfigBuilder<'a> {
     /// let workspace = workspace::current();
     ///
     /// let (dist_config, pkg_config) = DistConfigBuilder::from_package_name(workspace, "cli-xtask")?;
-    /// let target_builders = pkg_config.all_targets("lib");
+    /// let target_builders = pkg_config.all_targets("bin");
     /// let targets = target_builders
     ///     .into_iter()
     ///     .map(DistTargetConfigBuilder::build)

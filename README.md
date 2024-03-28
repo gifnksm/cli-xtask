@@ -6,7 +6,7 @@
 [![License: MIT OR Apache-2.0](https://img.shields.io/crates/l/cli-xtask.svg?style=flat-square)](#license)
 [![crates.io](https://img.shields.io/crates/v/cli-xtask.svg?logo=rust&style=flat-square)](https://crates.io/crates/cli-xtask)
 [![docs.rs](https://img.shields.io/docsrs/cli-xtask.svg?logo=docs.rs&style=flat-square)](https://docs.rs/cli-xtask)
-[![Rust: ^1.70.0](https://img.shields.io/badge/rust-^1.70.0-93450a.svg?logo=rust&style=flat-square)](https://doc.rust-lang.org/cargo/reference/manifest.html#the-rust-version-field)
+[![Rust: ^1.74.0](https://img.shields.io/badge/rust-^1.74.0-93450a.svg?logo=rust&style=flat-square)](https://doc.rust-lang.org/cargo/reference/manifest.html#the-rust-version-field)
 [![GitHub Actions: CI](https://img.shields.io/github/actions/workflow/status/gifnksm/cli-xtask/ci.yml.svg?label=CI&logo=github&style=flat-square)](https://github.com/gifnksm/cli-xtask/actions/workflows/ci.yml)
 [![Codecov](https://img.shields.io/codecov/c/github/gifnksm/cli-xtask.svg?label=codecov&logo=codecov&style=flat-square)](https://codecov.io/gh/gifnksm/cli-xtask)
 <!-- cargo-sync-rdme ]] -->
@@ -95,7 +95,7 @@ See the [Feature flags section](#feature-flags) for more information.
 
 If you want to add the subcommands that are not included in this crate,
 you can add them by creating a new data structure that implements the
-[`clap::Subcommand`](https://docs.rs/clap_builder/4.4.2/clap_builder/derive/trait.Subcommand.html) and [`Run`](https://docs.rs/cli-xtask/latest/cli_xtask/trait.Run.html).
+[`clap::Subcommand`](https://docs.rs/clap_builder/4.5.2/clap_builder/derive/trait.Subcommand.html) and [`Run`](https://docs.rs/cli-xtask/latest/cli_xtask/trait.Run.html).
 See [the documentation of `Xtask`](https://docs.rs/cli-xtask/latest/cli_xtask/command/struct.Xtask.html) for more
 information.
 
@@ -174,7 +174,7 @@ The following features require third-party tools:
 
 ## Minimum supported Rust version (MSRV)
 
-The minimum supported Rust version is **Rust 1.70.0**.
+The minimum supported Rust version is **Rust 1.74.0**.
 At least the last 3 versions of stable Rust are supported at any given time.
 
 While a crate is a pre-release status (0.x.x) it may have its MSRV bumped in

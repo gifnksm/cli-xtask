@@ -136,7 +136,7 @@ jobs:
           token: ${{ secrets.CODECOV_TOKEN }}
           files: |
             **/lcov-*.info
-          fail_ci_if_error: true
+          fail_ci_if_error: false
 
   coverage_integration_test:
     name: Coverage (integration test)
@@ -168,7 +168,7 @@ jobs:
           token: ${{ secrets.CODECOV_TOKEN }}
           files: |
             **/lcov-*.info
-          fail_ci_if_error: true
+          fail_ci_if_error: false
 
 
   build:

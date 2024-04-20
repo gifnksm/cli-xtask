@@ -9,6 +9,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased] - ReleaseDate
 
+* Add default implementations of the conversion functions on the Run trait to simplify implementations
+
 ## [0.8.0] - 2023-09-24
 
 ### Changed

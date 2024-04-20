@@ -287,13 +287,28 @@ pub trait Run: Any {
     }
 
     /// Converts the `Box<dyn Run>` to `Box<dyn Any>`.
-    fn into_any(self: Box<Self>) -> Box<dyn Any>;
+    fn into_any(self: Box<Self>) -> Box<dyn Any>
+    where
+        Self: Sized,
+    {
+        self
+    }
 
     /// Converts the `&dyn Run` trait object to a concrete type.
-    fn as_any(&self) -> &dyn Any;
+    fn as_any(&self) -> &dyn Any
+    where
+        Self: Sized,
+    {
+        self
+    }
 
     /// Converts the `&dyn Run` trait object to a mutable concrete type.
-    fn as_any_mut(&mut self) -> &mut dyn Any;
+    fn as_any_mut(&mut self) -> &mut dyn Any
+    where
+        Self: Sized,
+    {
+        self
+    }
 }
 
 /// Subcommands that this command will run.
@@ -343,34 +358,19 @@ mod tests {
         fn run(&self, _config: &config::Config) -> Result<()> {
             Ok(())
         }
-
-        fn into_any(self: Box<Self>) -> Box<dyn Any> {
-            self
-        }
-
-        fn as_any(&self) -> &dyn Any {
-            self
-        }
-
-        fn as_any_mut(&mut self) -> &mut dyn Any {
-            self
-        }
     }
 
     #[test]
     fn run_downcast() {
-        let s = S(42);
-        let s = &s as &(dyn Run);
+        let s = &S(42);
         let s = s.as_any().downcast_ref::<S>().unwrap();
         assert_eq!(s.0, 42);
 
-        let mut s = S(42);
-        let s = &mut s as &mut (dyn Run);
+        let s = &mut S(42);
         let s = s.as_any_mut().downcast_mut::<S>().unwrap();
         assert_eq!(s.0, 42);
 
-        let s = S(42);
-        let s = Box::new(s) as Box<dyn Run>;
+        let s = Box::new(S(42));
         let s = s.into_any().downcast::<S>().unwrap();
         assert_eq!(s.0, 42);
     }

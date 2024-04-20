@@ -1,5 +1,3 @@
-use std::any::Any;
-
 use crate::{config::Config, Result, Run, SubcommandRun};
 
 /// Arguments definition of the `pre-release` subcommand.
@@ -15,18 +13,6 @@ impl Run for PreRelease {
 
     fn to_subcommands(&self) -> Option<SubcommandRun> {
         Some(self.to_subcommands())
-    }
-
-    fn into_any(self: Box<Self>) -> Box<dyn Any> {
-        self
-    }
-
-    fn as_any(&self) -> &dyn Any {
-        self
-    }
-
-    fn as_any_mut(&mut self) -> &mut dyn Any {
-        self
     }
 }
 

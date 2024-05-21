@@ -6,12 +6,14 @@ fn main() {
     if command_enabled {
         println!("cargo:rustc-cfg=subcommand");
     }
+    println!("cargo::rustc-check-cfg=cfg(subcommand)");
 
     let command_build_enabled = std::env::vars()
         .any(|(name, var)| name.starts_with("CARGO_FEATURE_SUBCOMMAND_DIST_BUILD_") && var == "1");
     if command_build_enabled {
         println!("cargo:rustc-cfg=subcommand_dist_build");
     }
+    println!("cargo::rustc-check-cfg=cfg(subcommand_dist_build)");
 
     println!(
         "cargo:rustc-env=DEFAULT_TARGET={}",

@@ -108,7 +108,7 @@ subcommand-udeps = []
 cargo_metadata = "0.18.1"
 chrono = { version = "0.4.38", features = ["clock"], optional = true }
 clap = { version = "4.5.7", features = ["derive"] }
-clap_complete = { version = "4.5.3", optional = true }
+clap_complete = { version = "4.5.5", optional = true }
 clap_mangen = { version = "0.2.21", optional = true }
 color-eyre = { version = "0.6.3", optional = true }
 eyre = "0.6.12"

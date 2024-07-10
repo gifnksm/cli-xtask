@@ -107,7 +107,7 @@ subcommand-udeps = []
 [dependencies]
 cargo_metadata = "0.18.1"
 chrono = { version = "0.4.38", features = ["clock"], optional = true }
-clap = { version = "4.5.8", features = ["derive"] }
+clap = { version = "4.5.9", features = ["derive"] }
 clap_complete = { version = "4.5.7", optional = true }
 clap_mangen = { version = "0.2.22", optional = true }
 color-eyre = { version = "0.6.3", optional = true }
@@ -115,7 +115,7 @@ eyre = "0.6.12"
 flate2 = { version = "1.0.30", optional = true }
 once_cell = "1.19.0"
 regex = { version = "1.10.5", optional = true }
-serde = { version = "1.0.203", optional = true, features = ["derive"] }
+serde = { version = "1.0.204", optional = true, features = ["derive"] }
 serde_json = { version = "1.0.120", optional = true }
 tar = { version = "0.4.41", optional = true }
 tracing = "0.1.40"

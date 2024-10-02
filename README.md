@@ -27,7 +27,7 @@ This crate provides the following utilities:
   * Integrated with  [`rustfmt`], [`clippy`], [`cargo-sync-rdme`].
 * **[`cargo xtask pre-release`]**
   * Checks if your bin/lib crate is ready for a release.
-* **[`cargo xtask build`], [`clippy`](https://docs.rs/cli-xtask/latest/cli_xtask/subcommand/clippy/struct.Clippy.html), [`doc`](https://docs.rs/cli-xtask/latest/cli_xtask/subcommand/doc/struct.Doc.html), [`fmt`](https://docs.rs/cli-xtask/latest/cli_xtask/subcommand/fmt/struct.Fmt.html), [`test`](https://docs.rs/cli-xtask/latest/cli_xtask/subcommand/test/struct.Test.html)**
+* **[`cargo xtask build`], [`clippy`][`cargo xtask clippy`], [`doc`][`cargo xtask doc`], [`fmt`][`cargo xtask fmt`], [`test`][`cargo xtask test`]**
   * Runs the cargo commands with options useful for testing and continuous
     integration.
     * **`--all-workspaces`** - Runs the cargo commands for all workspaces.
@@ -45,7 +45,7 @@ This crate provides the following utilities:
 ## Usage
 
 First, create an `xtask` crate following the [instructions on the
-cargo-xtask website](https://github.com/matklad/cargo-xtask#defining-xtasks).
+cargo-xtask website][xtask-setup].
 
 Then, run the following command to add `cli-xtask` to the dependencies.
 
@@ -95,7 +95,7 @@ See the [Feature flags section](#feature-flags) for more information.
 
 If you want to add the subcommands that are not included in this crate,
 you can add them by creating a new data structure that implements the
-[`clap::Subcommand`](https://docs.rs/clap_builder/4.5.17/clap_builder/derive/trait.Subcommand.html) and [`Run`](https://docs.rs/cli-xtask/latest/cli_xtask/trait.Run.html).
+[`clap::Subcommand`](https://docs.rs/clap_builder/4.5.19/clap_builder/derive/trait.Subcommand.html) and [`Run`](https://docs.rs/cli-xtask/latest/cli_xtask/trait.Run.html).
 See [the documentation of `Xtask`](https://docs.rs/cli-xtask/latest/cli_xtask/command/struct.Xtask.html) for more
 information.
 
@@ -210,10 +210,14 @@ See [CONTRIBUTING.md].
 [`cargo xtask tidy`]: https://docs.rs/cli-xtask/latest/cli_xtask/subcommand/tidy/struct.Tidy.html
 [`cargo xtask pre-release`]: https://docs.rs/cli-xtask/latest/cli_xtask/subcommand/pre_release/struct.PreRelease.html
 [`cargo xtask build`]: https://docs.rs/cli-xtask/latest/cli_xtask/subcommand/build/struct.Build.html
+[`cargo xtask clippy`]: https://docs.rs/cli-xtask/latest/cli_xtask/subcommand/clippy/struct.Clippy.html
+[`cargo xtask doc`]: https://docs.rs/cli-xtask/latest/cli_xtask/subcommand/doc/struct.Doc.html
+[`cargo xtask fmt`]: https://docs.rs/cli-xtask/latest/cli_xtask/subcommand/fmt/struct.Fmt.html
+[`cargo xtask test`]: https://docs.rs/cli-xtask/latest/cli_xtask/subcommand/test/struct.Test.html
 [`cargo xtask docsrs`]: https://docs.rs/cli-xtask/latest/cli_xtask/subcommand/docsrs/struct.Docsrs.html
 [docs.rs]: https://docs.rs/
 [`cargo xtask exec`]: https://docs.rs/cli-xtask/latest/cli_xtask/subcommand/exec/struct.Exec.html
-[`cargo xtask clippy`]: https://docs.rs/cli-xtask/latest/cli_xtask/subcommand/clippy/struct.Clippy.html
+[xtask-setup]: https://github.com/matklad/cargo-xtask#defining-xtasks
 [`cargo xtask dist-archive`]: https://docs.rs/cli-xtask/latest/cli_xtask/subcommand/dist_archive/struct.DistArchive.html
 [`cargo xtask dist-build-bin`]: https://docs.rs/cli-xtask/latest/cli_xtask/subcommand/dist_build_bin/struct.DistBuildBin.html
 [`cargo xtask dist-build-completion`]: https://docs.rs/cli-xtask/latest/cli_xtask/subcommand/dist_build_completion/struct.DistBuildCompletion.html
@@ -222,9 +226,6 @@ See [CONTRIBUTING.md].
 [`cargo xtask dist-build-man`]: https://docs.rs/cli-xtask/latest/cli_xtask/subcommand/dist_build_man/struct.DistBuildMan.html
 [`cargo xtask dist-build-readme`]: https://docs.rs/cli-xtask/latest/cli_xtask/subcommand/dist_build_readme/struct.DistBuildReadme.html
 [`cargo xtask dist-clean`]: https://docs.rs/cli-xtask/latest/cli_xtask/subcommand/dist_clean/struct.DistClean.html
-[`cargo xtask doc`]: https://docs.rs/cli-xtask/latest/cli_xtask/subcommand/doc/struct.Doc.html
-[`cargo xtask fmt`]: https://docs.rs/cli-xtask/latest/cli_xtask/subcommand/fmt/struct.Fmt.html
-[`cargo xtask test`]: https://docs.rs/cli-xtask/latest/cli_xtask/subcommand/test/struct.Test.html
 [`cargo xtask sync-rdme`]: https://docs.rs/cli-xtask/latest/cli_xtask/subcommand/sync_rdme/struct.SyncRdme.html
 [`cargo xtask udeps`]: https://docs.rs/cli-xtask/latest/cli_xtask/subcommand/udeps/struct.Udeps.html
 [LICENSE-APACHE]: https://github.com/gifnksm/cli-xtask/blob/main/LICENSE-APACHE

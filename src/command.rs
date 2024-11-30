@@ -115,7 +115,12 @@ mod main;
 /// ```
 #[derive(Debug, Clone, Default, clap::Parser)]
 #[non_exhaustive]
-#[clap(bin_name = "cargo xtask", about = "Rust project automation command", long_about = None)]
+#[clap(
+    bin_name = "cargo xtask",
+    about = "Rust project automation command",
+    long_about = None,
+    styles = clap_cargo::style::CLAP_STYLING
+)]
 pub struct Xtask<Subcommand = crate::subcommand::Subcommand>
 where
     Subcommand: clap::Subcommand,

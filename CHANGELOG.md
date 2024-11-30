@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 * Add default implementations of the conversion functions on the Run trait to simplify implementations
 * Add `DistConfigBuilder::from_default_packages`
+* (breaking change) Run commands for default workspace memmbers instead of root package if no package name specified
 
 ## [0.8.0] - 2023-09-24
 

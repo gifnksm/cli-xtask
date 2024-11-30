@@ -43,7 +43,7 @@ impl<'a> DistConfigBuilder<'a> {
     /// use cli_xtask::{config::DistConfigBuilder, workspace};
     ///
     /// let workspace = workspace::current();
-    /// let config = DistConfigBuilder::new("app", workspace).build()?;
+    /// let config = DistConfigBuilder::new("app-v1.0", workspace).build()?;
     /// # Ok(())
     /// # }
     /// ```
@@ -61,6 +61,31 @@ impl<'a> DistConfigBuilder<'a> {
             #[cfg(feature = "subcommand-dist-build-bin")]
             cargo_build_options: vec![],
         }
+    }
+
+    /// Creates a new `DistConfigBuilder` from the default packages of the given workspace.
+    ///
+    /// Created `DistConfig` will be associated with current cargo workspace.
+    ///
+    /// # Examples
+    ///
+    /// ```rust
+    /// # fn main() -> cli_xtask::Result<()> {
+    /// use cli_xtask::{config::{DistConfigBuilder, DistPackageConfigBuilder}, workspace};
+    ///
+    /// let workspace = workspace::current();
+    ///
+    /// let (dist_config, pkg_configs) = DistConfigBuilder::from_default_packages("app-v1.0", workspace);
+    /// let pkg_configs = pkg_configs.into_iter().map(DistPackageConfigBuilder::build).collect::<Result<Vec<_>, _>>()?;
+    /// let dist_config = dist_config.packages(pkg_configs).build()?;
+    /// # Ok(())
+    /// # }
+    /// ```
+    pub fn from_default_packages(
+        name: impl Into<String>,
+        workspace: &'a Metadata,
+    ) -> (Self, Vec<DistPackageConfigBuilder<'a>>) {
+        Self::from_packages(name, workspace, &workspace.workspace_default_packages())
     }
 
     /// Creates a new `DistConfigBuilder` from the root package of given
@@ -152,6 +177,22 @@ impl<'a> DistConfigBuilder<'a> {
         let package_builder = DistPackageConfigBuilder::new(package);
 
         (dist, package_builder)
+    }
+
+    fn from_packages(
+        name: impl Into<String>,
+        workspace: &'a Metadata,
+        packages: &[&'a Package],
+    ) -> (Self, Vec<DistPackageConfigBuilder<'a>>) {
+        let name = name.into();
+
+        let dist = Self::new(name, workspace);
+        let package_builders = packages
+            .iter()
+            .copied()
+            .map(DistPackageConfigBuilder::new)
+            .collect();
+        (dist, package_builders)
     }
 
     /// Creates a new [`DistPackageConfigBuilder`] from the given package name.

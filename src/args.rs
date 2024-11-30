@@ -184,11 +184,11 @@ impl PackageArgs {
                     vec![pkg]
                 } else {
                     let current_dir = Utf8PathBuf::try_from(env::current_dir()?)?;
-                    let pkg = workspace
-                        .workspace_package_by_path(&current_dir)
-                        .or_else(|| workspace.root_package())
-                        .ok_or_else(|| eyre!("Package not found"))?;
-                    vec![pkg]
+                    if let Some(pkg) = workspace.workspace_package_by_path(&current_dir) {
+                        vec![pkg]
+                    } else {
+                        workspace.workspace_default_packages()
+                    }
                 };
                 let it = packages
                     .into_iter()

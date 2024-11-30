@@ -131,7 +131,7 @@ jobs:
           cargo llvm-cov run -p xtask --lcov --output-path lcov-exec.info -- exec --all-workspaces --exclude-current-workspace -- cargo llvm-cov --workspace --lcov --output-path lcov-test.info
         shell: bash
       - name: Upload coverage to Codecov
-        uses: codecov/codecov-action@v4
+        uses: codecov/codecov-action@v5
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           files: |
@@ -163,7 +163,7 @@ jobs:
         run: cargo llvm-cov run -p xtask --lcov --output-path lcov-xtask.info -- xtask-test --cargo-llvm-cov
         shell: bash
       - name: Upload coverage to Codecov
-        uses: codecov/codecov-action@v4
+        uses: codecov/codecov-action@v5
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           files: |

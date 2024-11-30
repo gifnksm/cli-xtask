@@ -1,3 +1,3 @@
-# simple
+# bin-main
 
 Example CLI application.

@@ -1,4 +1,4 @@
-# with_command
+# bin-main-with-command
 
 <!-- cargo-sync-rdme rustdoc [[ -->
 Example CLI application.

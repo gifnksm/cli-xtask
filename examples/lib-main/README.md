@@ -1,3 +1,3 @@
-# simple
+# lib-main
 
 Example CLI application.

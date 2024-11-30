@@ -1,0 +1,6 @@
+[workspace]
+members = ["app1", "app2", "xtask"]
+default-members = ["app1", "app2"]
+
+[workspace.package]
+publish = false

@@ -86,7 +86,7 @@ pub struct DistTargetConfig<'a> {
     cargo_build_options: Vec<String>,
 }
 
-impl<'a> DistTargetConfig<'a> {
+impl DistTargetConfig<'_> {
     /// Return the name of the target.
     pub fn name(&self) -> &str {
         &self.name

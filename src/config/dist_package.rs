@@ -501,7 +501,7 @@ fn collect_targets<'a>(package: &'a Package, kind: &str) -> Vec<DistTargetConfig
     package
         .targets
         .iter()
-        .filter(|target| target.kind.iter().any(|x| x == kind))
+        .filter(|target| target.kind.iter().any(|x| x == &kind.into()))
         .map(DistTargetConfigBuilder::from_metadata)
         .collect()
 }

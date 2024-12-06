@@ -7,7 +7,7 @@ use std::{
 };
 
 use cargo_metadata::{
-    camino::Utf8PathBuf, Artifact, Message, Metadata, MetadataCommand, Package, Target,
+    camino::Utf8PathBuf, Artifact, Message, Metadata, MetadataCommand, Package, Target, TargetKind,
 };
 use eyre::{bail, ensure, eyre};
 
@@ -64,12 +64,12 @@ pub fn build<'a>(
 
     if let Some(target) = target {
         for kind in &target.kind {
-            match kind.as_str() {
-                "bin" => args.extend(["--bin", target.name.as_str()]),
-                "example" => args.extend(["--example", target.name.as_str()]),
-                "test" => args.extend(["--test", target.name.as_str()]),
-                "bench" => args.extend(["--bench", target.name.as_str()]),
-                "lib" => args.extend(["--lib"]),
+            match kind {
+                TargetKind::Bin => args.extend(["--bin", target.name.as_str()]),
+                TargetKind::Example => args.extend(["--example", target.name.as_str()]),
+                TargetKind::Test => args.extend(["--test", target.name.as_str()]),
+                TargetKind::Bench => args.extend(["--bench", target.name.as_str()]),
+                TargetKind::Lib => args.extend(["--lib"]),
                 _ => bail!("unsupported target kind: {}", kind),
             }
         }

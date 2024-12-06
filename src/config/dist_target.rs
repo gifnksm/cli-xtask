@@ -31,7 +31,7 @@ impl<'a> DistTargetConfigBuilder<'a> {
         let target = package
             .targets
             .iter()
-            .find(|t| t.name == name && t.kind.iter().any(|k| k == kind))
+            .find(|t| t.name == name && t.kind.iter().any(|k| k == &kind.into()))
             .ok_or_else(|| eyre!("command not found: {name}, {kind}"))?;
         Ok(Self {
             name: name.to_string(),

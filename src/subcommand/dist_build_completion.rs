@@ -1,5 +1,7 @@
+use std::fmt;
+
 use cargo_metadata::camino::{Utf8Path, Utf8PathBuf};
-use clap_complete::Shell;
+use clap_complete::Generator;
 
 use crate::{config::Config, fs::ToRelative, Result, Run};
 
@@ -12,6 +14,54 @@ pub struct DistBuildCompletion {}
 impl Run for DistBuildCompletion {
     fn run(&self, config: &Config) -> Result<()> {
         self.run(config)
+    }
+}
+
+#[derive(Debug, Clone, Copy)]
+enum Shell {
+    Bash,
+    Elvish,
+    Fish,
+    #[allow(clippy::enum_variant_names)]
+    PowerShell,
+    Zsh,
+    Nushell,
+}
+
+impl fmt::Display for Shell {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        match self {
+            Shell::Bash => fmt::Display::fmt(&clap_complete::Shell::Bash, f),
+            Shell::Elvish => fmt::Display::fmt(&clap_complete::Shell::Elvish, f),
+            Shell::Fish => fmt::Display::fmt(&clap_complete::Shell::Fish, f),
+            Shell::PowerShell => fmt::Display::fmt(&clap_complete::Shell::PowerShell, f),
+            Shell::Zsh => fmt::Display::fmt(&clap_complete::Shell::Zsh, f),
+            Shell::Nushell => fmt::Display::fmt("nushell", f),
+        }
+    }
+}
+
+impl Generator for Shell {
+    fn file_name(&self, name: &str) -> String {
+        match self {
+            Shell::Bash => Generator::file_name(&clap_complete::Shell::Bash, name),
+            Shell::Elvish => Generator::file_name(&clap_complete::Shell::Elvish, name),
+            Shell::Fish => Generator::file_name(&clap_complete::Shell::Fish, name),
+            Shell::PowerShell => Generator::file_name(&clap_complete::Shell::PowerShell, name),
+            Shell::Zsh => Generator::file_name(&clap_complete::Shell::Zsh, name),
+            Shell::Nushell => Generator::file_name(&clap_complete_nushell::Nushell, name),
+        }
+    }
+
+    fn generate(&self, cmd: &clap::Command, buf: &mut dyn std::io::Write) {
+        match self {
+            Shell::Bash => Generator::generate(&clap_complete::Shell::Bash, cmd, buf),
+            Shell::Elvish => Generator::generate(&clap_complete::Shell::Elvish, cmd, buf),
+            Shell::Fish => Generator::generate(&clap_complete::Shell::Fish, cmd, buf),
+            Shell::PowerShell => Generator::generate(&clap_complete::Shell::PowerShell, cmd, buf),
+            Shell::Zsh => Generator::generate(&clap_complete::Shell::Zsh, cmd, buf),
+            Shell::Nushell => Generator::generate(&clap_complete_nushell::Nushell, cmd, buf),
+        }
     }
 }
 
@@ -33,6 +83,7 @@ impl DistBuildCompletion {
             Shell::Fish,
             Shell::PowerShell,
             Shell::Zsh,
+            Shell::Nushell,
         ];
 
         for package in config.packages() {

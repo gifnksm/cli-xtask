@@ -111,7 +111,7 @@ clap = { version = "4.5.23", features = ["derive"] }
 clap-cargo = "0.15.1"
 clap_complete = { version = "4.5.40", optional = true }
 clap_complete_nushell = { version = "4.5.5", optional = true }
-clap_mangen = { version = "0.2.24", optional = true }
+clap_mangen = { version = "0.2.25", optional = true }
 color-eyre = { version = "0.6.3", optional = true }
 eyre = "0.6.12"
 flate2 = { version = "1.0.35", optional = true }

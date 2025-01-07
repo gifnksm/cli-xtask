@@ -109,7 +109,7 @@ cargo_metadata = "0.19.1"
 chrono = { version = "0.4.39", features = ["clock"], optional = true }
 clap = { version = "4.5.23", features = ["derive"] }
 clap-cargo = "0.15.1"
-clap_complete = { version = "4.5.40", optional = true }
+clap_complete = { version = "4.5.41", optional = true }
 clap_complete_nushell = { version = "4.5.5", optional = true }
 clap_mangen = { version = "0.2.24", optional = true }
 color-eyre = { version = "0.6.3", optional = true }

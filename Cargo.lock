@@ -284,7 +284,6 @@ dependencies = [
  "color-eyre",
  "eyre",
  "flate2",
- "once_cell",
  "regex",
  "serde",
  "serde_json",

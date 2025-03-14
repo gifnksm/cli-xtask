@@ -3,13 +3,13 @@
 use std::{
     cmp::Ordering,
     collections::{hash_map::Entry, HashMap, HashSet},
+    sync::LazyLock,
 };
 
 use cargo_metadata::{
     camino::{Utf8Path, Utf8PathBuf},
     Metadata, MetadataCommand,
 };
-use once_cell::sync::Lazy;
 use walkdir::WalkDir;
 
 use crate::{fs::ToRelative, Result};
@@ -19,7 +19,7 @@ mod package;
 
 pub use self::{metadata::*, package::*};
 
-static WORKSPACES: Lazy<Vec<Metadata>> = Lazy::new(|| {
+static WORKSPACES: LazyLock<Vec<Metadata>> = LazyLock::new(|| {
     let current_dir = std::env::current_dir().unwrap();
     let current_dir = Utf8PathBuf::try_from(current_dir).unwrap();
     collect_workspaces(&current_dir).unwrap()

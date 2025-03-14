@@ -511,7 +511,8 @@ fn collect_license_files(
     package: &Package,
     files: Option<Vec<Utf8PathBuf>>,
 ) -> Result<Vec<Utf8PathBuf>> {
-    use once_cell::sync::Lazy;
+    use std::sync::LazyLock;
+
     use regex::{Regex, RegexBuilder};
     let src_dir = package.root_directory();
 
@@ -531,7 +532,7 @@ fn collect_license_files(
         }
 
         let src_file = src_entry.path();
-        static RE: Lazy<Regex> = Lazy::new(|| {
+        static RE: LazyLock<Regex> = LazyLock::new(|| {
             RegexBuilder::new(r"^LICENSE(?:-|_|\.|$)")
                 .case_insensitive(true)
                 .build()

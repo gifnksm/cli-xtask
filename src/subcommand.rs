@@ -207,13 +207,13 @@ pub enum Subcommand {
     #[cfg_attr(docsrs, doc(cfg(feature = "subcommand-build")))]
     Build(Build),
 
-    /// `cargo clippy` with options useful for tesing and continuous
+    /// `cargo clippy` with options useful for testing and continuous
     /// integration.
     #[cfg(feature = "subcommand-clippy")]
     #[cfg_attr(docsrs, doc(cfg(feature = "subcommand-clippy")))]
     Clippy(Clippy),
 
-    /// Build the artifacs and create the archive file for distribution.
+    /// Build the artifacts and create the archive file for distribution.
     #[cfg(feature = "subcommand-dist")]
     #[cfg_attr(docsrs, doc(cfg(feature = "subcommand-dist")))]
     Dist(Dist),

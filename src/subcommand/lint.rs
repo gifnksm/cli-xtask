@@ -24,7 +24,7 @@ impl Lint {
     /// Returns a list of all subcommands to run.
     pub fn subcommands(&self) -> Vec<Box<dyn Run>> {
         let Self { feature_args } = self;
-        let _ = feature_args.clone(); // supress unused-variables warning
+        let _ = feature_args.clone(); // suppress unused-variables warning
 
         vec![
             // cargo fmt --check

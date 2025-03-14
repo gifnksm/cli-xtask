@@ -108,7 +108,7 @@ fn test_dist_archive(cargo: &Cargo) -> Result<()> {
     let workdir = cargo.target_directory().join("xtask/dist/app-v0.1.0");
     let distdir = cargo.target_directory().join("dist");
 
-    // archive created per archtecture
+    // archive created per architecture
     cargo.cleanup()?;
     let noarch = workdir.join("noarch");
     fs::create_dir_all(&noarch)?;

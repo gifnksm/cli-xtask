@@ -68,7 +68,7 @@ pub fn copy(from: impl AsRef<Utf8Path>, to: impl AsRef<Utf8Path>) -> Result<()> 
 /// Convert a path to a path relative to the current directory which implements
 /// [`Display`](std::fmt::Display).
 pub trait ToRelative {
-    /// Tye type of the converted path that implements
+    /// The type of the converted path that implements
     /// [`Display`](std::fmt::Display).
     type Output: fmt::Display;
 

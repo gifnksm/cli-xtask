@@ -12,12 +12,12 @@ use crate::{
     Result,
 };
 
-/// Commmand line arguments to control log verbosity level.
+/// Command line arguments to control log verbosity level.
 ///
 /// # Examples
 ///
 /// To get `--quiet` (`-q`) and `--verbose` (or `-v`) flags through your entire
-/// program, just `flattern` this struct:
+/// program, just `flatten` this struct:
 ///
 /// ```rust
 /// use cli_xtask::{args::Verbosity, clap};

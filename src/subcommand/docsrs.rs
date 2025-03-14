@@ -230,7 +230,7 @@ impl DocsrsMetadata {
         // copied from https://github.com/rust-lang/docs.rs/blob/4635eb745e77c6de9c055cb7334f48375c0cda5d/src/docbuilder/rustwide_builder.rs#L776
         let mut rustdoc_args = vec![
             "-Zunstable-options",
-            // Coment out so that static resouces are loaded when the document is published on
+            // Comment out so that static resources are loaded when the document is published on
             // GitHub Pages
             // "--static-root-path", "/-/rustdoc.static/",
 

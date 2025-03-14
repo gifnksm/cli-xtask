@@ -318,7 +318,7 @@ impl<'a> DistPackageConfigBuilder<'a> {
     /// Adds a package license files to the list of files to be distributed.
     ///
     /// If the given path is a relative path, it is resolved against the package
-    /// root direcotry.
+    /// root directory.
     ///
     /// # Examples
     ///
@@ -359,7 +359,7 @@ impl<'a> DistPackageConfigBuilder<'a> {
     /// distributed.
     ///
     /// If the given path is a relative path, it is resolved against the package
-    /// root direcotry.
+    /// root directory.
     ///
     /// # Examples
     ///

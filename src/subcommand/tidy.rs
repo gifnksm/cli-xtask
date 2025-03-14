@@ -39,10 +39,10 @@ impl Tidy {
             feature_args,
         } = self;
 
-        let _ = allow_no_vcs; // supress unused-variables warning
-        let _ = allow_dirty; // supress unused-variables warning
-        let _ = allow_staged; // supress unused-variables warning
-        let _ = feature_args.clone(); // supress unused-variables warning
+        let _ = allow_no_vcs; // suppress unused-variables warning
+        let _ = allow_dirty; // suppress unused-variables warning
+        let _ = allow_staged; // suppress unused-variables warning
+        let _ = feature_args.clone(); // suppress unused-variables warning
 
         vec![
             // cargo fmt

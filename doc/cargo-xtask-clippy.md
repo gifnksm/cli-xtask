@@ -1,7 +1,7 @@
 # `cargo-xtask-clippy(1)`
 
 ```test
-`cargo clippy` with options useful for tesing and continuous integration
+`cargo clippy` with options useful for testing and continuous integration
 
 Usage: cargo xtask clippy [OPTIONS] [EXTRA_OPTIONS]...
 

@@ -1,7 +1,7 @@
 # `cargo-xtask-dist(1)`
 
 ```test
-Build the artifacs and create the archive file for distribution
+Build the artifacts and create the archive file for distribution
 
 Usage: cargo xtask dist [OPTIONS]
 

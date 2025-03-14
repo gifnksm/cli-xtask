@@ -7,8 +7,8 @@ Usage: cargo xtask [OPTIONS] [COMMAND]
 
 Commands:
   build                  `cargo build` with options useful for testing and continuous integration
-  clippy                 `cargo clippy` with options useful for tesing and continuous integration
-  dist                   Build the artifacs and create the archive file for distribution
+  clippy                 `cargo clippy` with options useful for testing and continuous integration
+  dist                   Build the artifacts and create the archive file for distribution
   dist-archive           Create the archive file for distribution
   dist-build             Build all artifacts for distribution
   dist-build-bin         Build the release binaries for distribution

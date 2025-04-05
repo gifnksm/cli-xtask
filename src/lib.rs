@@ -48,8 +48,7 @@
 //!     cargo add -p xtask cli-xtask --features main,bin-crate
 //!     ```
 //!
-//!     If you want to use extra tools such as `cargo-sync-rdme` and
-//!     `cargo-udeps`, add the `bin-crate-extra` feature.
+//!     If you want to use extra tools such as `cargo-sync-rdme` and `cargo-udeps`, add the `bin-crate-extra` feature.
 //!
 //!     ```console
 //!     cargo add -p xtask cli-xtask --features main,bin-crate,bin-crate-extra
@@ -61,8 +60,7 @@
 //!     cargo add -p xtask cli-xtask --features main,lib-crate
 //!     ```
 //!
-//!     If you want to use extra tools such as `cargo-sync-rdme` and
-//!     `cargo-udeps`, add the `lib-crate-extra` feature.
+//!     If you want to use extra tools such as `cargo-sync-rdme` and `cargo-udeps`, add the `lib-crate-extra` feature.
 //!
 //!     ```console
 //!     cargo add -p xtask cli-xtask --features main,lib-crate,lib-crate-extra

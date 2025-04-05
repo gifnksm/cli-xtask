@@ -55,8 +55,7 @@ Then, run the following command to add `cli-xtask` to the dependencies.
   cargo add -p xtask cli-xtask --features main,bin-crate
   ````
   
-  If you want to use extra tools such as `cargo-sync-rdme` and
-  `cargo-udeps`, add the `bin-crate-extra` feature.
+  If you want to use extra tools such as `cargo-sync-rdme` and `cargo-udeps`, add the `bin-crate-extra` feature.
   
   ````console
   cargo add -p xtask cli-xtask --features main,bin-crate,bin-crate-extra
@@ -68,8 +67,7 @@ Then, run the following command to add `cli-xtask` to the dependencies.
   cargo add -p xtask cli-xtask --features main,lib-crate
   ````
   
-  If you want to use extra tools such as `cargo-sync-rdme` and
-  `cargo-udeps`, add the `lib-crate-extra` feature.
+  If you want to use extra tools such as `cargo-sync-rdme` and `cargo-udeps`, add the `lib-crate-extra` feature.
   
   ````console
   cargo add -p xtask cli-xtask --features main,lib-crate,lib-crate-extra
@@ -95,7 +93,7 @@ See the [Feature flags section](#feature-flags) for more information.
 
 If you want to add the subcommands that are not included in this crate,
 you can add them by creating a new data structure that implements the
-[`clap::Subcommand`](https://docs.rs/clap_builder/4.5.32/clap_builder/derive/trait.Subcommand.html) and [`Run`](https://docs.rs/cli-xtask/latest/cli_xtask/trait.Run.html).
+[`clap::Subcommand`](https://docs.rs/clap_builder/4.5.35/clap_builder/derive/trait.Subcommand.html) and [`Run`](https://docs.rs/cli-xtask/latest/cli_xtask/trait.Run.html).
 See [the documentation of `Xtask`](https://docs.rs/cli-xtask/latest/cli_xtask/command/struct.Xtask.html) for more
 information.
 

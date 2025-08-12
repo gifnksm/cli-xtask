@@ -107,7 +107,7 @@ subcommand-udeps = []
 [dependencies]
 cargo_metadata = "0.19.2"
 chrono = { version = "0.4.40", features = ["clock"], optional = true }
-clap = { version = "4.5.35", features = ["derive"] }
+clap = { version = "4.5.44", features = ["derive"] }
 clap-cargo = "0.15.2"
 clap_complete = { version = "4.5.47", optional = true }
 clap_complete_nushell = { version = "4.5.5", optional = true }

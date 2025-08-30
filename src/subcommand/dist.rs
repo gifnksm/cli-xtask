@@ -7,7 +7,7 @@ use crate::{config::Config, Result, Run};
 pub struct Dist {
     /// Arguments for the `dist-build` subcommand.
     #[cfg(subcommand_dist_build)]
-    #[cfg_attr(docsrs, doc(cfg(feature = "subcommand-dist-build-*")))]
+    #[cfg_attr(docsrs, doc(cfg(subcommand_dist_build)))]
     #[clap(flatten)]
     pub dist_build_args: super::DistBuild,
     /// Arguments for the `dist-archive` subcommand.

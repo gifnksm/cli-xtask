@@ -23,10 +23,10 @@ mod dist_archive;
 pub use self::dist_archive::DistArchive;
 
 #[cfg(subcommand_dist_build)]
-#[cfg_attr(docsrs, doc(cfg(feature = "subcommand-dist-build-*")))]
+#[cfg_attr(docsrs, doc(cfg(subcommand_dist_build)))]
 mod dist_build;
 #[cfg(subcommand_dist_build)]
-#[cfg_attr(docsrs, doc(cfg(feature = "subcommand-dist-build-*")))]
+#[cfg_attr(docsrs, doc(cfg(subcommand_dist_build)))]
 pub use self::dist_build::DistBuild;
 
 #[cfg(feature = "subcommand-dist-build-bin")]
@@ -225,7 +225,7 @@ pub enum Subcommand {
 
     /// Build all artifacts for distribution.
     #[cfg(subcommand_dist_build)]
-    #[cfg_attr(docsrs, doc(cfg(feature = "subcommand-dist-build-*")))]
+    #[cfg_attr(docsrs, doc(cfg(subcommand_dist_build)))]
     DistBuild(DistBuild),
 
     /// Build the release binaries for distribution.
@@ -297,7 +297,7 @@ pub enum Subcommand {
     /// `cargo sync-rdme` with options useful for testing and continuous
     /// integration.
     #[cfg(feature = "subcommand-sync-rdme")]
-    #[cfg_attr(docsrs, doc(cfg(feature = "subcommand-syncrdme")))]
+    #[cfg_attr(docsrs, doc(cfg(feature = "subcommand-sync-rdme")))]
     SyncRdme(sync_rdme::SyncRdme),
 
     /// `cargo test` with options useful for testing and continuous integration.

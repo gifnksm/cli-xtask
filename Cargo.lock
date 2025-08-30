@@ -1222,4 +1222,5 @@ dependencies = [
  "cli-xtask",
  "dir-diff",
  "tempfile",
+ "tracing",
 ]

@@ -375,7 +375,7 @@ impl<'a> DistConfig<'a> {
     }
 
     /// Returns the configurations of the packages that will be distributed.
-    pub fn packages(&self) -> &[DistPackageConfig] {
+    pub fn packages(&'_ self) -> &'_ [DistPackageConfig<'_>] {
         &self.packages
     }
 

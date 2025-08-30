@@ -7,7 +7,7 @@ use eyre::{ensure, eyre};
 
 use crate::Result;
 
-/// Create a new [`File`](std::fs::File) from a `path`, and output the path to
+/// Create a new [`File`] from a `path`, and output the path to
 /// log.
 #[tracing::instrument(name = "create_file" fields(path = %path.as_ref().to_relative()), err)]
 pub fn create_file(path: impl AsRef<Utf8Path>) -> Result<File> {

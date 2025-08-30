@@ -451,7 +451,7 @@ impl<'a> DistPackageConfig<'a> {
     ///
     /// If no targets are added, the list of targets is constructed from all
     /// binaries target of the package.
-    pub fn targets(&self) -> &[DistTargetConfig] {
+    pub fn targets(&'_ self) -> &'_ [DistTargetConfig<'_>] {
         &self.targets
     }
 

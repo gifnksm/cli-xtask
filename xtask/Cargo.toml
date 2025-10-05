@@ -9,5 +9,5 @@ readme = "README.md"
 [dependencies]
 cli-xtask = { path = "../", default-features = false, features = ["main", "lib-crate-extra", "subcommand-exec"] }
 dir-diff = "0.3.3"
-tempfile = "3.21.0"
+tempfile = "3.23.0"
 tracing = "0.1.41"

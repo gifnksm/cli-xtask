@@ -3,7 +3,7 @@
     feature = "subcommand-dist-build-doc"
 ))]
 use cargo_metadata::camino::Utf8PathBuf;
-use cargo_metadata::{camino::Utf8Path, Package};
+use cargo_metadata::{camino::Utf8Path, Package, PackageName};
 
 use super::{DistTargetConfig, DistTargetConfigBuilder};
 use crate::{workspace::PackageExt, Result};
@@ -60,7 +60,7 @@ use crate::{workspace::PackageExt, Result};
 /// ```
 #[derive(Debug)]
 pub struct DistPackageConfigBuilder<'a> {
-    name: String,
+    name: PackageName,
     metadata: &'a Package,
     targets: Option<Vec<DistTargetConfig<'a>>>,
     #[cfg(feature = "subcommand-dist-build-bin")]
@@ -422,7 +422,7 @@ impl<'a> DistPackageConfigBuilder<'a> {
 /// Configuration for the distribution of the package.
 #[derive(Debug)]
 pub struct DistPackageConfig<'a> {
-    name: String,
+    name: PackageName,
     metadata: &'a Package,
     targets: Vec<DistTargetConfig<'a>>,
     #[cfg(feature = "subcommand-dist-build-bin")]
@@ -435,7 +435,7 @@ pub struct DistPackageConfig<'a> {
 
 impl<'a> DistPackageConfig<'a> {
     /// Returns the name of the package.
-    pub fn name(&self) -> &str {
+    pub fn name(&self) -> &PackageName {
         &self.name
     }
 

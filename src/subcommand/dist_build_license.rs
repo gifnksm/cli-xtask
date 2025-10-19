@@ -39,7 +39,7 @@ impl DistBuildLicense {
 
         for package in config.packages() {
             let dest_dir = if add_package_dir {
-                license_dir.join(package.name())
+                license_dir.join(package.name().as_ref())
             } else {
                 license_dir.clone()
             };

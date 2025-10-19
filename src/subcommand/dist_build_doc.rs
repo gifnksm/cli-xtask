@@ -34,7 +34,7 @@ impl DistBuildDoc {
 
         for package in packages {
             let dest_dir = if add_package_dir {
-                doc_dir.join(package.name())
+                doc_dir.join(package.name().as_ref())
             } else {
                 doc_dir.clone()
             };

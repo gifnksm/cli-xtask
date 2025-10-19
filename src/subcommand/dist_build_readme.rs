@@ -41,7 +41,7 @@ impl DistBuildReadme {
             if let Some(readme) = &package.metadata().readme {
                 let src_file = package.root_directory().join(readme);
                 let dest_dir = if add_package_dir {
-                    readme_dir.join(package.name())
+                    readme_dir.join(package.name().as_ref())
                 } else {
                     readme_dir.clone()
                 };

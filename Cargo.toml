@@ -107,14 +107,14 @@ subcommand-udeps = []
 [dependencies]
 cargo_metadata = "0.23.0"
 chrono = { version = "0.4.42", features = ["clock"], optional = true }
-clap = { version = "4.5.49", features = ["derive"] }
-clap-cargo = "0.18.1"
+clap = { version = "4.5.50", features = ["derive"] }
+clap-cargo = "0.18.3"
 clap_complete = { version = "4.5.59", optional = true }
 clap_complete_nushell = { version = "4.5.9", optional = true }
-clap_mangen = { version = "0.2.30", optional = true }
+clap_mangen = { version = "0.2.31", optional = true }
 color-eyre = { version = "0.6.5", optional = true }
 eyre = "0.6.12"
-flate2 = { version = "1.1.4", optional = true }
+flate2 = { version = "1.1.5", optional = true }
 regex = { version = "1.12.2", optional = true }
 serde = { version = "1.0.228", optional = true, features = ["derive"] }
 serde_json = { version = "1.0.145", optional = true }

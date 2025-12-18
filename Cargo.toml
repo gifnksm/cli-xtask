@@ -119,7 +119,7 @@ regex = { version = "1.12.2", optional = true }
 serde = { version = "1.0.228", optional = true, features = ["derive"] }
 serde_json = { version = "1.0.145", optional = true }
 tar = { version = "0.4.44", optional = true }
-tracing = "0.1.41"
+tracing = "0.1.44"
 tracing-subscriber = { version = "0.3.20", features = ["env-filter"], optional = true }
 walkdir = "2.5.0"
 

@@ -1,4 +1,4 @@
-use crate::{cargo, config::Config, Result, Run};
+use crate::{Result, Run, cargo, config::Config};
 
 /// Arguments definition of the `dist-build-bin` subcommand.
 #[cfg_attr(doc, doc = include_str!("../../doc/cargo-xtask-dist-build-bin.md"))]

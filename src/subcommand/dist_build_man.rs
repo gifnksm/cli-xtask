@@ -4,7 +4,7 @@ use cargo_metadata::camino::{Utf8Path, Utf8PathBuf};
 use chrono::{Datelike, Utc};
 use clap_mangen::Man;
 
-use crate::{config::Config, Result, Run};
+use crate::{Result, Run, config::Config};
 
 /// Arguments definition of the `dist-build-man` subcommand.
 #[cfg_attr(doc, doc = include_str!("../../doc/cargo-xtask-dist-build-man.md"))]
@@ -105,20 +105,20 @@ fn iterate_commands(cmd: clap::Command) -> Box<dyn Iterator<Item = clap::Command
             .map(move |mut subcommand| {
                 let name = format!("{command_name} {}", subcommand.get_name());
                 subcommand = subcommand.name(name);
-                if subcommand.get_version().is_none() {
-                    if let Some(version) = &command_version {
-                        subcommand = subcommand.version(version);
-                    }
+                if subcommand.get_version().is_none()
+                    && let Some(version) = &command_version
+                {
+                    subcommand = subcommand.version(version);
                 }
-                if subcommand.get_long_version().is_none() {
-                    if let Some(long_version) = &command_long_version {
-                        subcommand = subcommand.long_version(long_version);
-                    }
+                if subcommand.get_long_version().is_none()
+                    && let Some(long_version) = &command_long_version
+                {
+                    subcommand = subcommand.long_version(long_version);
                 }
-                if subcommand.get_author().is_none() {
-                    if let Some(author) = &command_author {
-                        subcommand = subcommand.author(author);
-                    }
+                if subcommand.get_author().is_none()
+                    && let Some(author) = &command_author
+                {
+                    subcommand = subcommand.author(author);
                 }
                 subcommand
             })

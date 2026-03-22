@@ -1,6 +1,6 @@
 use eyre::eyre;
 
-use crate::{config::Config, fs::ToRelative, Result, Run};
+use crate::{Result, Run, config::Config, fs::ToRelative};
 
 /// Arguments definition of the `dist-build-license` subcommand.
 #[cfg_attr(doc, doc = include_str!("../../doc/cargo-xtask-dist-build-license.md"))]

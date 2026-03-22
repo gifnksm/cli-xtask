@@ -1,4 +1,4 @@
-use crate::{config::Config, Result, Run, SubcommandRun};
+use crate::{Result, Run, SubcommandRun, config::Config};
 
 /// Arguments definition of the `pre-release` subcommand.
 #[cfg_attr(doc, doc = include_str!("../../doc/cargo-xtask-pre-release.md"))]

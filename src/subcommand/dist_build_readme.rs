@@ -1,4 +1,4 @@
-use crate::{config::Config, Result, Run};
+use crate::{Result, Run, config::Config};
 
 /// Arguments definition of the `dist-build-readme` subcommand.
 #[cfg_attr(doc, doc = include_str!("../../doc/cargo-xtask-dist-build-readme.md"))]

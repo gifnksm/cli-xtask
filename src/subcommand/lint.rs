@@ -1,4 +1,4 @@
-use crate::{args::FeatureArgs, config::Config, Result, Run, SubcommandRun};
+use crate::{Result, Run, SubcommandRun, args::FeatureArgs, config::Config};
 
 /// Arguments definition of the `lint` subcommand.
 #[cfg_attr(doc, doc = include_str!("../../doc/cargo-xtask-lint.md"))]

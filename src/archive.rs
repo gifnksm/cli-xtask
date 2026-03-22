@@ -1,9 +1,9 @@
 //! Utilities for creating archives.
 
 use cargo_metadata::camino::Utf8Path;
-use flate2::{write::GzEncoder, Compression};
+use flate2::{Compression, write::GzEncoder};
 
-use crate::{fs::ToRelative, Result};
+use crate::{Result, fs::ToRelative};
 
 /// Create a `tar.gz` archive from the given paths.
 ///

@@ -1,10 +1,10 @@
 use std::process::Command;
 
 use crate::{
+    Result, Run,
     args::{EnvArgs, PackageArgs},
     config::Config,
     process::CommandExt,
-    Result, Run,
 };
 
 /// Arguments definition of the `fmt` subcommand.

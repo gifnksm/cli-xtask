@@ -1,5 +1,5 @@
 //! Command line interfaces for xtask workflows.
-use crate::{config::Config, Result, Run};
+use crate::{Result, Run, config::Config};
 
 #[cfg(feature = "subcommand-build")]
 #[cfg_attr(docsrs, doc(cfg(feature = "subcommand-build")))]

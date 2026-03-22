@@ -1,4 +1,4 @@
-use crate::{archive, config::Config, Result, Run};
+use crate::{Result, Run, archive, config::Config};
 
 /// Arguments definition of the `dist-archive` subcommand.
 #[cfg_attr(doc, doc = include_str!("../../doc/cargo-xtask-dist-archive.md"))]
@@ -55,11 +55,11 @@ impl DistArchive {
             created = true;
         }
 
-        if !created && noarch_path.is_some() {
+        if !created && let Some(noarch_path) = noarch_path {
             let archive_name = format!("{}-noarch.tar.gz", config.name());
             let archive_path = dist_dir.join(archive_name);
 
-            archive::create(&archive_path, [noarch_path.unwrap()].into_iter())?;
+            archive::create(&archive_path, [noarch_path].into_iter())?;
 
             tracing::info!("Archive created successfully: {archive_path}");
         }

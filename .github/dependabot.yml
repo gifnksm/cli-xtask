@@ -10,3 +10,8 @@ updates:
       - "/examples/*"
     schedule:
       interval: "daily"
+    groups:
+      cargo-all:
+        patterns:
+          - "*"
+        group-by: dependency-name

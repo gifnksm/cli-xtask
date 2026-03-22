@@ -1,4 +1,4 @@
-use cargo_metadata::{camino::Utf8Path, Metadata, Package};
+use cargo_metadata::{Metadata, Package, camino::Utf8Path};
 
 use super::PackageExt;
 

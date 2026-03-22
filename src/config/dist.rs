@@ -1,6 +1,6 @@
 use cargo_metadata::{
-    camino::{Utf8Path, Utf8PathBuf},
     Metadata, Package,
+    camino::{Utf8Path, Utf8PathBuf},
 };
 use eyre::eyre;
 

@@ -1,10 +1,10 @@
 use std::process::Command;
 
 use crate::{
+    Result, Run,
     args::{EnvArgs, FeatureArgs},
     config::Config,
     process::CommandExt,
-    Result, Run,
 };
 
 /// Arguments definition of the `udeps` subcommand.

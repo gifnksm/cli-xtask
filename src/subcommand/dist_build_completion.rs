@@ -3,7 +3,7 @@ use std::fmt;
 use cargo_metadata::camino::{Utf8Path, Utf8PathBuf};
 use clap_complete::Generator;
 
-use crate::{config::Config, fs::ToRelative, Result, Run};
+use crate::{Result, Run, config::Config, fs::ToRelative};
 
 /// Arguments definition of the `dist-build-completion` subcommand.
 #[cfg_attr(doc, doc = include_str!("../../doc/cargo-xtask-dist-build-completion.md"))]

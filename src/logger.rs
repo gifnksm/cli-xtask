@@ -10,19 +10,22 @@ use crate::Result;
 
 /// Install a `tracing-subscriber` as a logger.
 pub fn install(verbosity: Option<Level>) -> Result<()> {
-    if env::var_os("RUST_LOG").is_none() {
-        match verbosity {
-            Some(Level::ERROR) => env::set_var("RUST_LOG", "error"),
-            Some(Level::WARN) => env::set_var("RUST_LOG", "warn"),
-            Some(Level::INFO) => env::set_var("RUST_LOG", "info"),
-            Some(Level::DEBUG) => env::set_var("RUST_LOG", "debug"),
-            Some(Level::TRACE) => env::set_var("RUST_LOG", "trace"),
-            None => env::set_var("RUST_LOG", "off"),
-        }
-    }
+    let env_filter = if env::var_os("RUST_LOG").is_some() {
+        EnvFilter::from_default_env()
+    } else {
+        let level = match verbosity {
+            Some(Level::ERROR) => "error",
+            Some(Level::WARN) => "warn",
+            Some(Level::INFO) => "info",
+            Some(Level::DEBUG) => "debug",
+            Some(Level::TRACE) => "trace",
+            None => "off",
+        };
+        EnvFilter::new(level)
+    };
 
     tracing_subscriber::fmt()
-        .with_env_filter(EnvFilter::from_default_env())
+        .with_env_filter(env_filter)
         .with_writer(io::stderr)
         .with_target(false)
         .try_init()

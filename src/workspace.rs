@@ -2,17 +2,17 @@
 
 use std::{
     cmp::Ordering,
-    collections::{hash_map::Entry, HashMap, HashSet},
+    collections::{HashMap, HashSet, hash_map::Entry},
     sync::LazyLock,
 };
 
 use cargo_metadata::{
-    camino::{Utf8Path, Utf8PathBuf},
     Metadata, MetadataCommand,
+    camino::{Utf8Path, Utf8PathBuf},
 };
 use walkdir::WalkDir;
 
-use crate::{fs::ToRelative, Result};
+use crate::{Result, fs::ToRelative};
 
 mod metadata;
 mod package;

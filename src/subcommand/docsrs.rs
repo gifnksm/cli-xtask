@@ -4,10 +4,10 @@ use cargo_metadata::Package;
 use serde::Deserialize;
 
 use crate::{
+    Error, Result, Run,
     args::{EnvArgs, PackageArgs},
     config::Config,
     process::CommandExt,
-    Error, Result, Run,
 };
 
 /// Arguments definition of the `docsrs` subcommand.

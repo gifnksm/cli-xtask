@@ -1,4 +1,4 @@
-use crate::{args::Verbosity, config::Config, Result, Run};
+use crate::{Result, Run, args::Verbosity, config::Config};
 
 #[cfg(feature = "main")]
 #[cfg_attr(docsrs, doc(cfg(feature = "main")))]

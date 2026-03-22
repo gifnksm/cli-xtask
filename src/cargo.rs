@@ -7,7 +7,7 @@ use std::{
 };
 
 use cargo_metadata::{
-    camino::Utf8PathBuf, Artifact, Message, Metadata, MetadataCommand, Package, Target, TargetKind,
+    Artifact, Message, Metadata, MetadataCommand, Package, Target, TargetKind, camino::Utf8PathBuf,
 };
 use eyre::{bail, ensure, eyre};
 

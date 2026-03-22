@@ -5,7 +5,7 @@ use std::process::{Command, Stdio};
 use cargo_metadata::Metadata;
 use eyre::eyre;
 
-use crate::{fs::ToRelative, Result};
+use crate::{Result, fs::ToRelative};
 
 /// Extension methods for [`std::process::Command`].
 pub trait CommandExt {

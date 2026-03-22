@@ -3,10 +3,10 @@
     feature = "subcommand-dist-build-doc"
 ))]
 use cargo_metadata::camino::Utf8PathBuf;
-use cargo_metadata::{camino::Utf8Path, Package, PackageName};
+use cargo_metadata::{Package, PackageName, camino::Utf8Path};
 
 use super::{DistTargetConfig, DistTargetConfigBuilder};
-use crate::{workspace::PackageExt, Result};
+use crate::{Result, workspace::PackageExt};
 
 /// Configures and constructs [`DistPackageConfig`].
 ///

@@ -1,6 +1,7 @@
 use crate::{
+    Result, Run, Xtask,
     config::{Config, ConfigBuilder, DistConfigBuilder, DistTargetConfigBuilder},
-    workspace, Result, Run, Xtask,
+    workspace,
 };
 
 impl<Subcommand> Xtask<Subcommand>

@@ -2,14 +2,14 @@
 
 use std::{env, iter};
 
-use cargo_metadata::{camino::Utf8PathBuf, Metadata, Package};
+use cargo_metadata::{Metadata, Package, camino::Utf8PathBuf};
 use clap::ArgAction;
 use eyre::eyre;
 use tracing::Level;
 
 use crate::{
-    workspace::{self, FeatureOption, MetadataExt, PackageExt},
     Result,
+    workspace::{self, FeatureOption, MetadataExt, PackageExt},
 };
 
 /// Command line arguments to control log verbosity level.

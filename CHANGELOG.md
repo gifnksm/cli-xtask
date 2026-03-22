@@ -9,6 +9,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased] - ReleaseDate
 
+## [0.10.2] - 2026-03-22
+
 ## [0.10.1] - 2025-01-02
 
 ## [0.10.0] - 2024-12-27
@@ -112,7 +114,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 * First release
 
 <!-- next-url -->
-[Unreleased]: https://github.com/gifnksm/cli-xtask/compare/v0.10.1...HEAD
+[Unreleased]: https://github.com/gifnksm/cli-xtask/compare/v0.10.2...HEAD
+[0.10.2]: https://github.com/gifnksm/cli-xtask/compare/v0.10.1...v0.10.2
 [0.10.1]: https://github.com/gifnksm/cli-xtask/compare/v0.10.0...v0.10.1
 [0.10.0]: https://github.com/gifnksm/cli-xtask/compare/v0.9.0...v0.10.0
 [0.9.0]: https://github.com/gifnksm/cli-xtask/compare/v0.8.0...v0.9.0

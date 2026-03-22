@@ -1,6 +1,7 @@
 [workspace]
 members = ["app1", "app2", "xtask"]
 default-members = ["app1", "app2"]
+resolver = "3"
 
 [workspace.package]
 publish = false

@@ -106,21 +106,21 @@ subcommand-udeps = []
 
 [dependencies]
 cargo_metadata = "0.23.1"
-chrono = { version = "0.4.42", features = ["clock"], optional = true }
-clap = { version = "4.5.53", features = ["derive"] }
+chrono = { version = "0.4.44", features = ["clock"], optional = true }
+clap = { version = "4.6.0", features = ["derive"] }
 clap-cargo = "0.18.3"
-clap_complete = { version = "4.5.61", optional = true }
-clap_complete_nushell = { version = "4.5.10", optional = true }
-clap_mangen = { version = "0.2.31", optional = true }
+clap_complete = { version = "4.6.0", optional = true }
+clap_complete_nushell = { version = "4.6.0", optional = true }
+clap_mangen = { version = "0.2.33", optional = true }
 color-eyre = { version = "0.6.5", optional = true }
 eyre = "0.6.12"
-flate2 = { version = "1.1.5", optional = true }
-regex = { version = "1.12.2", optional = true }
+flate2 = { version = "1.1.9", optional = true }
+regex = { version = "1.12.3", optional = true }
 serde = { version = "1.0.228", optional = true, features = ["derive"] }
-serde_json = { version = "1.0.145", optional = true }
-tar = { version = "0.4.44", optional = true }
-tracing = "0.1.41"
-tracing-subscriber = { version = "0.3.20", features = ["env-filter"], optional = true }
+serde_json = { version = "1.0.149", optional = true }
+tar = { version = "0.4.45", optional = true }
+tracing = "0.1.44"
+tracing-subscriber = { version = "0.3.23", features = ["env-filter"], optional = true }
 walkdir = "2.5.0"
 
 [dev-dependencies]

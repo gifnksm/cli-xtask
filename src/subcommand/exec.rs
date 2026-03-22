@@ -41,11 +41,20 @@ impl Exec {
             command_options,
         } = self;
 
+        let is_cargo_llvm_cov =
+            command == "cargo" && command_options.first().is_some_and(|arg| arg == "llvm-cov");
+
         for workspace in workspace_args.workspaces() {
-            Command::new(command)
-                .args(command_options)
-                .envs(env_args.env.clone())
-                .workspace_spawn(workspace)?;
+            let mut cmd = Command::new(command);
+            cmd.args(command_options).envs(env_args.env.clone());
+
+            if is_cargo_llvm_cov {
+                // Avoid cargo-llvm-cov recursion when running under llvm-cov.
+                cmd.env_remove("RUSTC_WRAPPER")
+                    .env_remove("RUSTC_WORKSPACE_WRAPPER");
+            }
+
+            cmd.workspace_spawn(workspace)?;
         }
 
         Ok(())

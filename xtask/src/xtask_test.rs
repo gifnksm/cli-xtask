@@ -203,6 +203,9 @@ fn cargo_llvm_cov_init(workspace: &Metadata) -> Result<Vec<(String, String)>> {
     let output = Command::new("cargo")
         .args(["llvm-cov", "show-env"])
         .env("CARGO_TARGET_DIR", &target_dir)
+        // Avoid cargo-llvm-cov recursion when this xtask itself runs under llvm-cov.
+        .env_remove("RUSTC_WRAPPER")
+        .env_remove("RUSTC_WORKSPACE_WRAPPER")
         .workspace_stdout(workspace)?;
 
     let mut envs = vec![("CARGO_TARGET_DIR".to_string(), target_dir.into_string())];
@@ -217,6 +220,9 @@ fn cargo_llvm_cov_init(workspace: &Metadata) -> Result<Vec<(String, String)>> {
     // remove remove artifacts that may affect the coverage results
     Command::new("cargo")
         .args(["llvm-cov", "clean", "--workspace"])
+        // Avoid cargo-llvm-cov recursion when this xtask itself runs under llvm-cov.
+        .env_remove("RUSTC_WRAPPER")
+        .env_remove("RUSTC_WORKSPACE_WRAPPER")
         .envs(envs.iter().map(|(k, v)| (k.as_str(), v.as_str())))
         .workspace_spawn(workspace)?;
 

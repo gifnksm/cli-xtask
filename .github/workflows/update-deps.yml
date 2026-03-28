@@ -22,11 +22,11 @@ jobs:
           tool: cargo-edit
       - name: Update dependencies
         run: |
-          cargo upgrade --compatible
+          cargo upgrade --compatible --workspace
           cargo update
           for dir in examples/*/; do
             if [ -f "${dir}Cargo.toml" ]; then
-              (cd "${dir}" && cargo upgrade --compatible && cargo update)
+              (cd "${dir}" && cargo upgrade --compatible --workspace && cargo update)
             fi
           done
         shell: bash

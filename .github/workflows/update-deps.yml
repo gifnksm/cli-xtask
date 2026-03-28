@@ -36,7 +36,7 @@ jobs:
           title: "chore: update dependencies"
           body: |
             This PR updates dependencies using:
-            - `cargo upgrade --compatible`: Updates semver-compatible direct dependency versions in `Cargo.toml`
+            - `cargo upgrade --compatible --workspace`: Updates semver-compatible direct dependency versions in `Cargo.toml`
             - `cargo update`: Updates `Cargo.lock` with the latest compatible versions (including indirect dependencies)
           branch: update-dependencies
           delete-branch: true

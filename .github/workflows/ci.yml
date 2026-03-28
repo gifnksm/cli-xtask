@@ -260,11 +260,13 @@ jobs:
     permissions: {}
     steps:
       - name: CI complete
+        env:
+          FAILURE: ${{ contains(needs.*.result, 'failure') }}
+          CANCELLED: ${{ contains(needs.*.result, 'cancelled') }}
         run: |
-          if ${{ !contains(needs.*.result, 'failure') && !contains(needs.*.result, 'cancelled') }}; then
-            echo "CI succeeded"
-          else
+          if [[ "$FAILURE" == "true" || "$CANCELLED" == "true" ]]; then
             echo "CI failed"
             exit 1
           fi
+          echo "CI succeeded"
         shell: bash

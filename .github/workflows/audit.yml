@@ -37,6 +37,7 @@ jobs:
           command: check ${{ matrix.checks }}
 
   audit-complete:
+    name: Audit complete
     needs:
       - security_audit
       - cargo-deny

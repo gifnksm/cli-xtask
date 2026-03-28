@@ -241,3 +241,30 @@ jobs:
           echo "::add-matcher::.github/actionlint-matcher.json"
           ./actionlint -color
         shell: bash
+
+  ci-complete:
+    name: CI complete
+    needs:
+      - set-matrix
+      - set-workspace
+      - test
+      - integration_test
+      - coverage_test
+      - coverage_integration_test
+      - build
+      - lint
+      - release-dry-run
+      - actionlint
+    runs-on: ubuntu-latest
+    if: ${{ always() }}
+    permissions: {}
+    steps:
+      - name: CI complete
+        run: |
+          if ${{ !contains(needs.*.result, 'failure') && !contains(needs.*.result, 'cancelled') }}; then
+            echo "CI succeeded"
+          else
+            echo "CI failed"
+            exit 1
+          fi
+        shell: bash

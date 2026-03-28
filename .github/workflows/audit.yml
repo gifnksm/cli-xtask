@@ -35,3 +35,21 @@ jobs:
       - uses: EmbarkStudios/cargo-deny-action@v2
         with:
           command: check ${{ matrix.checks }}
+
+  audit-complete:
+    needs:
+      - security_audit
+      - cargo-deny
+    runs-on: ubuntu-latest
+    if: ${{ always() }}
+    permissions: {}
+    steps:
+      - name: Audit complete
+        run: |
+          if ${{ !contains(needs.*.result, 'failure') && !contains(needs.*.result, 'cancelled') }}; then
+            echo "Audit succeeded"
+          else
+            echo "Audit failed"
+            exit 1
+          fi
+        shell: bash

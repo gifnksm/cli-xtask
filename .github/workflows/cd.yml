@@ -16,20 +16,3 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         if: ${{ startsWith(github.ref, 'refs/tags/') }}
-
-  cd-complete:
-    needs:
-      - release
-    runs-on: ubuntu-latest
-    if: ${{ always() }}
-    permissions: {}
-    steps:
-      - name: CD complete
-        run: |
-          if ${{ !contains(needs.*.result, 'failure') && !contains(needs.*.result, 'cancelled') }}; then
-            echo "CD succeeded"
-          else
-            echo "CD failed"
-            exit 1
-          fi
-        shell: bash

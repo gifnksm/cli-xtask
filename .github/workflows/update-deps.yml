@@ -32,6 +32,7 @@ jobs:
         shell: bash
       - uses: peter-evans/create-pull-request@v8
         with:
+          token: ${{ secrets.UPDATE_DEPS_PAT }}
           commit-message: "chore: update dependencies"
           title: "chore: update dependencies"
           body: |

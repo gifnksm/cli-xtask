@@ -9,6 +9,8 @@ on:
 env:
   CARGO_TERM_COLOR: always
 
+permissions: {}
+
 jobs:
   set-matrix:
     runs-on: ubuntu-latest
@@ -257,7 +259,6 @@ jobs:
       - actionlint
     runs-on: ubuntu-latest
     if: ${{ always() }}
-    permissions: {}
     steps:
       - name: CI complete
         run: |

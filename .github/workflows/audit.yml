@@ -9,6 +9,8 @@ on:
       - main
   pull_request:
 
+permissions: {}
+
 jobs:
   security_audit:
     name: Security Audit
@@ -42,7 +44,6 @@ jobs:
       - cargo-deny
     runs-on: ubuntu-latest
     if: ${{ always() }}
-    permissions: {}
     steps:
       - name: Audit complete
         run: |

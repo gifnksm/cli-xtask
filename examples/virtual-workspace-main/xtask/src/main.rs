@@ -1,6 +1,7 @@
 use cli_xtask::{
+    Result, Xtask,
     config::{ConfigBuilder, DistConfigBuilder, DistPackageConfigBuilder},
-    workspace, Result, Xtask,
+    workspace,
 };
 
 fn main() -> Result<()> {

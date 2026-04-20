@@ -5,3 +5,5 @@ resolver = "3"
 
 [workspace.package]
 publish = false
+edition = "2024"
+rust-version = "1.88.0"

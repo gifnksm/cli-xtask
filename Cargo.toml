@@ -118,7 +118,7 @@ eyre = "0.6.12"
 flate2 = { version = "1.1.9", optional = true }
 regex = { version = "1.12.3", optional = true }
 serde = { version = "1.0.228", optional = true, features = ["derive"] }
-serde_json = { version = "1.0.149", optional = true }
+serde_json = { version = "1.0.150", optional = true }
 tar = { version = "0.4.45", optional = true }
 tracing = "0.1.44"
 tracing-subscriber = { version = "0.3.23", features = ["env-filter"], optional = true }

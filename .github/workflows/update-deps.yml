@@ -20,7 +20,9 @@ jobs:
       - uses: Swatinem/rust-cache@v2
       - uses: taiki-e/install-action@v2
         with:
-          tool: cargo-edit
+          tool: cargo-edit,cargo-sync-rdme
+      - run: rustup toolchain add nightly --profile minimal
+        shell: bash
       - name: Update dependencies
         run: |
           cargo upgrade --compatible
@@ -31,6 +33,8 @@ jobs:
             fi
           done
         shell: bash
+      - name: Sync README
+        run: cargo xtask sync-rdme --exhaustive
       - uses: peter-evans/create-pull-request@v8
         with:
           token: ${{ secrets.UPDATE_DEPS_PAT }}

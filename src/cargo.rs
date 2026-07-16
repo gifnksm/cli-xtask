@@ -70,7 +70,9 @@ pub fn build<'a>(
                 TargetKind::Test => args.extend(["--test", target.name.as_str()]),
                 TargetKind::Bench => args.extend(["--bench", target.name.as_str()]),
                 TargetKind::Lib => args.extend(["--lib"]),
-                _ => bail!("unsupported target kind: {}", kind),
+                _ => {
+                    bail!("unsupported target kind: {}", kind);
+                }
             }
         }
     }

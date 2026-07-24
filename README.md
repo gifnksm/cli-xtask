@@ -106,8 +106,8 @@ The following section contains a list of available features:
 
 ### CLI features
 
-* **`main`** - Enables \[`Xtask::main`\] function and
-  \[`Xtask::main_with_config`\] function that are the premade entry point for
+* **`main`** - Enables [`Xtask::main`](https://docs.rs/cli-xtask/latest/cli_xtask/command/Xtask/fn.main.html) function and
+  [`Xtask::main_with_config`](https://docs.rs/cli-xtask/latest/cli_xtask/command/Xtask/fn.main_with_config.html) function that are the premade entry point for
   the CLI.
 * **`error-handler`** - Enables functions for error handling in
   [`error_handler`](https://docs.rs/cli-xtask/latest/cli_xtask/error_handler/index.html) module.

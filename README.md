@@ -93,7 +93,7 @@ See the [Feature flags section](#feature-flags) for more information.
 
 If you want to add the subcommands that are not included in this crate,
 you can add them by creating a new data structure that implements the
-[`clap::Subcommand`](https://docs.rs/clap_builder/4.6.5/clap_builder/derive/trait.Subcommand.html) and [`Run`](https://docs.rs/cli-xtask/latest/cli_xtask/trait.Run.html).
+[`clap::Subcommand`](https://docs.rs/clap_builder/4.6.6/clap_builder/derive/trait.Subcommand.html) and [`Run`](https://docs.rs/cli-xtask/latest/cli_xtask/trait.Run.html).
 See [the documentation of `Xtask`](https://docs.rs/cli-xtask/latest/cli_xtask/command/struct.Xtask.html) for more
 information.
 
@@ -106,8 +106,8 @@ The following section contains a list of available features:
 
 ### CLI features
 
-* **`main`** - Enables [`Xtask::main`](https://docs.rs/cli-xtask/latest/cli_xtask/command/Xtask/fn.main.html) function and
-  [`Xtask::main_with_config`](https://docs.rs/cli-xtask/latest/cli_xtask/command/Xtask/fn.main_with_config.html) function that are the premade entry point for
+* **`main`** - Enables [`Xtask::main`](https://docs.rs/cli-xtask/latest/cli_xtask/command/struct.Xtask.html#method.main) function and
+  [`Xtask::main_with_config`](https://docs.rs/cli-xtask/latest/cli_xtask/command/struct.Xtask.html#method.main_with_config) function that are the premade entry point for
   the CLI.
 * **`error-handler`** - Enables functions for error handling in
   [`error_handler`](https://docs.rs/cli-xtask/latest/cli_xtask/error_handler/index.html) module.

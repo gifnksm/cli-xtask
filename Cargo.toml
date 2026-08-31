@@ -115,7 +115,7 @@ clap_complete_nushell = { version = "4.6.2", optional = true }
 clap_mangen = { version = "0.3.3", optional = true }
 color-eyre = { version = "0.6.5", optional = true }
 eyre = "0.6.14"
-flate2 = { version = "1.1.9", optional = true }
+flate2 = { version = "1.1.10", optional = true }
 regex = { version = "1.13.1", optional = true }
 serde = { version = "1.0.229", optional = true, features = ["derive"] }
 serde_json = { version = "1.0.151", optional = true }

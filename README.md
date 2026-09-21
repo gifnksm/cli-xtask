@@ -216,13 +216,13 @@ See [CONTRIBUTING.md].
 [docs.rs]: https://docs.rs/
 [`cargo xtask exec`]: https://docs.rs/cli-xtask/latest/cli_xtask/subcommand/exec/struct.Exec.html "struct cli_xtask::subcommand::exec::Exec"
 [xtask-setup]: https://github.com/matklad/cargo-xtask#defining-xtasks
-[`clap::Subcommand`]: https://docs.rs/clap_builder/4.6.6/clap_builder/derive/trait.Subcommand.html "trait clap_builder::derive::Subcommand"
+[`clap::Subcommand`]: https://docs.rs/clap_builder/4.6.7/clap_builder/derive/trait.Subcommand.html "trait clap_builder::derive::Subcommand"
 [`Run`]: https://docs.rs/cli-xtask/latest/cli_xtask/trait.Run.html "trait cli_xtask::Run"
 [Xtask]: https://docs.rs/cli-xtask/latest/cli_xtask/command/struct.Xtask.html "struct cli_xtask::command::Xtask"
-[`Xtask::main`]: https://docs.rs/cli-xtask/latest/cli_xtask/command/struct.Xtask.html#method.main "method cli_xtask::command::Xtask::main"
-[`Xtask::main_with_config`]: https://docs.rs/cli-xtask/latest/cli_xtask/command/struct.Xtask.html#method.main_with_config "method cli_xtask::command::Xtask::main_with_config"
-[`error_handler`]: https://docs.rs/cli-xtask/latest/cli_xtask/error_handler/index.html "module cli_xtask::error_handler"
-[`logger`]: https://docs.rs/cli-xtask/latest/cli_xtask/logger/index.html "module cli_xtask::logger"
+[`Xtask::main`]: https://docs.rs/cli-xtask/latest/cli_xtask/command/struct.Xtask.html#method.main "associated function cli_xtask::command::Xtask::main"
+[`Xtask::main_with_config`]: https://docs.rs/cli-xtask/latest/cli_xtask/command/struct.Xtask.html#method.main_with_config "associated function cli_xtask::command::Xtask::main_with_config"
+[`error_handler`]: https://docs.rs/cli-xtask/latest/cli_xtask/error_handler/index.html "mod cli_xtask::error_handler"
+[`logger`]: https://docs.rs/cli-xtask/latest/cli_xtask/logger/index.html "mod cli_xtask::logger"
 [`cargo xtask dist-archive`]: https://docs.rs/cli-xtask/latest/cli_xtask/subcommand/dist_archive/struct.DistArchive.html "struct cli_xtask::subcommand::dist_archive::DistArchive"
 [`cargo xtask dist-build-bin`]: https://docs.rs/cli-xtask/latest/cli_xtask/subcommand/dist_build_bin/struct.DistBuildBin.html "struct cli_xtask::subcommand::dist_build_bin::DistBuildBin"
 [`cargo xtask dist-build-completion`]: https://docs.rs/cli-xtask/latest/cli_xtask/subcommand/dist_build_completion/struct.DistBuildCompletion.html "struct cli_xtask::subcommand::dist_build_completion::DistBuildCompletion"
@@ -233,7 +233,7 @@ See [CONTRIBUTING.md].
 [`cargo xtask dist-clean`]: https://docs.rs/cli-xtask/latest/cli_xtask/subcommand/dist_clean/struct.DistClean.html "struct cli_xtask::subcommand::dist_clean::DistClean"
 [`cargo xtask sync-rdme`]: https://docs.rs/cli-xtask/latest/cli_xtask/subcommand/sync_rdme/struct.SyncRdme.html "struct cli_xtask::subcommand::sync_rdme::SyncRdme"
 [`cargo xtask udeps`]: https://docs.rs/cli-xtask/latest/cli_xtask/subcommand/udeps/struct.Udeps.html "struct cli_xtask::subcommand::udeps::Udeps"
-[`archive`]: https://docs.rs/cli-xtask/latest/cli_xtask/archive/index.html "module cli_xtask::archive"
+[`archive`]: https://docs.rs/cli-xtask/latest/cli_xtask/archive/index.html "mod cli_xtask::archive"
 [LICENSE-APACHE]: https://github.com/gifnksm/cli-xtask/blob/main/LICENSE-APACHE
 [LICENSE-MIT]: https://github.com/gifnksm/cli-xtask/blob/main/LICENSE-MIT
 [CONTRIBUTING.md]: https://github.com/gifnksm/cli-xtask/blob/main/CONTRIBUTING.md

@@ -5,6 +5,10 @@
 //! A collection of utility functions and command line interfaces for
 //! [cargo-xtask].
 //!
+//! **Warning: Deprecated and unmaintained.**
+//! This crate is no longer maintained and its use is not recommended.
+//! The maintainer no longer uses it and is not aware of any other users.
+//!
 //! This crate provides the following utilities:
 //!
 //! * **[`cargo xtask dist`]** and related subcommands

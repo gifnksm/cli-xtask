@@ -9,6 +9,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased] - ReleaseDate
 
+### Deprecated
+
+* This crate is deprecated and is no longer maintained because the maintainer no longer uses it and is not aware of any other users. Using this crate is not recommended.
+
 ## [0.10.2] - 2026-03-22
 
 ## [0.10.1] - 2025-01-02

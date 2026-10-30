@@ -9,6 +9,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased] - ReleaseDate
 
+## [0.10.3] - 2026-10-30
+
 ### Deprecated
 
 * This crate is deprecated and is no longer maintained because the maintainer no longer uses it and is not aware of any other users. Using this crate is not recommended.
@@ -118,7 +120,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 * First release
 
 <!-- next-url -->
-[Unreleased]: https://github.com/gifnksm/cli-xtask/compare/v0.10.2...HEAD
+[Unreleased]: https://github.com/gifnksm/cli-xtask/compare/v0.10.3...HEAD
+[0.10.3]: https://github.com/gifnksm/cli-xtask/compare/v0.10.2...v0.10.3
 [0.10.2]: https://github.com/gifnksm/cli-xtask/compare/v0.10.1...v0.10.2
 [0.10.1]: https://github.com/gifnksm/cli-xtask/compare/v0.10.0...v0.10.1
 [0.10.0]: https://github.com/gifnksm/cli-xtask/compare/v0.9.0...v0.10.0

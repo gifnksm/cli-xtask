@@ -2,7 +2,7 @@
 # cli-xtask
 <!-- cargo-sync-rdme ]] -->
 <!-- cargo-sync-rdme badge [[ -->
-[![Maintenance: passively-maintained](https://img.shields.io/badge/maintenance-passively--maintained-yellowgreen.svg?style=flat-square)](https://doc.rust-lang.org/cargo/reference/manifest.html#the-badges-section)
+[![Maintenance: deprecated](https://img.shields.io/badge/maintenance-deprecated-red.svg?style=flat-square)](https://doc.rust-lang.org/cargo/reference/manifest.html#the-badges-section)
 [![License: MIT OR Apache-2.0](https://img.shields.io/crates/l/cli-xtask.svg?style=flat-square)](#license)
 [![crates.io](https://img.shields.io/crates/v/cli-xtask.svg?logo=rust&style=flat-square)](https://crates.io/crates/cli-xtask)
 [![docs.rs](https://img.shields.io/docsrs/cli-xtask.svg?logo=docs.rs&style=flat-square)](https://docs.rs/cli-xtask)
@@ -13,6 +13,10 @@
 <!-- cargo-sync-rdme rustdoc [[ -->
 A collection of utility functions and command line interfaces for
 [cargo-xtask].
+
+**Warning: Deprecated and unmaintained.**
+This crate is no longer maintained and its use is not recommended.
+The maintainer no longer uses it and is not aware of any other users.
 
 This crate provides the following utilities:
 
